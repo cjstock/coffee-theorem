@@ -1,8 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import { cursorTo } from "readline";
-import { beanRouter } from "../server/router/bean";
+import NavBar from "../components/navbar";
 import { trpc } from "../utils/trpc";
 
 const AddBean: React.FC = () => {
@@ -20,7 +19,7 @@ const AddBean: React.FC = () => {
   const [bean, setBean] = useState(emptyForm);
 
   return (
-    <div className="z-50 p-4 h-2/3 w-1/2 bg-secondary">
+    <div className="grid grid-flow-row place-items-center bg-secondary">
       <form className="form-control" onSubmit={(event) => {
         event.preventDefault()
         mutate(bean)
@@ -46,7 +45,6 @@ const AddBean: React.FC = () => {
 
 
 const Home: NextPage = () => {
-  const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
   const { data, isLoading } = trpc.useQuery(["beans.getAll"])
 
   if (isLoading || !data) return <div>Loading...</div>
@@ -59,8 +57,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="w-screen min-h-screen flex flex-col justify-center items-center p-4 overflow-y-scroll">
-        <AddBean />
+      <div className="container min-w-full">
+        <NavBar />
+        <div className="grid grid-flow-row place-items-center">
+          <div className="flex flex-col">
+            <div className="text-2xl font-bold">Beans</div>
+            {data.map((bean) => {
+              return (
+                <div key={bean.id} className="my-2">
+                  {bean.country}
+                </div>
+              )
+            })}
+          </div>
+          <AddBean />
+        </div>
       </div>
     </>
   )

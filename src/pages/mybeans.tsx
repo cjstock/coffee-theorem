@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import BeanCard from "../components/beancard"
-import { Bean } from "@prisma/client";
 
 const MyBeans: NextPage = () => {
     const { data, isLoading, isError } = trpc.useQuery(["beans.getAll"])
@@ -17,7 +16,7 @@ const MyBeans: NextPage = () => {
                     data.map(bean => {
                         return (
                             <Link href={ `/bean/${bean.id}` }>
-                                <a>
+                                <a key={bean.id}>
                                 <BeanCard value={bean} key={bean.id} />
                                 </a>
                             </Link>

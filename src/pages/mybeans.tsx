@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import BeanCard from "../components/beancard"
+import AddBeanCard from "../components/addbeancard";
 
 const MyBeans: NextPage = () => {
     const { data, isLoading, isError } = trpc.useQuery(["beans.getAll"])
@@ -21,6 +22,7 @@ const MyBeans: NextPage = () => {
                         )
                     })
                 }
+                <AddBeanCard/>
             </div>
         </div>
     </>)

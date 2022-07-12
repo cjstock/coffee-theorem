@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useState } from "react";
 import NavBar from "../components/navbar";
 import { trpc } from "../utils/trpc";
+import MyBeans from "./mybeans";
 
 const AddBean: React.FC = () => {
   const { mutate } = trpc.useMutation("beans.create");
@@ -59,18 +60,8 @@ const Home: NextPage = () => {
 
       <div className="container min-w-full">
         <NavBar />
-        <div className="grid grid-flow-row place-items-center">
-          <div className="flex flex-col">
-            <div className="text-2xl font-bold">Beans</div>
-            {data.map((bean) => {
-              return (
-                <div key={bean.id} className="my-2">
-                  {bean.country}
-                </div>
-              )
-            })}
-          </div>
-          <AddBean />
+        <div className="grid grid-flow-row place-items-center p-6">
+          <MyBeans/>
         </div>
       </div>
     </>

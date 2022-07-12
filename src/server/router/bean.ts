@@ -8,6 +8,18 @@ export const beanRouter = createRouter()
       return await ctx.prisma.bean.findMany();
     },
   })
+  .query("byId", {
+    input: z.object({
+      id: z.string()
+    }),
+    async resolve({ctx, input}) {
+      return await ctx.prisma.bean.findUnique({
+        where: {
+          id: input.id
+        }
+      })
+    }
+  })
   .mutation("create", {
     input: z.object({
         country: z.string(),

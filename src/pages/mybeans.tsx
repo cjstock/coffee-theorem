@@ -15,8 +15,8 @@ const MyBeans: NextPage = () => {
                 {
                     data.map(bean => {
                         return (
-                            <Link href={ `/bean/${bean.id}` }>
-                                <a key={bean.id}>
+                            <Link key={bean.id} href={ `/bean/${bean.id}` }>
+                                <a>
                                 <BeanCard value={bean} key={bean.id} />
                                 </a>
                             </Link>

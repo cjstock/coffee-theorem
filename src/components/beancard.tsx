@@ -8,6 +8,7 @@ interface Props {
 
 const BeanCard: React.FC<Props> = (Props) => {
     const { value } = Props;
+
     return (
         <div className="card mx-auto w-80 h-52 bg-secondary shadow-xl text-left">
             <div className="card-body">

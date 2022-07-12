@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function NavBar() {
 
@@ -41,9 +42,11 @@ export default function NavBar() {
                     <li><a>Item 3</a></li>
                 </ul>
             </div>
-            <div className="navbar-end">
-                <a className="btn">My Beans</a>
-            </div>
+            <Link href={`/`}>
+                <div className="navbar-end">
+                    <a className="btn">My Beans</a>
+                </div>
+            </Link>
         </div>
     </>)
 };

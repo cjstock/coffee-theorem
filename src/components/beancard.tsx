@@ -1,5 +1,4 @@
 import { Bean } from "@prisma/client";
-import { ComponentProps } from "react";
 
 interface Props {
     value: Bean,
@@ -10,7 +9,7 @@ const BeanCard: React.FC<Props> = (Props) => {
     const { value } = Props;
 
     return (
-        <div className="card mx-auto w-80 h-52 bg-secondary shadow-xl text-left">
+        <div className="card mx-auto w-80 h-52 bg-secondary shadow-xl text-left hover:bg-secondary-focus">
             <div className="card-body">
                 <h2 className="card-title">{value.country} | {value.region}</h2>
                 <div>

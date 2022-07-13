@@ -3,7 +3,7 @@ import Layout from "../components/layout";
 import { trpc } from "../utils/trpc";
 
 const AddBean: React.FC = () => {
-    const { mutate } = trpc.useMutation("beans.create");
+    const { mutate } = trpc.useMutation("bean.create");
 
     const emptyForm = {
         country: "",

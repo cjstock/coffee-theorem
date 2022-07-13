@@ -5,7 +5,7 @@ import BeanCard from "../components/beancard"
 import AddBeanCard from "../components/addbeancard";
 
 const MyBeans: NextPage = () => {
-    const { data, isLoading, isError } = trpc.useQuery(["beans.getAll"])
+    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll"])
 
 
     return (<>

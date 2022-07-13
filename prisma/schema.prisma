@@ -16,15 +16,6 @@ model Example {
     id String @id @default(cuid())
 }
 
-model Bean {
-    id String @id @default(cuid())
-    country String
-    region String?
-    process String?
-    variety String?
-    altitude String?
-    roast String?
-}
 
 // Necessary for Next auth
 model Account {
@@ -53,12 +44,28 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Bean {
+    id String @id @default(cuid())
+    country String
+    region String?
+    process String?
+    variety String?
+    altitude String?
+    roast String?
+
+    userId String
+    user User @relation(fields: [userId], references: [id])
+
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    beanId        String?
+    beans         Bean[]
     accounts      Account[]
     sessions      Session[]
 }

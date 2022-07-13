@@ -11,7 +11,7 @@ const LoginButton = () => {
         </>)
     }
     return (<>
-        <button className="btn btn-primary" onClick={() => signIn()}>Sign In</button>
+        <button className="btn btn-secondary" onClick={() => signIn()}>Sign In</button>
     </>)
 }
 

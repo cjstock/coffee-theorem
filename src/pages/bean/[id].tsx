@@ -7,7 +7,6 @@ const BeanPage: NextPage = () => {
     const id = useRouter().query.id as string;
     const { data, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
 
-
     return (<>
         <Layout>
             {data && data.country}

@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { z } from "zod";
-import { createRouter } from "../../server/router/context";
+import { createRouter } from "./context";
 
 export const userRouter = createRouter()
     .query("byEmail", {

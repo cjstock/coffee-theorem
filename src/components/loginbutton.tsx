@@ -6,7 +6,6 @@ const LoginButton = () => {
 
     if (session) {
         return (<>
-            Hi, {session.user?.name}! <br/>
             <button className="btn btn-accent" onClick={() => signOut()}>Sign Out</button>
         </>)
     }

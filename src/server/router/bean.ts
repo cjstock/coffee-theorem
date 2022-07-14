@@ -4,8 +4,15 @@ import { z } from "zod";
 
 export const beanRouter = createRouter()
   .query("getAll", {
-    async resolve({ ctx }) {
-      return await ctx.prisma.bean.findMany();
+    input: z.object({
+      userId: z.string()
+    }),
+    async resolve({ ctx, input }) {
+      return await ctx.prisma.bean.findMany({
+        where: {
+          userId: input.userId
+        }
+      });
     },
   })
   .query("byId", {
@@ -27,7 +34,8 @@ export const beanRouter = createRouter()
         process: z.string().nullish(),
         variety: z.string().nullish(),
         altitude: z.string().nullish(),
-        roast: z.string().nullish()
+        roast: z.string().nullish(),
+        userId: z.string()
     }),
 
     async resolve({ctx, input}) {
@@ -38,7 +46,8 @@ export const beanRouter = createRouter()
                 process: input.process,
                 variety: input.variety,
                 altitude: input.altitude,
-                roast: input.roast
+                roast: input.roast,
+                userId: input.userId
             },
         })
     },

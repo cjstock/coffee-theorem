@@ -3,10 +3,13 @@ import Link from "next/link";
 import { trpc } from "../utils/trpc";
 import BeanCard from "../components/beancard"
 import AddBeanCard from "../components/addbeancard";
+import { useSession } from "next-auth/react";
 
 const MyBeans: NextPage = () => {
-    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll"])
-
+    const {data: session} = useSession()
+    const userQuery = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string}])
+    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll", { userId: userQuery.data?.id as string}])
+    
 
     return (<>
         <div className="mx-auto px-4 lg:max-w-5xl md: max-w-2xl">

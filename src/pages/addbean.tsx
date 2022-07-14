@@ -1,9 +1,12 @@
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Layout from "../components/layout";
 import { trpc } from "../utils/trpc";
 
 const AddBean: React.FC = () => {
     const { mutate } = trpc.useMutation("bean.create");
+    const {data: session} = useSession()
+    const userQuery = trpc.useQuery(["user.byEmail", {email: session?.user?.email as string}])
 
     const emptyForm = {
         country: "",
@@ -11,7 +14,8 @@ const AddBean: React.FC = () => {
         process: "",
         variety: "",
         altitude: "",
-        roast: ""
+        roast: "",
+        userId: userQuery.data?.id as string
     }
 
     const [bean, setBean] = useState(emptyForm);

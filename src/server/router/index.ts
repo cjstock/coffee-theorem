@@ -5,12 +5,14 @@ import superjson from "superjson";
 import { exampleRouter } from "./example";
 import { authRouter } from "./auth";
 import { beanRouter } from "./bean";
+import { userRouter } from "../../pages/api/user";
 
 export const appRouter = createRouter()
   .transformer(superjson)
   .merge("example.", exampleRouter)
   .merge("auth.", authRouter)
-  .merge("bean.", beanRouter);
+  .merge("bean.", beanRouter)
+  .merge("user.", userRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

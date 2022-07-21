@@ -62,10 +62,10 @@ const AddBean: React.FC = () => {
                                 <Input label="Variety" value={variety} onChange={setVariety} />
                                 <Input label="Altitude" value={altitude} onChange={setAltitude} />
                                 <Input label="Roast" value={roast} onChange={setRoast} />
-                                <Input label="Seller Brew Methods" value={sellerBrewMethods} onChange={setSellerBrewMethods} />
-                                <Input label="Seller Buy Link" value={sellerBuyLink} onChange={setSellerBuyLink} />
-                                <TextArea label="Seller Tasting Notes" value={sellerTastingNotes} onChange={setSellerTastingNotes} />
-                                <TextArea label="Seller Description" value={sellerDescription} onChange={setsellerDescription} />
+                                <Input label="Brew Methods" value={sellerBrewMethods} onChange={setSellerBrewMethods} />
+                                <Input label="Buy Link" value={sellerBuyLink} onChange={setSellerBuyLink} />
+                                <TextArea label="Tasting Notes" value={sellerTastingNotes} onChange={setSellerTastingNotes} />
+                                <TextArea label="Description" value={sellerDescription} onChange={setsellerDescription} />
                             </div>
                     </div>
                     <div className="divider lg:divider-horizontal"></div>

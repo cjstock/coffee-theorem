@@ -3,8 +3,6 @@ import { useState } from "react";
 import Layout from "../components/layout";
 import { trpc } from "../utils/trpc";
 import Input from "../components/inputfield";
-import { string } from "zod";
-import { Bean } from "@prisma/client";
 import TextArea from "../components/textarea";
 
 const AddBean: React.FC = () => {
@@ -12,6 +10,9 @@ const AddBean: React.FC = () => {
     const { data: session } = useSession()
     const userQuery = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string }])
 
+    const [isEditMode, setIsEditMode] = useState(true);
+
+    // State vars for form data
     const [country, setCountry] = useState("");
     const [region, setRegion] = useState("");
     const [process, setProcess] = useState("");

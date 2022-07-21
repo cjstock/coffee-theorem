@@ -1,7 +1,14 @@
 import { Bean } from "@prisma/client";
 
 interface Props {
-    value: Bean,
+    value: {
+        country: string,
+        sellerTastingNotes: string | null,
+        region: string | null,
+        isFavorite: boolean | null,
+        id: string,
+        roast: string | null
+    },
     key: string
 }
 

@@ -79,7 +79,7 @@ const BeanPage: NextPage = () => {
             }}>
                 <div className="flex flex-col w-full lg:flex-row">
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
-                        <h2 className="text-2xl"></h2>
+                        <h2 className="text-2xl">Seller Info</h2>
                         <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
                             <Input label="Country" disabled={!isEditMode} value={country} onChange={setCountry} />
                             <Input label="Region" disabled={!isEditMode} value={region} onChange={setRegion} />

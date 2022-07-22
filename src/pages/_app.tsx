@@ -5,6 +5,9 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
+import MapComponent from "../components/map";
+
+
 
 const MyApp: AppType = ({
   Component,
@@ -12,10 +15,11 @@ const MyApp: AppType = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+        <Component {...pageProps} />
     </SessionProvider>
   );
 };
+
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") {

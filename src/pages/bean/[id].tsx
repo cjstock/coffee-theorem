@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Input from "../../components/inputfield";
 import Layout from "../../components/layout";
+import Map from "../../components/map";
 import TextArea from "../../components/textarea";
 import { trpc } from "../../utils/trpc";
 
@@ -13,6 +14,8 @@ const BeanPage: NextPage = () => {
 
     const [isEditMode, setIsEditMode] = useState(false);
 
+    const center = { lat: -34.397, lng: 150.644 }
+    const zoom = 10
 
     // State vars for form data
     const [country, setCountry] = useState("");
@@ -76,8 +79,8 @@ const BeanPage: NextPage = () => {
             }}>
                 <div className="flex flex-col w-full lg:flex-row">
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
-                        <h2 className="text-2xl">Seller Info</h2>
-                        <div className="grid grid-cols-2 w-full">
+                        <h2 className="text-2xl"></h2>
+                        <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
                             <Input label="Country" disabled={!isEditMode} value={country} onChange={setCountry} />
                             <Input label="Region" disabled={!isEditMode} value={region} onChange={setRegion} />
                             <Input label="Process" disabled={!isEditMode} value={process} onChange={setProcess} />
@@ -108,6 +111,9 @@ const BeanPage: NextPage = () => {
                 </div>
                 <button className="btn btn-accent m-6" formAction="submit">{isEditMode ? "Save" : "Edit"}</button>
             </form>
+            <div className="w-full h-full p-5">
+                <Map center={center} zoom={zoom} />
+            </div>
         </Layout>
     )
 }

@@ -13,13 +13,12 @@ const Layout = ({ children }: LayoutProps) => {
             <meta name="description" content="Log your beans and learn!" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-
-        <div className="container min-w-full">
-            <NavBar />
-            <div className="grid grid-flow-row place-items-center p-6">
-                {children}
+            <div className="container min-w-full">
+                <NavBar />
+                <div className="grid grid-flow-row place-items-center p-6">
+                    {children}
+                </div>
             </div>
-        </div>
     </>
     )
 }

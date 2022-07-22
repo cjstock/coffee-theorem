@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { map } from "zod";
 import Input from "../../components/inputfield";
 import Layout from "../../components/layout";
 import Map from "../../components/map";
@@ -88,7 +89,7 @@ const BeanPage: NextPage = () => {
                             <Input label="Altitude" disabled={!isEditMode} value={altitude} onChange={setAltitude} />
                             <Input label="Roast" disabled={!isEditMode} value={roast} onChange={setRoast} />
                             <Input label="Brew Methods" disabled={!isEditMode} value={sellerBrewMethods} onChange={setSellerBrewMethods} />
-                            <Input label="Buy Link" disabled={!isEditMode} value={sellerBuyLink} onChange={setSellerBuyLink} />
+                            <Input label="Buy Link" type={"url"} disabled={!isEditMode} value={sellerBuyLink} onChange={setSellerBuyLink} />
                             <TextArea label="Tasting Notes" disabled={!isEditMode} value={sellerTastingNotes} onChange={setSellerTastingNotes} />
                             <TextArea label="Description" disabled={!isEditMode} value={sellerDescription} onChange={setsellerDescription} />
                         </div>

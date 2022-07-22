@@ -5,15 +5,16 @@ interface InputProps {
     label: string,
     value: string,
     onChange: (str:string) => void,
-    disabled?: boolean
+    disabled?: boolean,
+    type?: string
 }
 
-const Input:React.FC<InputProps> = ({label, value, onChange, disabled}) => {
+const Input:React.FC<InputProps> = ({label, value, onChange, disabled, type}) => {
 
     return (
-        <label className="p-2 input-group input-group-vertical" htmlFor="country-input">
+        <label className="p-2 input-group input-group-vertical">
             <span>{label}</span>
-            <input className="input input-primary input-sm disabled:cursor-default" id="country-input" disabled={disabled} name={label} value={value} onChange={(event) => onChange(event.currentTarget.value)} />
+            <input className="input input-primary input-sm disabled:cursor-default" type={type || "text"} disabled={disabled} name={label} value={value} onChange={(event) => onChange(event.currentTarget.value)} />
         </label>
     )
 }

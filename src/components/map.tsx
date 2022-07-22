@@ -1,10 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { MarkOptions } from "perf_hooks";
 
+interface MapProps extends google.maps.MapOptions {
+    center: google.maps.LatLngLiteral,
+    zoom: number,
+    children?: ReactNode
+}
 
 const MapComponent: React.FC<MapProps> = ({
     center,
     zoom,
+    children,
     ...options
 }) => {
     const ref = useRef<HTMLDivElement>(null)
@@ -24,12 +31,42 @@ const MapComponent: React.FC<MapProps> = ({
         }
     }, [ref, map])
 
-    return <div ref={ref} id="map" style={{height: "500px"}}/>
+    return (<>
+        <div ref={ref} id="map" style={{ height: "500px" }} />
+        {
+            React.Children.map(children, (child) => {
+                if (React.isValidElement(child)) {
+                    return React.cloneElement(child, { map });
+                }
+            })
+        }
+    </>)
 }
 
-interface MapProps extends google.maps.MapOptions {
-    center: google.maps.LatLngLiteral,
-    zoom: number
+
+const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
+    const [marker, setMarker] = useState<google.maps.Marker>();
+
+    useEffect(() => {
+        if (!marker) {
+            setMarker(new google.maps.Marker());
+        }
+
+        return () => {
+            if (marker) {
+                marker.setMap(null);
+            }
+        }
+    }, [marker])
+
+    useEffect(() => {
+        if (marker) {
+            marker.setOptions(options);
+        }
+    }, [marker, options])
+
+    return null;
+
 }
 
 const Map: React.FC<MapProps> = ({
@@ -40,7 +77,9 @@ const Map: React.FC<MapProps> = ({
 
     const render = (status: Status) => {
         if (status === (Status.LOADING || Status.FAILURE)) return <h3>{status}</h3>
-        return <MapComponent center={center} zoom={zoom} />
+        return <MapComponent center={center} zoom={zoom} >
+            <Marker position={center} title={"Hello!"} animation={google.maps.Animation.DROP} />
+        </MapComponent>
     }
     return (
         <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} />

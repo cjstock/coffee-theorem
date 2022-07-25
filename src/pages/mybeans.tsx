@@ -8,11 +8,15 @@ import Unauthorized from "../components/unauthorized";
 
 const MyBeans: NextPage = () => {
     const { data: session } = useSession()
-    const userQuery = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string }])
-    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll", { userId: userQuery.data?.id as string }])
+
+    const {data: user, isSuccess: foundUser} = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string }], {
+        enabled: !!session
+    })
+    const { data: beans} = trpc.useQuery(["bean.getAll", { userId: user?.id as string }], {
+        enabled: foundUser
+    })
 
     if (!session) {
-        if (isLoading) return <h2>Loading...</h2>
         return <Unauthorized />
     }
 
@@ -21,7 +25,7 @@ const MyBeans: NextPage = () => {
         <div className="mx-auto px-4 lg:max-w-5xl md: max-w-2xl">
             <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 place-content-center">
                 {
-                    data?.map(bean => {
+                    beans?.map(bean => {
                         return (
                             <Link key={bean.id} href={`/bean/${bean.id}`}>
                                 <a>

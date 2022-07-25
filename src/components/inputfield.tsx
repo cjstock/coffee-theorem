@@ -7,14 +7,20 @@ interface InputProps {
     onChange: (str:string) => void,
     disabled?: boolean,
     type?: string
+    capitalized?: boolean
 }
 
-const Input:React.FC<InputProps> = ({label, value, onChange, disabled, type}) => {
+const Input:React.FC<InputProps> = ({label, value, onChange, disabled, type, capitalized}) => {
 
     return (
-        <label className="p-2 input-group input-group-vertical">
+        <label className="p-2 input-group input-group-vertical capitalize">
             <span>{label}</span>
-            <input className="input input-primary input-sm disabled:cursor-default" type={type || "text"} disabled={disabled} name={label} value={value} onChange={(event) => onChange(event.currentTarget.value)} />
+            <input className={`input input-primary input-sm disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
+            type={type || "text"}
+            disabled={disabled}
+            name={label}
+            value={value}
+            onChange={(event) => onChange(event.currentTarget.value)} />
         </label>
     )
 }

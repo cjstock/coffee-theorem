@@ -100,15 +100,15 @@ const BeanPage: NextPage = () => {
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
                         <h2 className="text-2xl">Seller Info</h2>
                         <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
-                            <Input label="Country" disabled={!isEditMode} value={country} onChange={setCountry} />
-                            <Input label="Region" disabled={!isEditMode} value={region} onChange={setRegion} />
-                            <Input label="Process" disabled={!isEditMode} value={process} onChange={setProcess} />
-                            <Input label="Variety" disabled={!isEditMode} value={variety} onChange={setVariety} />
-                            <Input label="Altitude" disabled={!isEditMode} value={altitude} onChange={setAltitude} />
-                            <Input label="Roast" disabled={!isEditMode} value={roast} onChange={setRoast} />
-                            <Input label="Brew Methods" disabled={!isEditMode} value={sellerBrewMethods} onChange={setSellerBrewMethods} />
+                            <Input label="Country" capitalized={true} disabled={!isEditMode} value={country} onChange={setCountry} />
+                            <Input label="Region" capitalized={true} disabled={!isEditMode} value={region} onChange={setRegion} />
+                            <Input label="Process" capitalized={true} disabled={!isEditMode} value={process} onChange={setProcess} />
+                            <Input label="Variety" capitalized={true} disabled={!isEditMode} value={variety} onChange={setVariety} />
+                            <Input label="Altitude" capitalized={true} disabled={!isEditMode} value={altitude} onChange={setAltitude} />
+                            <Input label="Roast" capitalized={true} disabled={!isEditMode} value={roast} onChange={setRoast} />
+                            <Input label="Brew Methods" capitalized={true} disabled={!isEditMode} value={sellerBrewMethods} onChange={setSellerBrewMethods} />
                             <Input label="Buy Link" type={"url"} disabled={!isEditMode} value={sellerBuyLink} onChange={setSellerBuyLink} />
-                            <TextArea label="Tasting Notes" disabled={!isEditMode} value={sellerTastingNotes} onChange={setSellerTastingNotes} />
+                            <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} value={sellerTastingNotes} onChange={setSellerTastingNotes} />
                             <TextArea label="Description" disabled={!isEditMode} value={sellerDescription} onChange={setsellerDescription} />
                         </div>
                     </div>
@@ -123,8 +123,8 @@ const BeanPage: NextPage = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>}</button>
                         </div>
-                        <TextArea label="Tasting Notes" disabled={!isEditMode} value={myTastingNotes} onChange={setMyTastingNotes} />
-                        <TextArea label="Brew Methods" disabled={!isEditMode} value={myBrewMethods} onChange={setMyBrewMethods} />
+                        <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} value={myTastingNotes} onChange={setMyTastingNotes} />
+                        <TextArea label="Brew Methods" capitalized={true} disabled={!isEditMode} value={myBrewMethods} onChange={setMyBrewMethods} />
                         <TextArea label="Additional Notes" disabled={!isEditMode} value={myAdditionalNotes} onChange={setMyAdditionalNotes} />
                     </div>
                 </div>

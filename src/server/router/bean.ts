@@ -127,3 +127,15 @@ export const beanRouter = createRouter()
       })
     },
   })
+  .mutation("delete", {
+    input: z.object({
+      id: z.string()
+    }),
+    async resolve({ctx, input}) {
+      return await ctx.prisma.bean.delete({
+        where: {
+          id: input.id
+        }
+      })
+    }
+  })

@@ -1,3 +1,4 @@
+import { Bean } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -8,10 +9,22 @@ import TextArea from "../../components/textarea";
 import { trpc } from "../../utils/trpc";
 
 const BeanPage: NextPage = () => {
-
-    const id = useRouter().query.id as string;
+    const utils = trpc.useContext()
+    const router = useRouter()
+    const id = router.query.id as string;
     const { data, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
-    const { mutate } = trpc.useMutation("bean.edit");
+    const { mutate: editMutate } = trpc.useMutation("bean.edit");
+    const { mutate: deleteMutate } = trpc.useMutation("bean.delete", {
+        onSuccess(variables) {
+            utils.queryClient.setQueryData(["bean.getAll", { userId: variables.userId }],
+            (oldData: Array<Bean> | undefined) => {
+                if (oldData) {
+                    return oldData.filter((bean: Bean) => bean.id !== id)
+                }
+                return []
+            })
+        },
+    })
 
     const [isEditMode, setIsEditMode] = useState(false);
 
@@ -53,12 +66,17 @@ const BeanPage: NextPage = () => {
         }
     }, [data])
 
+    function handleDeleteOnClick() {
+        deleteMutate({ id })
+        router.push("/")
+    }
+
     return (
         <Layout>
             <form className="form-control w-full p-3" onSubmit={(event) => {
                 event.preventDefault()
                 if (isEditMode) {
-                    mutate({
+                    editMutate({
                         id: id,
                         country: country,
                         region: region,
@@ -110,7 +128,10 @@ const BeanPage: NextPage = () => {
                         <TextArea label="Additional Notes" disabled={!isEditMode} value={myAdditionalNotes} onChange={setMyAdditionalNotes} />
                     </div>
                 </div>
-                <button className="btn btn-accent m-6" formAction="submit">{isEditMode ? "Save" : "Edit"}</button>
+                <div className="flex flex-row justify-center w-full">
+                    <button className="btn btn-accent m-3 w-1/2" formAction="submit">{isEditMode ? "Save" : "Edit"}</button>
+                    <button className="btn btn-accent m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
+                </div>
             </form>
             <div className="w-full h-full p-5">
                 <Map center={center} zoom={zoom} />

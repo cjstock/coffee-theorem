@@ -12,6 +12,7 @@ const MyBeans: NextPage = () => {
     const { data, isLoading, isError } = trpc.useQuery(["bean.getAll", { userId: userQuery.data?.id as string }])
 
     if (!session) {
+        if (isLoading) return <h2>Loading...</h2>
         return <Unauthorized />
     }
 

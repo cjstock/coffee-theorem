@@ -12,7 +12,6 @@ const BeanPage: NextPage = () => {
     const id = useRouter().query.id as string;
     const { data, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
     const { mutate } = trpc.useMutation("bean.edit");
-    const utils = trpc.useContext()
 
     const [isEditMode, setIsEditMode] = useState(false);
 

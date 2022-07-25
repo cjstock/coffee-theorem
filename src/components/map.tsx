@@ -77,9 +77,10 @@ const Map: React.FC<MapProps> = ({
 
     const render = (status: Status) => {
         if (status === (Status.LOADING || Status.FAILURE)) return <h3>{status}</h3>
-        return <MapComponent center={center} zoom={zoom} >
+        return (
+        <MapComponent center={center} zoom={zoom} >
             <Marker position={center} title={"Hello!"} animation={google.maps.Animation.DROP} />
-        </MapComponent>
+        </MapComponent>)
     }
     return (
         <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} />

@@ -4,12 +4,17 @@ import { trpc } from "../utils/trpc";
 import BeanCard from "../components/beancard"
 import AddBeanCard from "../components/addbeancard";
 import { useSession } from "next-auth/react";
+import Unauthorized from "../components/unauthorized";
 
 const MyBeans: NextPage = () => {
-    const {data: session} = useSession()
-    const userQuery = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string}])
-    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll", { userId: userQuery.data?.id as string}])
-    
+    const { data: session } = useSession()
+    const userQuery = trpc.useQuery(["user.byEmail", { email: session?.user?.email as string }])
+    const { data, isLoading, isError } = trpc.useQuery(["bean.getAll", { userId: userQuery.data?.id as string }])
+
+    if (!session) {
+        return <Unauthorized />
+    }
+
 
     return (<>
         <div className="mx-auto px-4 lg:max-w-5xl md: max-w-2xl">
@@ -25,7 +30,11 @@ const MyBeans: NextPage = () => {
                         )
                     })
                 }
-                <AddBeanCard/>
+                <Link href={`/bean/add`}>
+                    <a>
+                        <AddBeanCard />
+                    </a>
+                </Link>
             </div>
         </div>
     </>)

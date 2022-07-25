@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { map } from "zod";
 import Input from "../../components/inputfield";
 import Layout from "../../components/layout";
 import Map from "../../components/map";
@@ -9,9 +8,11 @@ import TextArea from "../../components/textarea";
 import { trpc } from "../../utils/trpc";
 
 const BeanPage: NextPage = () => {
+
     const id = useRouter().query.id as string;
     const { data, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
     const { mutate } = trpc.useMutation("bean.edit");
+    const utils = trpc.useContext()
 
     const [isEditMode, setIsEditMode] = useState(false);
 

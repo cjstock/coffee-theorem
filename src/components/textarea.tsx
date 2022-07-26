@@ -16,7 +16,7 @@ const TextArea: React.FC<InputProps> = ({ label, label_key, value, onChange, dis
             <span>{label}</span>
             <textarea
                 rows={4}
-                className={`textarea textarea-primary disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
+                className={`textarea textarea-primary text-primary disabled:cursor-default disabled:text-primary ${capitalized ? "capitalize" : ""}`}
                 disabled={disabled}
                 name={label}
                 value={value}

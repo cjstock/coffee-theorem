@@ -81,15 +81,15 @@ const AddBean: NextPage = () => {
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
                         <h2 className="text-2xl">Seller Info</h2>
                         <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
-                            <Input label="Country" label_key="country" value={beanState.country} onChange={handleInputChange} />
-                            <Input label="Region" label_key="region" value={beanState.region} onChange={handleInputChange} />
-                            <Input label="Process" label_key="process" value={beanState.process} onChange={handleInputChange} />
-                            <Input label="Variety" label_key="variety" value={beanState.variety} onChange={handleInputChange} />
-                            <Input label="Altitude" label_key="altitude" value={beanState.altitude} onChange={handleInputChange} />
-                            <Input label="Roast" label_key="roast" value={beanState.roast} onChange={handleInputChange} />
-                            <Input label="Brew Methods" label_key="sellerBrewMethods" value={beanState.sellerBrewMethods} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Country" label_key="country" value={beanState.country} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Region" label_key="region" value={beanState.region} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Process" label_key="process" value={beanState.process} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Variety" label_key="variety" value={beanState.variety} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Altitude" label_key="altitude" value={beanState.altitude} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Roast" label_key="roast" value={beanState.roast} onChange={handleInputChange} />
+                            <Input capitalized={true} label="Brew Methods" label_key="sellerBrewMethods" value={beanState.sellerBrewMethods} onChange={handleInputChange} />
                             <Input label="Buy Link" label_key="sellerBuyLink" value={beanState.sellerBuyLink} onChange={handleInputChange} />
-                            <TextArea label="Tasting Notes" label_key="sellerTastingNotes" value={beanState.sellerTastingNotes} onChange={handleInputChange} />
+                            <TextArea capitalized={true} label="Tasting Notes" label_key="sellerTastingNotes" value={beanState.sellerTastingNotes} onChange={handleInputChange} />
                             <TextArea label="Description" label_key="sellerDescription" value={beanState.sellerDescription} onChange={handleInputChange} />
                         </div>
                     </div>
@@ -106,8 +106,8 @@ const AddBean: NextPage = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>}</button>
                         </div>
-                        <TextArea label="Tasting Notes" label_key="myTastingNotes" value={beanState.myTastingNotes} onChange={handleInputChange} />
-                        <TextArea label="Brew Methods" label_key="myBrewMethods" value={beanState.myBrewMethods} onChange={handleInputChange} />
+                        <TextArea capitalized={true} label="Tasting Notes" label_key="myTastingNotes" value={beanState.myTastingNotes} onChange={handleInputChange} />
+                        <TextArea capitalized={true} label="Brew Methods" label_key="myBrewMethods" value={beanState.myBrewMethods} onChange={handleInputChange} />
                         <TextArea label="Additional Notes" label_key="myAdditionalNotes" value={beanState.myAdditionalNotes} onChange={handleInputChange} />
                     </div>
                 </div>

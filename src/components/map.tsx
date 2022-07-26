@@ -68,7 +68,7 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
 
 }
 
-const Map: React.FC<MapProps> = ({
+const MapWrapper: React.FC<MapProps> = ({
     center,
     zoom,
     children,
@@ -78,14 +78,16 @@ const Map: React.FC<MapProps> = ({
     const render = (status: Status) => {
         if (status === (Status.LOADING || Status.FAILURE)) return <h3>{status}</h3>
         return (
-        <MapComponent center={center} zoom={zoom} >
-            <Marker position={center} />
-            {children}
-        </MapComponent>)
+            <MapComponent center={center} zoom={zoom} >
+                <Marker position={center} />
+                {children}
+            </MapComponent>)
     }
     return (
-        <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render}/>
+        <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render}>
+            {children}
+        </Wrapper>
     )
 }
 
-export default Map
+export default MapWrapper

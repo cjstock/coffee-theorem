@@ -1,6 +1,5 @@
 import { Bean } from "@prisma/client";
 import { NextPage } from "next";
-import { prepareServerlessUrl } from "next/dist/server/base-server";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Input from "../../components/inputfield";

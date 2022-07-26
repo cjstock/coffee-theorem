@@ -1,6 +1,5 @@
-import React, { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { MarkOptions } from "perf_hooks";
 
 interface MapProps extends google.maps.MapOptions {
     center: google.maps.LatLngLiteral,
@@ -72,6 +71,7 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
 const Map: React.FC<MapProps> = ({
     center,
     zoom,
+    children,
     ...options
 }) => {
 
@@ -80,10 +80,11 @@ const Map: React.FC<MapProps> = ({
         return (
         <MapComponent center={center} zoom={zoom} >
             <Marker position={center} title={"Hello!"} animation={google.maps.Animation.DROP} />
+            {children}
         </MapComponent>)
     }
     return (
-        <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} />
+        <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render}/>
     )
 }
 

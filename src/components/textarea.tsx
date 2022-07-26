@@ -2,23 +2,28 @@
 
 interface InputProps {
     label: string,
+    label_key: string,
     value: string,
-    onChange: (str:string) => void,
+    onChange: (key: string, value: string) => void,
     disabled?: boolean
     capitalized?: boolean
 }
 
-const TextArea:React.FC<InputProps> = ({label, value, onChange, disabled, capitalized}) => {
+const TextArea: React.FC<InputProps> = ({ label, label_key, value, onChange, disabled, capitalized }) => {
 
     return (
         <label className="p-2 input-group input-group-vertical capitalize">
             <span>{label}</span>
             <textarea
-            className={`textarea textarea-primary leading-10 disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
-            disabled={disabled}
-            name={label}
-            value={value}
-            onChange={(event) => onChange(event.currentTarget.value)} />
+                rows={4}
+                className={`textarea textarea-primary disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
+                disabled={disabled}
+                name={label}
+                value={value}
+                onChange={(event) => {
+                    onChange(label_key, event.currentTarget.value)
+                }
+                } />
         </label>
     )
 }

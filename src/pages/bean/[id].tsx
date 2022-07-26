@@ -1,5 +1,6 @@
 import { Bean } from "@prisma/client";
 import { NextPage } from "next";
+import { prepareServerlessUrl } from "next/dist/server/base-server";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Input from "../../components/inputfield";
@@ -12,63 +13,77 @@ const BeanPage: NextPage = () => {
     const utils = trpc.useContext()
     const router = useRouter()
     const id = router.query.id as string;
-    const { data, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
+    const { data: bean, isLoading, isError } = trpc.useQuery(["bean.byId", { id }])
     const { mutate: editMutate } = trpc.useMutation("bean.edit");
     const { mutate: deleteMutate } = trpc.useMutation("bean.delete", {
         onSuccess(variables) {
             utils.queryClient.setQueryData(["bean.getAll", { userId: variables.userId }],
-            (oldData: Array<Bean> | undefined) => {
-                if (oldData) {
-                    return oldData.filter((bean: Bean) => bean.id !== id)
-                }
-                return []
-            })
+                (oldData: Array<Bean> | undefined) => {
+                    if (oldData) {
+                        return oldData.filter((bean: Bean) => bean.id !== id)
+                    }
+                    return []
+                })
         },
     })
 
     const [isEditMode, setIsEditMode] = useState(false);
 
+    // Map info
     const center = { lat: -34.397, lng: 150.644 }
     const zoom = 10
 
     // State vars for form data
-    const [country, setCountry] = useState("");
-    const [region, setRegion] = useState("");
-    const [process, setProcess] = useState("");
-    const [variety, setVariety] = useState("");
-    const [altitude, setAltitude] = useState("");
-    const [roast, setRoast] = useState("");
-    const [sellerTastingNotes, setSellerTastingNotes] = useState("");
-    const [sellerBrewMethods, setSellerBrewMethods] = useState("");
-    const [sellerDescription, setsellerDescription] = useState("");
-    const [sellerBuyLink, setSellerBuyLink] = useState("");
-    const [myTastingNotes, setMyTastingNotes] = useState("");
-    const [myBrewMethods, setMyBrewMethods] = useState("");
-    const [myAdditionalNotes, setMyAdditionalNotes] = useState("");
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [beanState, setBeanState] = useState({
+        country: "",
+        altitude: "",
+        id: id,
+        isFavorite: false,
+        myAdditionalNotes: "",
+        myBrewMethods: "",
+        myTastingNotes: "",
+        process: "",
+        region: "",
+        roast: "",
+        sellerBrewMethods: "",
+        sellerBuyLink: "",
+        sellerDescription: "",
+        sellerTastingNotes: "",
+        variety: "",
+    })
+
 
     useEffect(() => {
-        if (data) {
-            setCountry(data.country)
-            setRegion(data.region || "")
-            setProcess(data.process || "")
-            setVariety(data.variety || "")
-            setAltitude(data.altitude || "")
-            setRoast(data.roast || "")
-            setSellerTastingNotes(data.sellerTastingNotes || "")
-            setSellerBrewMethods(data.sellerBrewMethods || "")
-            setsellerDescription(data.sellerDescription || "")
-            setSellerBuyLink(data.sellerBuyLink || "")
-            setMyTastingNotes(data.myTastingNotes || "")
-            setMyBrewMethods(data.myBrewMethods || "")
-            setMyAdditionalNotes(data.myAdditionalNotes || "")
-            setIsFavorite(data.isFavorite || false)
+        if (bean) {
+            handleInputChange("country", bean.country)
+            handleInputChange("region", bean.region || "")
+            handleInputChange("process", bean.process || "")
+            handleInputChange("variety", bean.variety || "")
+            handleInputChange("altitude", bean.altitude || "")
+            handleInputChange("roast", bean.roast || "")
+            handleInputChange("sellerTastingNotes", bean.sellerTastingNotes || "")
+            handleInputChange("sellerBrewMethods", bean.sellerBrewMethods || "")
+            handleInputChange("sellerDescription", bean.sellerDescription || "")
+            handleInputChange("sellerBuyLink", bean.sellerBuyLink || "")
+            handleInputChange("myTastingNotes", bean.myTastingNotes || "")
+            handleInputChange("myBrewMethods", bean.myBrewMethods || "")
+            handleInputChange("myAdditionalNotes", bean.myAdditionalNotes || "")
+            handleInputChange("isFavorite", bean.isFavorite || false)
         }
-    }, [data])
+    }, [bean])
 
     function handleDeleteOnClick() {
         deleteMutate({ id })
         router.push("/")
+    }
+
+    function handleInputChange(key: string, value: string | boolean) {
+        setBeanState(prev => {
+            return {
+                ...prev,
+                [key]: value
+            }
+        })
     }
 
     return (
@@ -78,20 +93,20 @@ const BeanPage: NextPage = () => {
                 if (isEditMode) {
                     editMutate({
                         id: id,
-                        country: country,
-                        region: region,
-                        process: process,
-                        variety: variety,
-                        altitude: altitude,
-                        roast: roast,
-                        sellerTastingNotes: sellerTastingNotes,
-                        sellerBrewMethods: sellerBrewMethods,
-                        sellerDescription: sellerDescription,
-                        sellerBuyLink: sellerBuyLink,
-                        myTastingNotes: myTastingNotes,
-                        myBrewMethods: myBrewMethods,
-                        myAddtionalNotes: myAdditionalNotes,
-                        isFavorite: isFavorite,
+                        country: beanState.country,
+                        region: beanState.region,
+                        process: beanState.process,
+                        variety: beanState.variety,
+                        altitude: beanState.altitude,
+                        roast: beanState.roast,
+                        sellerTastingNotes: beanState.sellerTastingNotes,
+                        sellerBrewMethods: beanState.sellerBrewMethods,
+                        sellerDescription: beanState.sellerDescription,
+                        sellerBuyLink: beanState.sellerBuyLink,
+                        myTastingNotes: beanState.myTastingNotes,
+                        myBrewMethods: beanState.myBrewMethods,
+                        myAddtionalNotes: beanState.myAdditionalNotes,
+                        isFavorite: beanState.isFavorite,
                     })
                 }
                 setIsEditMode(!isEditMode)
@@ -100,32 +115,38 @@ const BeanPage: NextPage = () => {
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
                         <h2 className="text-2xl">Seller Info</h2>
                         <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
-                            <Input label="Country" capitalized={true} disabled={!isEditMode} value={country} onChange={setCountry} />
-                            <Input label="Region" capitalized={true} disabled={!isEditMode} value={region} onChange={setRegion} />
-                            <Input label="Process" capitalized={true} disabled={!isEditMode} value={process} onChange={setProcess} />
-                            <Input label="Variety" capitalized={true} disabled={!isEditMode} value={variety} onChange={setVariety} />
-                            <Input label="Altitude" capitalized={true} disabled={!isEditMode} value={altitude} onChange={setAltitude} />
-                            <Input label="Roast" capitalized={true} disabled={!isEditMode} value={roast} onChange={setRoast} />
-                            <Input label="Brew Methods" capitalized={true} disabled={!isEditMode} value={sellerBrewMethods} onChange={setSellerBrewMethods} />
-                            <Input label="Buy Link" type={"url"} disabled={!isEditMode} value={sellerBuyLink} onChange={setSellerBuyLink} />
-                            <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} value={sellerTastingNotes} onChange={setSellerTastingNotes} />
-                            <TextArea label="Description" disabled={!isEditMode} value={sellerDescription} onChange={setsellerDescription} />
+                            <Input label="Country" capitalized={true} disabled={!isEditMode} label_key={"country"} value={beanState.country} onChange={handleInputChange} />
+                            <Input label="Region" capitalized={true} disabled={!isEditMode} label_key={"region"} value={beanState.region} onChange={handleInputChange} />
+                            <Input label="Process" capitalized={true} disabled={!isEditMode} label_key={"process"} value={beanState.process} onChange={handleInputChange} />
+                            <Input label="Variety" capitalized={true} disabled={!isEditMode} label_key={"variety"} value={beanState.variety} onChange={handleInputChange} />
+                            <Input label="Altitude" capitalized={true} disabled={!isEditMode} label_key={"altitude"} value={beanState.altitude} onChange={handleInputChange} />
+                            <Input label="Roast" capitalized={true} disabled={!isEditMode} label_key={"roast"} value={beanState.roast} onChange={handleInputChange} />
+                            <Input label="Brew Methods" capitalized={true} disabled={!isEditMode} label_key={"sellerBrewMethods"} value={beanState.sellerBrewMethods} onChange={handleInputChange} />
+                            <Input label="Buy Link" type={"url"} disabled={!isEditMode} label_key={"sellerBuyLink"} value={beanState.sellerBuyLink} onChange={handleInputChange} />
+                            <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} label_key={"sellerTastingNotes"} value={beanState.sellerTastingNotes} onChange={handleInputChange} />
+                            <TextArea label="Description" disabled={!isEditMode} label_key={"sellerDescription"} value={beanState.sellerDescription} onChange={handleInputChange} />
                         </div>
                     </div>
                     <div className="divider lg:divider-horizontal"></div>
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box">
                         <div className="flex place-items-center w-full justify-center">
                             <h2 className="text-2xl">Discoveries</h2>
-                            <button type="button" className="btn btn-ghost btn-circle" onClick={() => setIsFavorite(val => !val)}>
-                                {isFavorite ? <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                            <button type="button" className="btn btn-ghost btn-circle" onClick={() => {
+                                if (isEditMode) {
+                                    setBeanState(val => {
+                                        return { ...val, ["isFavorite"]: !val.isFavorite }
+                                    })
+                                }
+                            }}>
+                                {beanState.isFavorite ? <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                                 </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>}</button>
                         </div>
-                        <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} value={myTastingNotes} onChange={setMyTastingNotes} />
-                        <TextArea label="Brew Methods" capitalized={true} disabled={!isEditMode} value={myBrewMethods} onChange={setMyBrewMethods} />
-                        <TextArea label="Additional Notes" disabled={!isEditMode} value={myAdditionalNotes} onChange={setMyAdditionalNotes} />
+                        <TextArea label="Tasting Notes" capitalized={true} disabled={!isEditMode} label_key={"myTastingNotes"} value={beanState.myTastingNotes} onChange={handleInputChange} />
+                        <TextArea label="Brew Methods" capitalized={true} disabled={!isEditMode} label_key={"myBrewMethods"} value={beanState.myBrewMethods} onChange={handleInputChange} />
+                        <TextArea label="Additional Notes" disabled={!isEditMode} label_key={"myAdditionalNotes"} value={beanState.myAdditionalNotes} onChange={handleInputChange} />
                     </div>
                 </div>
                 <div className="flex flex-row justify-center w-full">

@@ -79,7 +79,7 @@ const Map: React.FC<MapProps> = ({
         if (status === (Status.LOADING || Status.FAILURE)) return <h3>{status}</h3>
         return (
         <MapComponent center={center} zoom={zoom} >
-            <Marker position={center} title={"Hello!"} animation={google.maps.Animation.DROP} />
+            <Marker position={center} />
             {children}
         </MapComponent>)
     }

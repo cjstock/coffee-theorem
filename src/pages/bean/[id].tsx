@@ -111,9 +111,9 @@ const BeanPage: NextPage = () => {
                 setIsEditMode(!isEditMode)
             }}>
                 <div className="flex flex-col w-full lg:flex-row">
-                    <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
+                    <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center text-primary">
                         <h2 className="text-2xl">Seller Info</h2>
-                        <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
+                        <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full text-white">
                             <Input label="Country" capitalized={true} disabled={!isEditMode} label_key={"country"} value={beanState.country} onChange={handleInputChange} />
                             <Input label="Region" capitalized={true} disabled={!isEditMode} label_key={"region"} value={beanState.region} onChange={handleInputChange} />
                             <Input label="Process" capitalized={true} disabled={!isEditMode} label_key={"process"} value={beanState.process} onChange={handleInputChange} />
@@ -128,7 +128,7 @@ const BeanPage: NextPage = () => {
                     </div>
                     <div className="divider lg:divider-horizontal"></div>
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box">
-                        <div className="flex place-items-center w-full justify-center">
+                        <div className="flex place-items-center w-full justify-center text-primary">
                             <h2 className="text-2xl">Discoveries</h2>
                             <button type="button" className="btn btn-ghost btn-circle" onClick={() => {
                                 if (isEditMode) {

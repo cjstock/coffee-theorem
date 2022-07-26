@@ -12,11 +12,11 @@ interface InputProps {
 const TextArea: React.FC<InputProps> = ({ label, label_key, value, onChange, disabled, capitalized }) => {
 
     return (
-        <label className="p-2 input-group input-group-vertical capitalize not-prose">
+        <label className="p-2 input-group input-group-vertical capitalize">
             <span>{label}</span>
             <textarea
                 rows={4}
-                className={`textarea textarea-primary not-prose disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
+                className={`textarea textarea-primary disabled:cursor-default ${capitalized ? "capitalize" : ""}`}
                 disabled={disabled}
                 name={label}
                 value={value}

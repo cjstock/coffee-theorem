@@ -46,6 +46,7 @@ const BeanPage: NextPage = () => {
     })
     const { mutate: editMutate } = trpc.useMutation("bean.edit", {
         onSuccess(data) {
+            console.log(`Edit: ${data.region} ${data.country}`)
             setSearchQuery(`${data.region} ${data.country}`)
         },
     });

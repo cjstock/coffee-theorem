@@ -102,7 +102,7 @@ const Places: React.FC<PlacesProps> = ({
         else {
             getFirstResult()
         }
-    }, [placesService, map])
+    }, [placesService, map, searchQuery])
 
     useEffect(() => {
         if (map && location) {

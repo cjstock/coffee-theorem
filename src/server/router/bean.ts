@@ -53,7 +53,8 @@ export const beanRouter = createRouter()
       myTastingNotes: z.string().nullish(),
       myBrewMethods: z.string().nullish(),
       myAddtionalNotes: z.string().nullish(),
-      isFavorite: z.boolean().nullish()
+      isFavorite: z.boolean().nullish(),
+
     }),
 
     async resolve({ ctx, input }) {
@@ -75,7 +76,7 @@ export const beanRouter = createRouter()
           myTastingNotes: input.myTastingNotes,
           myBrewMethods: input.myBrewMethods,
           myAdditionalNotes: input.myAddtionalNotes,
-          isFavorite: input.isFavorite
+          isFavorite: input.isFavorite,
         },
       })
     },
@@ -131,7 +132,7 @@ export const beanRouter = createRouter()
     input: z.object({
       id: z.string()
     }),
-    async resolve({ctx, input}) {
+    async resolve({ ctx, input }) {
       return await ctx.prisma.bean.delete({
         where: {
           id: input.id

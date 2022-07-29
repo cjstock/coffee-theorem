@@ -34,7 +34,7 @@ const BeanPage: NextPage = () => {
         variety: "",
     })
 
-    const [mapStartPos, setMapStartPos] = useState<google.maps.LatLngLiteral>({lat: 0, lng: 0});
+    const [mapStartPos, setMapStartPos] = useState<google.maps.LatLngLiteral>({ lat: 0, lng: 0 });
     const [searchQuery, setSearchQuery] = useState("");
 
     const { data: bean, isLoading, isError } = trpc.useQuery(["bean.byId", { id }], {
@@ -45,7 +45,7 @@ const BeanPage: NextPage = () => {
         },
     })
     const { mutate: editMutate } = trpc.useMutation("bean.edit", {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
             setSearchQuery(`${data.region} ${data.country}`)
         },
     });
@@ -175,15 +175,13 @@ const BeanPage: NextPage = () => {
                     </div>
                 </form>
                 <div className="w-full h-full p-5">
-                    {
-                        searchQuery && (<>
-                            <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} libraries={["places"]} >
-                                <Map center={mapStartPos} zoom={3} style={{ height: "500px" }}>
-                                    <Places searchQuery={searchQuery} onLocationChange={setMapStartPos} />
-                                </Map>
-                            </Wrapper>
-                        </>)
-                    }
+                    <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} libraries={["places"]} >
+                        <Map center={mapStartPos} zoom={3} style={{ height: "500px" }}>
+                            {
+                                searchQuery && <Places searchQuery={searchQuery} onLocationChange={setMapStartPos} />
+                            }
+                        </Map>
+                    </Wrapper>
                 </div>
             </Layout>
         </>

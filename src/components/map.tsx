@@ -1,8 +1,4 @@
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import React, { useEffect, useRef, useState } from "react";
-import { createCustomEqual } from "fast-equals";
-import { isLatLngLiteral } from "@googlemaps/typescript-guards"
-import { string } from "zod";
 
 
 interface MapProps extends google.maps.MapOptions {
@@ -30,7 +26,7 @@ const Map: React.FC<MapProps> = ({
                 streetViewControl: false
             }));
         }
-    }, [ref, map])
+    }, [ref, map, options])
 
     return (<>
         <div ref={ref} style={style} />
@@ -90,11 +86,10 @@ const Places: React.FC<PlacesProps> = ({
 
         placesService?.findPlaceFromQuery(request, function (results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
-                const resLoc = {lat: results?.at(0)?.geometry?.location?.lat()!, lng: results?.at(0)?.geometry?.location?.lng()! }
+                const resLoc = { lat: results?.at(0)?.geometry?.location?.lat()!, lng: results?.at(0)?.geometry?.location?.lng()! }
                 console.log(resLoc)
                 setLocation(results?.at(0)?.geometry?.location)
                 onLocationChange(resLoc)
-                map?.panTo(resLoc)
             }
         })
     }
@@ -104,7 +99,9 @@ const Places: React.FC<PlacesProps> = ({
         if (!placesService && map) {
             setPlacesService(new google.maps.places.PlacesService(map))
         }
-        getFirstResult()
+        else {
+            getFirstResult()
+        }
     }, [placesService, map])
 
     useEffect(() => {

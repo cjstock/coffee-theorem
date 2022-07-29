@@ -37,7 +37,7 @@ const BeanPage: NextPage = () => {
     const [mapStartPos, setMapStartPos] = useState<google.maps.LatLngLiteral>({ lat: 0, lng: 0 });
     const [searchQuery, setSearchQuery] = useState("");
 
-    const { data: bean, isLoading, isError } = trpc.useQuery(["bean.byId", { id }], {
+    const { data: bean} = trpc.useQuery(["bean.byId", { id }], {
         onSuccess(data) {
             if (data) {
                 setSearchQuery(`${data.region} ${data.country}`)
@@ -46,7 +46,6 @@ const BeanPage: NextPage = () => {
     })
     const { mutate: editMutate } = trpc.useMutation("bean.edit", {
         onSuccess(data) {
-            console.log(`Edit: ${data.region} ${data.country}`)
             setSearchQuery(`${data.region} ${data.country}`)
         },
     });

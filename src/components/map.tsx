@@ -87,7 +87,6 @@ const Places: React.FC<PlacesProps> = ({
         placesService?.findPlaceFromQuery(request, function (results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 const resLoc = { lat: results?.at(0)?.geometry?.location?.lat()!, lng: results?.at(0)?.geometry?.location?.lng()! }
-                console.log(resLoc)
                 setLocation(results?.at(0)?.geometry?.location)
                 onLocationChange(resLoc)
             }
@@ -95,7 +94,6 @@ const Places: React.FC<PlacesProps> = ({
     }
 
     useEffect(() => {
-        console.log(`Query: ${searchQuery}`)
         if (!placesService && map) {
             setPlacesService(new google.maps.places.PlacesService(map))
         }

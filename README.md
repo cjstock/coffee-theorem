@@ -8,3 +8,4 @@ This is my first solo fullstack web app!
 3. Imprpove my Web Design skills
 
 ## Design Decisions
+I was inspired by Theo Browne after watching this -> https://www.youtube.com/watch?v=PbjHxIuHduU

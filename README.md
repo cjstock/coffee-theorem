@@ -1,4 +1,4 @@
-## Welcome to Coffee Theorem
+# Welcome to Coffee Theorem
 
 This is my first solo fullstack web app!
 

@@ -53,7 +53,7 @@ const AddBean: NextPage = () => {
     }
 
     return (
-        <Layout>
+        <Layout selectedTab="experiment">
             <form className="form-control w-full p-3" onSubmit={(event) => {
                 event.preventDefault()
 

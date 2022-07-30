@@ -1,12 +1,14 @@
 import React from "react";
 import NavBar from "./navbar";
 import Head from "next/head";
+import BottomNavBar from "./bottomnav";
 
 type LayoutProps = {
-    children: React.ReactNode
+    children: React.ReactNode,
+    selectedTab: string
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, selectedTab }: LayoutProps) => {
     return (<>
         <Head>
             <title>Coffee Theorem</title>
@@ -18,6 +20,7 @@ const Layout = ({ children }: LayoutProps) => {
                 <div className="grid grid-flow-row place-items-center p-6">
                     {children}
                 </div>
+                <BottomNavBar selected={selectedTab}/>
             </div>
     </>
     )

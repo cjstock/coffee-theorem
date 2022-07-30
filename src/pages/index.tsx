@@ -6,7 +6,7 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Layout>
+      <Layout selectedTab="experiment">
         <MyBeans />
       </Layout>
     </>

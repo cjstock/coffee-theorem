@@ -5,10 +5,10 @@ import BottomNavBar from "./bottomnav";
 
 type LayoutProps = {
     children: React.ReactNode,
-    selectedTab: string
+    selectedBottomTab: "learn" | "experiment"
 }
 
-const Layout = ({ children, selectedTab }: LayoutProps) => {
+const Layout = ({ children, selectedBottomTab }: LayoutProps) => {
     return (<>
         <Head>
             <title>Coffee Theorem</title>
@@ -20,7 +20,7 @@ const Layout = ({ children, selectedTab }: LayoutProps) => {
                 <div className="grid grid-flow-row place-items-center p-6">
                     {children}
                 </div>
-                <BottomNavBar selected={selectedTab}/>
+                <BottomNavBar selectedBottomTab={selectedBottomTab}/>
             </div>
     </>
     )

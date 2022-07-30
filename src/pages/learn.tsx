@@ -1,12 +1,13 @@
-import { NextPage } from "next"
-import Layout from "../components/layout"
+import { NextPage } from "next";
+import LearnLayout from "../components/learnlayout";
 
-const LearnPage: NextPage = () => {
-    return (<>
-    <Layout selectedTab="learn">
-        <p>{"Let's get to it!"}</p>
-    </Layout>
-    </>)
+const Learn: NextPage = () => {
+
+    return (
+        <LearnLayout selectedLearnTab="inception">
+            <p>{"Let's get it going!"}</p>
+        </LearnLayout>
+    )
 }
 
-export default LearnPage
+export default Learn

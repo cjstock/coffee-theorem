@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "../components/layout";
 import { trpc } from "../utils/trpc";
 import Input from "../components/inputfield";
@@ -53,7 +53,7 @@ const AddBean: NextPage = () => {
     }
 
     return (
-        <Layout selectedTab="experiment">
+        <Layout selectedBottomTab="experiment">
             <form className="form-control w-full p-3" onSubmit={(event) => {
                 event.preventDefault()
 

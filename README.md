@@ -7,12 +7,19 @@ I have always wanted an app/website that allows me to track the coffee beans I'v
 When you add a bean you've tried you automatically see its origin on a map, creating a geographic connection in your mind. Hopefully this better associates you with where exactly your coffee is grown/processed.
 
 (TODO) The other main part of Coffee Theorem documents every potential characteristic of coffee beans, including:
+
 Roast
+
 Variety
+
 Region
+
 Brew Methods
+
 Altitude
+
 Process
+
 etc.
 
 ## Goals

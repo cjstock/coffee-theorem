@@ -9,19 +9,19 @@ const LearnLayout = ({children, selectedLearnTab} : LearnLayoutProps) => {
     return (<>
     <Layout selectedBottomTab="learn">
         <div className="tabs">
-            <Link href="/inception">
+            <Link href="inception">
                 <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "inception" ? "tab-active" : ""}`}>Inception</a>
             </Link>
-            <Link href="/process">
+            <Link href="process">
                 <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "process" ? "tab-active" : ""}`}>Process</a>
             </Link>
-            <Link href="/roast">
+            <Link href="roast">
                 <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "roast" ? "tab-active" : ""}`}>Roast</a>
             </Link>
-            <Link href="/brew">
+            <Link href="brew">
                 <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "brew" ? "tab-active" : ""}`}>Brew</a>
             </Link>
-            <Link href="/taste">
+            <Link href="taste">
                 <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "taste" ? "tab-active" : ""}`}>Taste</a>
             </Link>
         </div>

@@ -1,6 +1,6 @@
 
 import { NextPage } from "next"
-import LearnLayout from "../components/learnlayout"
+import LearnLayout from "../../components/learnlayout"
 
 const RoastPage: NextPage = () => {
     return (

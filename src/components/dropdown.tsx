@@ -20,8 +20,8 @@ const DropDown = ({ title, data }: DropDownProps) => {
                 peer-checked:bg-secondary peer-checked:text-secondary-content">
                 {
                     data.map(variety => {
-                        return (<>
-                            <div className="card card-bordered border-accent-content mt-3">
+                        return (
+                            <div key={variety.id} className="card card-bordered border-accent-content mt-3">
                                 <div className="card-body p-2 md:p-3">
                                     <h1 className="card-title text-primary">{variety.name}</h1>
                                     <p className="italic">{variety.description}</p>
@@ -47,7 +47,7 @@ const DropDown = ({ title, data }: DropDownProps) => {
                                     </div>
                                 </div>
                             </div>
-                        </>)
+                        )
                     })
                 }
             </div>

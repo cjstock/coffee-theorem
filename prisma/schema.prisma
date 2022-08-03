@@ -80,3 +80,22 @@ model Bean {
   myBrewMethods     String?
   myAdditionalNotes String?
 }
+
+model Variety {
+  id                 String  @id @default(cuid())
+  name               String
+  description        String?
+  stature            Int?
+  leafTipColor       String?
+  beanSize           Int?
+  qualPotHighAlt     Int?
+  yieldPot           Int?
+  coffeeLeafRust     Int?
+  coffeeBerryDisease Int?
+  nematodes          Int?
+  yearOfFirstProd    Int?
+  nutReq             Int?
+  lineage            String?
+  breeder            String?
+  history            String? @db.LongText
+}

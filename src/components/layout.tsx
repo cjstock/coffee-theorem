@@ -17,7 +17,7 @@ const Layout = ({ children, selectedBottomTab }: LayoutProps) => {
         </Head>
             <div className="container min-w-full">
                 <NavBar />
-                <div className="grid grid-flow-row place-items-center p-6">
+                <div className="grid grid-flow-row place-items-center p-3">
                     {children}
                 </div>
                 <BottomNavBar selectedBottomTab={selectedBottomTab}/>

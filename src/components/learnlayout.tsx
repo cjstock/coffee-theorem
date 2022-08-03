@@ -10,19 +10,19 @@ const LearnLayout = ({ children, selectedLearnTab }: LearnLayoutProps) => {
         <Layout selectedBottomTab="learn">
             <div className="tabs">
                 <Link href="inception">
-                    <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "inception" ? "tab-active" : ""}`}>Inception</a>
+                    <a className={`tab tab-lifted sm:tab-md md:tab-lg ${selectedLearnTab === "inception" ? "tab-active" : ""}`}>Inception</a>
                 </Link>
                 <Link href="process">
-                    <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "process" ? "tab-active" : ""}`}>Process</a>
+                    <a className={`tab tab-lifted sm:tab-md md:tab-lg ${selectedLearnTab === "process" ? "tab-active" : ""}`}>Process</a>
                 </Link>
                 <Link href="roast">
-                    <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "roast" ? "tab-active" : ""}`}>Roast</a>
+                    <a className={`tab tab-lifted sm:tab-md md:tab-lg ${selectedLearnTab === "roast" ? "tab-active" : ""}`}>Roast</a>
                 </Link>
                 <Link href="brew">
-                    <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "brew" ? "tab-active" : ""}`}>Brew</a>
+                    <a className={`tab tab-lifted sm:tab-md md:tab-lg ${selectedLearnTab === "brew" ? "tab-active" : ""}`}>Brew</a>
                 </Link>
                 <Link href="taste">
-                    <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "taste" ? "tab-active" : ""}`}>Taste</a>
+                    <a className={`tab tab-lifted sm:tab-md md:tab-lg ${selectedLearnTab === "taste" ? "tab-active" : ""}`}>Taste</a>
                 </Link>
             </div>
             <div className="flex flex-col md:p-3 md:m-3 w-full">

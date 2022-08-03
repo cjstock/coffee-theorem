@@ -21,8 +21,8 @@ const DropDown = ({ title, data }: DropDownProps) => {
                 {
                     data.map(variety => {
                         return (<>
-                            <div className="card card-bordered border-accent-content m-1">
-                                <div className="card-body">
+                            <div className="card card-bordered border-accent-content mt-3">
+                                <div className="card-body p-2 md:p-3">
                                     <h1 className="card-title text-primary">{variety.name}</h1>
                                     <p className="italic">{variety.description}</p>
                                     <h2 className="mt-1 text-primary">Appearance</h2>

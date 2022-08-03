@@ -25,7 +25,7 @@ const LearnLayout = ({ children, selectedLearnTab }: LearnLayoutProps) => {
                     <a className={`tab tab-bordered sm:tab-md md:tab-lg ${selectedLearnTab === "taste" ? "tab-active" : ""}`}>Taste</a>
                 </Link>
             </div>
-            <div className="flex flex-col p-3 m-3 w-full">
+            <div className="flex flex-col md:p-3 md:m-3 w-full">
                 {children}
             </div>
         </Layout>

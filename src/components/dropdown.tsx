@@ -21,15 +21,15 @@ const DropDown = ({ title, data }: DropDownProps) => {
                 {
                     data.map(variety => {
                         return (<>
-                            <div className="card card-bordered border-accent-content m-3">
+                            <div className="card card-bordered border-accent-content m-1">
                                 <div className="card-body">
-                                    <h1 className="card-title">{variety.name}</h1>
+                                    <h1 className="card-title text-primary">{variety.name}</h1>
                                     <p className="italic">{variety.description}</p>
-                                    <h2 className="mt-3">Appearance</h2>
+                                    <h2 className="mt-1 text-primary">Appearance</h2>
                                     <div className="overflow-x-auto">
-                                        <table className="table w-full">
+                                        <table className="table w-full table-compact">
                                             <thead>
-                                                <tr>
+                                                <tr className="text-primary">
                                                     <th>Stature</th>
                                                     <th>Bean Size</th>
                                                     <th>Leaf Tip Color</th>

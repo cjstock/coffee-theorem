@@ -9,15 +9,12 @@ type DropDownProps = {
 const DropDown = ({ title, data }: DropDownProps) => {
     return (<>
         <div tabIndex={0} className="collapse collapse-arrow border border-base-100 rounded-box w-full">
-            <input type={"checkbox"} className="peer" />
             <div className="collapse-title
-                bg-primary text-primary-content
-                peer-checked:bg-secondary peer-checked:text-secondary-content">
+                bg-secondary">
                 {title}
             </div>
             <div className="collapse-content
-                bg-primary text-primary-content
-                peer-checked:bg-secondary peer-checked:text-secondary-content">
+                bg-secondary">
                 {
                     data.map(variety => {
                         return (

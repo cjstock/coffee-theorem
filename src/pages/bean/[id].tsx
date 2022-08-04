@@ -190,7 +190,9 @@ const BeanPage: NextPage = () => {
                         </Map>
                     </Wrapper>
                 </div>
-                <button className="btn btn-error m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
+                <div className="flex flex-row justify-center w-full h-52">
+                    <button className="btn btn-error m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
+                </div>
             </Layout>
         </>
     )

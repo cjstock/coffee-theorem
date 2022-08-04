@@ -73,12 +73,12 @@ model Bean {
 
   sellerTastingNotes String?
   sellerBrewMethods  String?
-  sellerDescription  String?
+  sellerDescription  String? @db.LongText
   sellerBuyLink      String?
 
   myTastingNotes    String?
   myBrewMethods     String?
-  myAdditionalNotes String?
+  myAdditionalNotes String? @db.LongText
 }
 
 model Variety {

@@ -1,5 +1,3 @@
-import { Bean } from "@prisma/client";
-
 interface Props {
     value: {
         country: string,

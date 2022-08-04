@@ -37,7 +37,7 @@ const BeanPage: NextPage = () => {
     const [mapStartPos, setMapStartPos] = useState<google.maps.LatLngLiteral>({ lat: 0, lng: 0 });
     const [searchQuery, setSearchQuery] = useState("");
 
-    const { data: bean} = trpc.useQuery(["bean.byId", { id }], {
+    const { data: bean } = trpc.useQuery(["bean.byId", { id }], {
         onSuccess(data) {
             if (data) {
                 setSearchQuery(`${data.region} ${data.country}`)
@@ -133,7 +133,18 @@ const BeanPage: NextPage = () => {
                 }}>
                     <div className="flex flex-col w-full lg:flex-row">
                         <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center text-primary">
-                            <h2 className="text-2xl">Seller Info</h2>
+                            <div className="flex place-items-center w-full justify-center text-primary">
+                                <h2 className="text-2xl">Seller Info</h2>
+                                <button className="btn btn-ghost btn-circle" formAction="submit">
+                                    {
+                                        isEditMode ? <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                        </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                    }
+                                </button>
+                            </div>
                             <div className="grid md:grid-cols-2 grid-cols-1 w-full text-white">
                                 <Input label="Country" capitalized={true} disabled={!isEditMode} label_key={"country"} value={beanState.country} onChange={handleInputChange} />
                                 <Input label="Region" capitalized={true} disabled={!isEditMode} label_key={"region"} value={beanState.region} onChange={handleInputChange} />
@@ -169,12 +180,8 @@ const BeanPage: NextPage = () => {
                             <TextArea label="Additional Notes" disabled={!isEditMode} label_key={"myAdditionalNotes"} value={beanState.myAdditionalNotes} onChange={handleInputChange} />
                         </div>
                     </div>
-                    <div className="flex flex-row justify-center w-full">
-                        <button className="btn btn-accent m-3 w-1/2" formAction="submit">{isEditMode ? "Save" : "Edit"}</button>
-                        <button className="btn btn-accent m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
-                    </div>
                 </form>
-                <div className="w-full h-full p-5">
+                <div className="w-full h-full p-3">
                     <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!} render={render} libraries={["places"]} >
                         <Map center={mapStartPos} zoom={3} style={{ height: "500px" }}>
                             {
@@ -183,6 +190,7 @@ const BeanPage: NextPage = () => {
                         </Map>
                     </Wrapper>
                 </div>
+                <button className="btn btn-error m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
             </Layout>
         </>
     )

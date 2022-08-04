@@ -80,7 +80,7 @@ const AddBean: NextPage = () => {
                 <div className="flex flex-col w-full lg:flex-row">
                     <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center">
                         <h2 className="text-2xl">Seller Info</h2>
-                        <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full">
+                        <div className="grid md:grid-cols-2 grid-cols-1 w-full">
                             <Input capitalized={true} label="Country" label_key="country" value={beanState.country} onChange={handleInputChange} />
                             <Input capitalized={true} label="Region" label_key="region" value={beanState.region} onChange={handleInputChange} />
                             <Input capitalized={true} label="Process" label_key="process" value={beanState.process} onChange={handleInputChange} />

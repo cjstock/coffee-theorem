@@ -9,12 +9,12 @@ const LearnPage: NextPage = () => {
     return (
         <Layout selectedBottomTab="learn">
             <div className="flex flex-col w-full">
-                <div className="grid place-items-center">
-                    <h1 className="text-5xl place-self-start pb-3">Inception</h1>
+                <section className="grid place-items-center">
+                    <h1 className="text-4xl place-self-start pb-3">Inception</h1>
                     {
                         varieties && <DropDown title="Varieties" data={varieties} />
                     }
-                </div>
+                </section>
                 <div className="divider"></div>
                 <div className="grid place-items-center">
                     <h1 className="text-5xl place-self-start pb-3">Process</h1>

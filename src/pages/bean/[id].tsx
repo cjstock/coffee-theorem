@@ -134,7 +134,7 @@ const BeanPage: NextPage = () => {
                     <div className="flex flex-col w-full lg:flex-row">
                         <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center text-primary">
                             <h2 className="text-2xl">Seller Info</h2>
-                            <div className="grid md:grid-cols-2 sm:grid-cols-1 w-full text-white">
+                            <div className="grid md:grid-cols-2 grid-cols-1 w-full text-white">
                                 <Input label="Country" capitalized={true} disabled={!isEditMode} label_key={"country"} value={beanState.country} onChange={handleInputChange} />
                                 <Input label="Region" capitalized={true} disabled={!isEditMode} label_key={"region"} value={beanState.region} onChange={handleInputChange} />
                                 <Input label="Process" capitalized={true} disabled={!isEditMode} label_key={"process"} value={beanState.process} onChange={handleInputChange} />

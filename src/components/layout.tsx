@@ -15,13 +15,15 @@ const Layout = ({ children, selectedBottomTab }: LayoutProps) => {
             <meta name="description" content="Log your beans and learn!" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-            <div className="container min-w-full">
+        <div className="grid place-items-center bg-base-300">
+            <div className="container max-w-screen-2xl bg-base-300 h-screen">
                 <NavBar />
                 <div className="grid grid-flow-row place-items-center p-3">
                     {children}
                 </div>
-                <BottomNavBar selectedBottomTab={selectedBottomTab}/>
+                <BottomNavBar selectedBottomTab={selectedBottomTab} />
             </div>
+        </div>
     </>
     )
 }

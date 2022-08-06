@@ -1,17 +1,17 @@
 enum Stature {
-    "Tall",
-    "Dwarf/Compact"
+    "Dwarf/Compact" = 1,
+    "Tall"
 }
 
 enum BeanSize {
-    "Below Average",
+    "Below Average" = 1,
     "Average",
     "Large",
     "Very Large"
 }
 
 enum QualPotHighAlt {
-    "Very Low",
+    "Very Low" = 1,
     "Low",
     "Good",
     "Very Good",
@@ -19,7 +19,7 @@ enum QualPotHighAlt {
 }
 
 enum YieldPotential {
-    "Low",
+    "Low" = 1,
     "Medium",
     "Good",
     "High",
@@ -27,31 +27,31 @@ enum YieldPotential {
 }
 
 enum CoffeeLeafRust {
-    "Resistant",
+    "Resistant" = 1,
     "Tolerant",
     "Susceptible"
 }
 
 enum CoffeeBerryDisease {
-    "Resistant",
+    "Resistant" = 1,
     "Tolerant",
     "Susceptible"
 }
 
 enum Nematodes {
-    "Resistant",
+    "Resistant" = 1,
     "Tolerant",
     "Susceptible"
 }
 
 enum YearFirstProd {
-    "Year 2",
+    "Year 2" = 1,
     "Year 3",
     "Year 4"
 }
 
 enum NutReq {
-    "Low",
+    "Low" = 1,
     "Medium",
     "High",
     "Very High"

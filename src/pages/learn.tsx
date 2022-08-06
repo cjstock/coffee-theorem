@@ -1,5 +1,5 @@
 import { NextPage } from "next"
-import DropDown from "../components/dropdown"
+import VarietyDropDown from "../components/varietydropdown"
 import Layout from "../components/layout"
 import { trpc } from "../utils/trpc"
 
@@ -12,12 +12,12 @@ const LearnPage: NextPage = () => {
                 <section className="grid place-items-center">
                     <h1 className="text-4xl place-self-start pb-3">Inception</h1>
                     {
-                        varieties && <DropDown title="Varieties" data={varieties} />
+                        varieties && <VarietyDropDown title="Varieties" data={varieties} />
                     }
                 </section>
                 <div className="divider"></div>
                 <div className="grid place-items-center">
-                    <h1 className="text-5xl place-self-start pb-3">Process</h1>
+                    <h1 className="text-4xl place-self-start pb-3">Process</h1>
                 </div>
             </div>
         </Layout>

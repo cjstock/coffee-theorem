@@ -17,12 +17,12 @@ const AddBean: NextPage = () => {
     const { mutate } = trpc.useMutation("bean.create", {
         onSuccess(data, variables) {
             utils.queryClient.setQueryData(["bean.getAll", { userId: variables.userId }],
-            (oldData: Array<Bean> | undefined) => {
-                if (oldData) {
-                    return [...oldData, data]
-                }
-                return [data]
-            })
+                (oldData: Array<Bean> | undefined) => {
+                    if (oldData) {
+                        return [...oldData, data]
+                    }
+                    return [data]
+                })
         },
     });
 
@@ -46,8 +46,9 @@ const AddBean: NextPage = () => {
 
     function handleInputChange(key: string, value: string | boolean) {
         setBeanState(prev => {
-            return {...prev, 
-            [key]: value
+            return {
+                ...prev,
+                [key]: value
             }
         })
     }
@@ -111,7 +112,9 @@ const AddBean: NextPage = () => {
                         <TextArea label="Additional Notes" label_key="myAdditionalNotes" value={beanState.myAdditionalNotes} onChange={handleInputChange} />
                     </div>
                 </div>
-                <button className="btn btn-secondary m-6" formAction="submit">Save</button>
+                <div className="flex flex-row justify-center w-full h-52">
+                    <button className="btn btn-secondary m-6 w-1/3" formAction="submit">Save</button>
+                </div>
             </form>
         </Layout>
     )

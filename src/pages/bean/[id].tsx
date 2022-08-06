@@ -1,7 +1,7 @@
 import { Bean } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../components/inputfield";
 import Layout from "../../components/layout";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
@@ -108,7 +108,7 @@ const BeanPage: NextPage = () => {
     return (
         <>
             <Layout selectedBottomTab="experiment">
-                <form className="form-control w-full p-3" onSubmit={(event) => {
+                <form className="w-full p-3 form-control" onSubmit={(event) => {
                     event.preventDefault()
                     if (isEditMode) {
                         editMutate({
@@ -132,20 +132,20 @@ const BeanPage: NextPage = () => {
                     setIsEditMode(!isEditMode)
                 }}>
                     <div className="flex flex-col w-full lg:flex-row">
-                        <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box place-items-center text-primary">
-                            <div className="flex place-items-center w-full justify-center text-primary">
+                        <div className="flex-grow p-3 grid card bg-secondary-focus rounded-box place-items-center text-primary">
+                            <div className="flex justify-center w-full place-items-center text-primary">
                                 <h2 className="text-2xl">Seller Info</h2>
                                 <button className="btn btn-ghost btn-circle" formAction="submit">
                                     {
-                                        isEditMode ? <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        isEditMode ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                                        </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                         </svg>
                                     }
                                 </button>
                             </div>
-                            <div className="grid md:grid-cols-2 grid-cols-1 w-full text-white">
+                            <div className="w-full text-white grid md:grid-cols-2 grid-cols-1">
                                 <Input label="Country" capitalized={true} disabled={!isEditMode} label_key={"country"} value={beanState.country} onChange={handleInputChange} />
                                 <Input label="Region" capitalized={true} disabled={!isEditMode} label_key={"region"} value={beanState.region} onChange={handleInputChange} />
                                 <Input label="Process" capitalized={true} disabled={!isEditMode} label_key={"process"} value={beanState.process} onChange={handleInputChange} />
@@ -159,8 +159,8 @@ const BeanPage: NextPage = () => {
                             </div>
                         </div>
                         <div className="divider lg:divider-horizontal"></div>
-                        <div className="p-3 grid flex-grow card bg-secondary-focus rounded-box">
-                            <div className="flex place-items-center w-full justify-center text-primary">
+                        <div className="flex-grow p-3 grid card bg-secondary-focus rounded-box">
+                            <div className="flex justify-center w-full place-items-center text-primary">
                                 <h2 className="text-2xl">Discoveries</h2>
                                 <button type="button" className="btn btn-ghost btn-circle" onClick={() => {
                                     if (isEditMode) {
@@ -169,9 +169,9 @@ const BeanPage: NextPage = () => {
                                         })
                                     }
                                 }}>
-                                    {beanState.isFavorite ? <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                                    {beanState.isFavorite ? <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                                    </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    </svg> : <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                     </svg>}</button>
                             </div>
@@ -191,7 +191,7 @@ const BeanPage: NextPage = () => {
                     </Wrapper>
                 </div>
                 <div className="flex flex-row justify-center w-full h-52">
-                    <button className="btn btn-error m-3 w-1/2" type="button" onClick={handleDeleteOnClick}>Delete</button>
+                    <button className="w-1/2 m-3 btn btn-error" type="button" onClick={handleDeleteOnClick}>Delete</button>
                 </div>
             </Layout>
         </>

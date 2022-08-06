@@ -15,8 +15,8 @@ const Layout = ({ children, selectedBottomTab }: LayoutProps) => {
             <meta name="description" content="Log your beans and learn!" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <div className="grid place-items-center bg-base-300">
-            <div className="container max-w-screen-2xl bg-base-300 h-screen">
+        <div className="grid place-items-start bg-base-300 h-screen">
+            <div className="container max-w-screen-2xl bg-base-300">
                 <NavBar />
                 <div className="grid grid-flow-row place-items-center p-3">
                     {children}

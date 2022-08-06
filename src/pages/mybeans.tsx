@@ -26,7 +26,7 @@ const MyBeans: NextPage = () => {
 
 
     return (<>
-        <div className="mx-auto lg:max-w-5xl md: max-w-2xl">
+        <div className="max-w-2xl mx-auto lg:max-w-5xl md:">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-content-center" ref={listRef}>
                 {
                     beans?.map(bean => {

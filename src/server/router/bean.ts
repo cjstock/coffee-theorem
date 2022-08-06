@@ -18,7 +18,8 @@ export const beanRouter = createRouter()
           region: true,
           isFavorite: true,
           sellerTastingNotes: true,
-          roast: true
+          roast: true,
+          process: true
         }
       });
     },

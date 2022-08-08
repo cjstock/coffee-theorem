@@ -1,10 +1,8 @@
 import { NextPage } from "next"
 import Layout from "../components/layout"
 import LearnCard from "../components/learncard"
-import { trpc } from "../utils/trpc"
 
 const LearnPage: NextPage = () => {
-    const { data: varieties } = trpc.useQuery(["variety.getAll"])
 
     return (
         <Layout selectedBottomTab="learn">

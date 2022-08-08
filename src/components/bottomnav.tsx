@@ -8,7 +8,7 @@ type BottomNavBarProps = {
 }
 
 const BottomNavBar = ({selectedBottomTab} : BottomNavBarProps) => (<>
-    <div className="mx-auto btm-nav max-w-screen-2xl">
+    <div className="mx-auto btm-nav max-w-screen-2xl z-50">
         <Link href={'/learn'}>
             <a
                 className={`bg-accent-focus text-primary hover:bg-accent transition ${selectedBottomTab === "learn" ? "active" : ""}`}>

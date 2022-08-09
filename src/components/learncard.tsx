@@ -13,9 +13,6 @@ const LearnCard = (props: LearnCardProps) => {
             <div className="card-body">
                 <h2 className="card-title text-2xl">{props.title}</h2>
                 <p className="italic">{props.description}</p>
-                <div className="justify-end card-actions">
-                    <button className="btn btn-primary">Explore</button>
-                </div>
             </div>
         </div>
     )

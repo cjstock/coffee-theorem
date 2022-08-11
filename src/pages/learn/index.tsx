@@ -86,7 +86,7 @@ const LearnPage: NextPage = () => {
                 {
                     learnData.map(data => {
                         return (
-                            <Link href={data.url}>
+                            <Link href={data.url} key={data.title}>
                                 <a>
                                     <LearnCard title={data.title} description={data.description} image={data.image} />
                                 </a>

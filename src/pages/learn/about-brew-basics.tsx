@@ -1,9 +1,12 @@
 import { NextPage } from "next";
+import Layout from "../../components/layout";
 
-const AboutBrewBasics:NextPage = () => {
-    
+const AboutBrewBasics: NextPage = () => {
+
     return (
-        <div>{"About Brewing"}</div>
+        <Layout selectedBottomTab="learn">
+            <div>{"About Brewing"}</div>
+        </Layout>
     )
 }
 

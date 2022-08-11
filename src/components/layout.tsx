@@ -18,7 +18,7 @@ const Layout = ({ children, selectedBottomTab }: LayoutProps) => {
         <div className="h-screen grid place-items-start bg-base-300">
             <div className="container mx-auto max-w-screen-2xl bg-base-300">
                 <NavBar />
-                <div className="p-3 grid grid-flow-row place-items-center">
+                <div className="p-3 grid grid-flow-row place-items-center pb-20">
                     {children}
                 </div>
                 <BottomNavBar selectedBottomTab={selectedBottomTab} />

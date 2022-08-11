@@ -107,7 +107,7 @@ const BeanPage: NextPage = () => {
 
     return (
         <>
-            <Layout selectedBottomTab="experiment">
+            <Layout selectedBottomTab="track">
                 <form className="w-full p-3 form-control" onSubmit={(event) => {
                     event.preventDefault()
                     if (isEditMode) {

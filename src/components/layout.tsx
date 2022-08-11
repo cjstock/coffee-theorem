@@ -5,7 +5,7 @@ import BottomNavBar from "./bottomnav";
 
 type LayoutProps = {
     children: React.ReactNode,
-    selectedBottomTab: "learn" | "experiment"
+    selectedBottomTab: "learn" | "track"
 }
 
 const Layout = ({ children, selectedBottomTab }: LayoutProps) => {

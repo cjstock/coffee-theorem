@@ -4,7 +4,7 @@ import { faGraduationCap, faFlask } from '@fortawesome/free-solid-svg-icons'
 
 
 type BottomNavBarProps = {
-    selectedBottomTab: "learn" | "experiment"
+    selectedBottomTab: "learn" | "track"
 }
 
 const BottomNavBar = ({selectedBottomTab} : BottomNavBarProps) => (<>
@@ -18,9 +18,9 @@ const BottomNavBar = ({selectedBottomTab} : BottomNavBarProps) => (<>
         </Link>
         <Link href={'/'}>
             <a
-                className={`bg-accent-focus text-primary hover:bg-accent ${selectedBottomTab === "experiment" ? "active" : ""}`}>
+                className={`bg-accent-focus text-primary hover:bg-accent ${selectedBottomTab === "track" ? "active" : ""}`}>
                 <FontAwesomeIcon icon={faFlask} className="w-5 h-5" />
-                <span className="btm-nav-label">Experiment</span>
+                <span className="btm-nav-label">Track</span>
             </a>
         </Link>
     </div>

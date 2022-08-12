@@ -45,6 +45,8 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
     React.useEffect(() => {
         if (!marker) {
             setMarker(new google.maps.Marker());
+        } else {
+            marker.setOptions(options)
         }
 
         // remove marker from map on unmount
@@ -53,12 +55,6 @@ const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
                 marker.setMap(null);
             }
         };
-    }, [marker]);
-
-    React.useEffect(() => {
-        if (marker) {
-            marker.setOptions(options);
-        }
     }, [marker, options]);
 
     return null;
@@ -106,7 +102,7 @@ const Places: React.FC<PlacesProps> = ({
         if (map && location) {
             map.panTo(location)
         }
-    }, [location])
+    }, [location, map])
 
 
     return <Marker position={location} map={map} />

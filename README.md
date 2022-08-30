@@ -23,19 +23,23 @@ Process
 etc.
 
 ## Goals
+
 1. Cement my skills with React, Typescript, and Web Architecture
 2. Build something I will use
 3. Imprpove my Web Design skills
 
 ## Design Decisions
+
 I was inspired by Theo Browne after watching this -> https://www.youtube.com/watch?v=PbjHxIuHduU
 
 ### The T3 stack includes 3 key pieces:
+
 1. Typescript -> Type safety is important for writing safer code, and improving developer experience
 2. Tailwindcss -> CSS is tedious and annoying (in my opinion)
 3. tRPC -> Allows for a fully type safe client/server architecture
 
 ### Other Tech
+
 Next.js -> Is the optimal framework for tRPC. It also allows me to easily serve static or dynamic pages with no boilerplate.
 
 Prisma.io -> An ORM to reduce the headaches of dealing with a DB directly. Also has a great experience with tRPC

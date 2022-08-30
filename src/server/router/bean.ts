@@ -1,16 +1,15 @@
-
 import { createRouter } from "./context";
 import { z } from "zod";
 
 export const beanRouter = createRouter()
   .query("getAll", {
     input: z.object({
-      userId: z.string()
+      userId: z.string(),
     }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.bean.findMany({
         where: {
-          userId: input.userId
+          userId: input.userId,
         },
         select: {
           country: true,
@@ -19,22 +18,22 @@ export const beanRouter = createRouter()
           isFavorite: true,
           sellerTastingNotes: true,
           roast: true,
-          process: true
-        }
+          process: true,
+        },
       });
     },
   })
   .query("byId", {
     input: z.object({
-      id: z.string()
+      id: z.string(),
     }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.bean.findUnique({
         where: {
-          id: input.id
-        }
-      })
-    }
+          id: input.id,
+        },
+      });
+    },
   })
   .mutation("create", {
     input: z.object({
@@ -55,7 +54,6 @@ export const beanRouter = createRouter()
       myBrewMethods: z.string().nullish(),
       myAddtionalNotes: z.string().nullish(),
       isFavorite: z.boolean().nullish(),
-
     }),
 
     async resolve({ ctx, input }) {
@@ -79,7 +77,7 @@ export const beanRouter = createRouter()
           myAdditionalNotes: input.myAddtionalNotes,
           isFavorite: input.isFavorite,
         },
-      })
+      });
     },
   })
   .mutation("edit", {
@@ -100,13 +98,13 @@ export const beanRouter = createRouter()
       myTastingNotes: z.string().nullish(),
       myBrewMethods: z.string().nullish(),
       myAddtionalNotes: z.string().nullish(),
-      isFavorite: z.boolean().nullish()
+      isFavorite: z.boolean().nullish(),
     }),
 
     async resolve({ ctx, input }) {
       return await ctx.prisma.bean.update({
         where: {
-          id: input.id
+          id: input.id,
         },
         data: {
           country: input.country,
@@ -124,20 +122,20 @@ export const beanRouter = createRouter()
           myTastingNotes: input.myTastingNotes,
           myBrewMethods: input.myBrewMethods,
           myAdditionalNotes: input.myAddtionalNotes,
-          isFavorite: input.isFavorite
+          isFavorite: input.isFavorite,
         },
-      })
+      });
     },
   })
   .mutation("delete", {
     input: z.object({
-      id: z.string()
+      id: z.string(),
     }),
     async resolve({ ctx, input }) {
       return await ctx.prisma.bean.delete({
         where: {
-          id: input.id
-        }
-      })
-    }
-  })
+          id: input.id,
+        },
+      });
+    },
+  });

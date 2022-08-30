@@ -12,7 +12,7 @@ export const appRouter = createRouter()
   .merge("auth.", authRouter)
   .merge("bean.", beanRouter)
   .merge("user.", userRouter)
-  .merge("variety.", varietyRouter)
+  .merge("variety.", varietyRouter);
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

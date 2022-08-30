@@ -1,8 +1,7 @@
-import { createRouter } from "./context"
+import { createRouter } from "./context";
 
-export const varietyRouter = createRouter()
-    .query("getAll", {
-        async resolve({ctx}) {
-            return await ctx.prisma.variety.findMany({})
-        }
-    })
+export const varietyRouter = createRouter().query("getAll", {
+  async resolve({ ctx }) {
+    return await ctx.prisma.variety.findMany({});
+  },
+});

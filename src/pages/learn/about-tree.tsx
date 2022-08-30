@@ -10,7 +10,7 @@ const AboutTreePage: NextPage = () => {
             <h1 className="text-4xl place-self-start font-bold p-4">
                 The Coffee Tree
             </h1>
-            <div className="columns-2">
+            <div className="md:columns-2">
                 <p>
                     There are over 120 known coffee tree species in existence.
                     However, only 2 are grown and cultivated in any meaningful
@@ -30,7 +30,9 @@ const AboutTreePage: NextPage = () => {
                 </p>
                 <figure>
                     <Image src={arabicaDiagram} />
-                    <figcaption>Coffea Arabica diagram</figcaption>
+                    <figcaption>
+                        <em>Coffea Arabica diagram</em>
+                    </figcaption>
                 </figure>
             </div>
         </Layout>

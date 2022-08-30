@@ -12,7 +12,7 @@ const AboutTreePage: NextPage = () => {
             </h1>
             <div className="border-secondary border-2 border-dotted rounded-lg p-5">
                 <p className="text-left">
-                    <span className="w-80 float-right m-5">
+                    <span className="w-32 md:w-80 float-right m-5">
                         <Image src={arabicaDiagram} layout="responsive" />
                         <span>
                             <em>Coffea Arabica diagram</em>

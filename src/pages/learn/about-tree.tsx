@@ -3,22 +3,21 @@ import Layout from "../../components/layout";
 import LearnSection from "../../components/learnsection";
 
 import arabicaDiagram from "../../../public/coffee-tree/arabica-diagram.png";
-import coffeeSoldier from "../../../public/learn-cards/soldiers.png";
-import { StaticImageData } from "next/image";
+import soldiers from "../../../public/learn-cards/soldiers.png";
+import LearnImage from "../../components/learnimage";
 
 const AboutTreePage: NextPage = () => {
-    const ARImages: Array<StaticImageData> = [arabicaDiagram, coffeeSoldier];
-    const ARImageDescs: Array<string> = ["Coffea Arabica diagram"];
     return (
         <Layout selectedBottomTab="learn">
             <h1 className="text-4xl place-self-start font-bold p-4">
                 The Coffee Tree
             </h1>
-            <LearnSection
-                images={ARImages}
-                imageDescriptions={ARImageDescs}
-                title="Arabica vs Robusta"
-            >
+            <LearnSection title="Arabica vs Robusta">
+                <LearnImage
+                    src={arabicaDiagram}
+                    description="Coffea Arabica diagram"
+                    className="float-right w-32 md:w-64 m-5"
+                />
                 There are over 120 known coffee tree species in existence.
                 However, only two are grown and cultivated in any meaningful
                 quantity; <em>Coffea Arabica</em> and <em>Coffea Canephora</em>
@@ -43,14 +42,20 @@ const AboutTreePage: NextPage = () => {
                 Varieties carry distinct flavors and mouthfeels. As you will
                 learn in other sections, every step between farm and cup effects
                 the final qualities in the cup.
-                <br />
-                <br />
-                Keep in mind that for producers, varieties are chosen based on
-                characteristic that result in more reliable crops. Trees with
-                higher resistance to disease lead to higher yields, which is key
-                for those who rely on growing for their livelihood. The
-                varieties section explores these characteristics in greater
-                detail.
+            </LearnSection>
+            <LearnSection title="From Seed to Tree">
+                <LearnImage
+                    src={soldiers}
+                    description="Coffee shoots, known as 'soldiers', are the first stage of coffee plant growth."
+                    className="float-right w-32 md:w-72 m-5"
+                />
+                Many coffee farms start the process by raising seedlings in a
+                nursery before planting them on the farm. Oddly enough, the bean
+                develops a shoot that lifts it out of the ground. This results
+                in a patch of coffee beans each suspended by a single thin green
+                stem. Next, the bean bursts open revealing the first leaves.
+                After this stage they are typcially moved from the nursey to
+                production.
             </LearnSection>
         </Layout>
     );

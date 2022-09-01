@@ -68,7 +68,7 @@ const AboutTreePage: NextPage = () => {
                 rainfall, causing the trees to bloom. Arabica can pollinate
                 itself, so as long as the plants make it to this stage they will
                 yield fruit. About nine months later farms can begin harvesting.
-                Unfortunately, coffee cherries don't ripen uniformly. Many
+                Unfortunately, coffee cherries don&apos;t ripen uniformly. Many
                 specialty producers will hand harvest, allowing all cherries to
                 fully ripen before being picked. While this leads to a higher
                 quality yield, it is very expensive.

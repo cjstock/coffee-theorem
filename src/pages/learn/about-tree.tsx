@@ -3,7 +3,8 @@ import Layout from "../../components/layout";
 import LearnSection from "../../components/learnsection";
 
 import arabicaDiagram from "../../../public/coffee-tree/arabica-diagram.png";
-import soldiers from "../../../public/learn-cards/soldiers.png";
+import soldiersImg from "../../../public/learn-cards/soldiers.png";
+import seedlingImg from "../../../public/coffee-tree/seedlings.png";
 import LearnImage from "../../components/learnimage";
 
 const AboutTreePage: NextPage = () => {
@@ -44,18 +45,33 @@ const AboutTreePage: NextPage = () => {
                 the final qualities in the cup.
             </LearnSection>
             <LearnSection title="From Seed to Tree">
-                <LearnImage
-                    src={soldiers}
-                    description="Coffee shoots, known as 'soldiers', are the first stage of coffee plant growth."
-                    className="float-right w-32 md:w-72 m-5"
-                />
+                <div className="flex flex-col float-right">
+                    <LearnImage
+                        src={soldiersImg}
+                        description="Coffee shoots, known as 'soldiers', are the first stage of coffee plant growth."
+                        className="float-right w-32 md:w-72 m-5"
+                    />
+                    <LearnImage
+                        src={seedlingImg}
+                        description="Coffee seedlings growing before being sold to plantations."
+                        className="float-right w-32 md:w-72 m-5"
+                    />
+                </div>
                 Many coffee farms start the process by raising seedlings in a
                 nursery before planting them on the farm. Oddly enough, the bean
                 develops a shoot that lifts it out of the ground. This results
                 in a patch of coffee beans each suspended by a single thin green
                 stem. Next, the bean bursts open revealing the first leaves.
                 After this stage they are typcially moved from the nursey to
-                production.
+                production. Most coffee trees take between 2-4 years before
+                first harvest. Typically the main harvest is triggered by heavy
+                rainfall, causing the trees to bloom. Arabica can pollinate
+                itself, so as long as the plants make it to this stage they will
+                yield fruit. About nine months later farms can begin harvesting.
+                Unfortunately, coffee cherries don't ripen uniformly. Many
+                specialty producers will hand harvest, allowing all cherries to
+                fully ripen before being picked. While this leads to a higher
+                quality yield, it is very expensive.
             </LearnSection>
         </Layout>
     );

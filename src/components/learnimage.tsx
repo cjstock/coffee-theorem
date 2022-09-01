@@ -8,7 +8,7 @@ interface Props {
 
 const LearnImage = ({ src, description, className }: Props) => {
     return (
-        <span className={`${className && className}`}>
+        <span className={`text-xs ${className && className}`}>
             <Image src={src} layout="responsive" />
             <span>
                 <em>{description}</em>

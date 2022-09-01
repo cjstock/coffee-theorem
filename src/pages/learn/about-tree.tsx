@@ -17,7 +17,6 @@ const AboutTreePage: NextPage = () => {
                 <LearnImage
                     src={arabicaDiagram}
                     description="Coffea Arabica diagram"
-                    className="float-right w-32 md:w-64 m-5"
                 />
                 There are over 120 known coffee tree species in existence.
                 However, only two are grown and cultivated in any meaningful
@@ -49,12 +48,10 @@ const AboutTreePage: NextPage = () => {
                     <LearnImage
                         src={soldiersImg}
                         description="Coffee shoots, known as 'soldiers', are the first stage of coffee plant growth."
-                        className="float-right w-32 md:w-72 m-5"
                     />
                     <LearnImage
                         src={seedlingImg}
                         description="Coffee seedlings growing before being sold to plantations."
-                        className="float-right w-32 md:w-72 m-5"
                     />
                 </div>
                 Many coffee farms start the process by raising seedlings in a

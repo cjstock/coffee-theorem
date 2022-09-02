@@ -2,12 +2,12 @@ import { NextPage } from "next";
 import Layout from "../../components/layout";
 import LearnCollapse from "../../components/learncollapse";
 import LearnSection from "../../components/learnsection";
+import VarietyTable from "../../components/varietytable";
 import { trpc } from "../../utils/trpc";
 import { qualities } from "../../utils/variety";
 
 const AboutVarietiesPage: NextPage = () => {
-    const { data: varieties, isLoading } = trpc.useQuery(["variety.getAll"]);
-
+    const { data: varieties } = trpc.useQuery(["variety.getAll"]);
 
     return (
         <Layout selectedBottomTab="learn">
@@ -38,34 +38,22 @@ const AboutVarietiesPage: NextPage = () => {
                 hundred percent Bourbon varietal.
             </LearnSection>
             <>
-            { varieties && varieties.map(variety => {
-                return (
-                    <LearnCollapse key={variety.id} title={variety.name}>
-                    <div className="card-body p-2 md:p-3">
-                        <p className="italic">{variety.description}</p>
-                        <h2 className="mt-1 text-primary">Appearance</h2>
-                        <div className="overflow-x-auto">
-                            <table className="table w-full table-compact">
-                                <thead>
-                                    <tr className="text-primary">
-                                        <th>Stature</th>
-                                        <th>Bean Size</th>
-                                        <th>Leaf Tip Color</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        {variety.stature && <td>{qualities.Stature[variety.stature]}</td>}
-                                        {variety.beanSize && <td>{qualities.BeanSize[variety.beanSize]}</td>}
-                                        {variety.leafTipColor && <td>{variety.leafTipColor}</td>}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    </LearnCollapse>
-                )
-            })}
+                {varieties &&
+                    varieties.map((variety) => {
+                        return (
+                            <LearnCollapse
+                                key={variety.id}
+                                title={variety.name}
+                            >
+                                <div className="card-body p-2 md:p-3">
+                                    <p className="italic">
+                                        {variety.description}
+                                    </p>
+                                    <VarietyTable variety={variety} />
+                                </div>
+                            </LearnCollapse>
+                        );
+                    })}
             </>
         </Layout>
     );

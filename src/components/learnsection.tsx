@@ -9,7 +9,7 @@ interface Props {
 const LearnSection = ({ title, children, className }: Props) => {
     return (
         <div
-            className={`bg-base-100 border-secondary border-2 rounded-lg p-5 m-3 ${className}`}
+            className={`bg-base-100 border-secondary border-2 rounded-lg p-5 m-3 w-full ${className}`}
         >
             <div className="text-left">
                 <h2 className="text-xl mb-2 font-bold">{title}</h2>

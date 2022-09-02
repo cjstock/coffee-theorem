@@ -4,7 +4,6 @@ import LearnCollapse from "../../components/learncollapse";
 import LearnSection from "../../components/learnsection";
 import VarietyTable from "../../components/varietytable";
 import { trpc } from "../../utils/trpc";
-import { qualities } from "../../utils/variety";
 
 const AboutVarietiesPage: NextPage = () => {
     const { data: varieties } = trpc.useQuery(["variety.getAll"]);
@@ -47,7 +46,7 @@ const AboutVarietiesPage: NextPage = () => {
                             >
                                 <div className="card-body p-2 md:p-3">
                                     <p className="italic">
-                                        {variety.description}
+                                        {variety && variety.description}
                                     </p>
                                     <VarietyTable variety={variety} />
                                 </div>

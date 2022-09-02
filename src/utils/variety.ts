@@ -1,19 +1,19 @@
 interface Variety {
     name: string;
-    description?: string;
-    lineage?: string;
-    breeder?: string;
-    history?: string;
-    stature?: Stature;
-    leafTipColor?: string;
-    beanSize?: BeanSize;
-    qualPotHighAlt?: QualPotHighAlt;
-    yieldPot?: YieldPotential;
-    coffeeLeafRust?: CoffeeLeafRust;
-    coffeeBerryDisease?: CoffeeBerryDisease;
-    nematodes?: Nematodes;
-    yearOfFirstProd?: YearFirstProd;
-    nutReq?: NutReq;
+    description: string | undefined;
+    lineage: string | undefined;
+    breeder: string | undefined;
+    history: string | undefined;
+    stature: Stature | undefined;
+    leafTipColor: string | undefined;
+    beanSize: BeanSize | undefined;
+    qualPotHighAlt: QualPotHighAlt | undefined;
+    yieldPot: YieldPotential | undefined;
+    coffeeLeafRust: CoffeeLeafRust | undefined;
+    coffeeBerryDisease: CoffeeBerryDisease | undefined;
+    nematodes: Nematodes | undefined;
+    yearOfFirstProd: YearFirstProd | undefined;
+    nutReq: NutReq | undefined;
 }
 
 enum Stature {

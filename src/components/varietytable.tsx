@@ -8,7 +8,8 @@ interface Props {
 const VarietyTables = ({ variety }: Props) => {
     return (
         <>
-            <h2 className="mt-1 font-bold">Appearance</h2>
+            <div className="divider" />
+            <h2 className="font-bold">Appearance</h2>
             <div className="overflow-x-auto">
                 <table className="table w-full table-compact">
                     <thead>
@@ -33,16 +34,14 @@ const VarietyTables = ({ variety }: Props) => {
                     </tbody>
                 </table>
             </div>
-            <h2 className="mt-1 font-bold">Agronomics</h2>
+            <div className="divider" />
+            <h2 className="font-bold">Agronomics</h2>
             <div className="overflow-x-auto">
                 <table className="table w-full table-compact">
                     <thead>
                         <tr className="text-primary">
                             <th>Qual. Poten. @ High Alt.</th>
                             <th>Yield Poten.</th>
-                            <th>Coffee Leaf Rust</th>
-                            <th>Coffee Berry Disease</th>
-                            <th>Nematodes</th>
                             <th>Year of First Prod.</th>
                             <th>Nutrition Req.</th>
                         </tr>
@@ -63,6 +62,35 @@ const VarietyTables = ({ variety }: Props) => {
                                     {qualities.YieldPotential[variety.yieldPot]}
                                 </td>
                             )}
+                            {variety.yearOfFirstProd && (
+                                <td>
+                                    {
+                                        qualities.YearFirstProd[
+                                            variety.yearOfFirstProd
+                                        ]
+                                    }
+                                </td>
+                            )}
+                            {variety.nutReq && (
+                                <td>{qualities.NutReq[variety.nutReq]}</td>
+                            )}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div className="divider" />
+            <h2 className="font-bold">Susceptibility</h2>
+            <div className="overflow-x-auto">
+                <table className="table w-full table-compact">
+                    <thead>
+                        <tr className="text-primary">
+                            <th>Coffee Leaf Rust</th>
+                            <th>Coffee Berry Disease</th>
+                            <th>Nematodes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
                             {variety.coffeeLeafRust && (
                                 <td>
                                     {
@@ -81,11 +109,11 @@ const VarietyTables = ({ variety }: Props) => {
                                     }
                                 </td>
                             )}
-                            {variety.nematodes && <td>{variety.nematodes}</td>}
-                            {variety.yearOfFirstProd && (
-                                <td>{variety.yearOfFirstProd}</td>
+                            {variety.nematodes && (
+                                <td>
+                                    {qualities.Nematodes[variety.nematodes]}
+                                </td>
                             )}
-                            {variety.nutReq && <td>{variety.nutReq}</td>}
                         </tr>
                     </tbody>
                 </table>

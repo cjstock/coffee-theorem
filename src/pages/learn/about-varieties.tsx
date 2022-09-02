@@ -48,6 +48,7 @@ const AboutVarietiesPage: NextPage = () => {
                                     <p className="italic">
                                         {variety && variety.description}
                                     </p>
+                                    <p>{variety && variety.history}</p>
                                     <VarietyTable variety={variety} />
                                 </div>
                             </LearnCollapse>

@@ -15,7 +15,7 @@ const MyBeans: NextPage = () => {
 
     let foundUser = false;
     const { data: beans } = trpc.useQuery(
-        ["bean.getAll", { userEmail: session?.user.email }],
+        ["bean.getAll", { userEmail: session?.user?.email as string }],
         {
             enabled: foundUser,
         }

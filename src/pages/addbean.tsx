@@ -14,7 +14,7 @@ const AddBean: NextPage = () => {
     const { mutate } = trpc.useMutation("bean.create", {
         onSuccess(data) {
             utils.queryClient.setQueryData(
-                ["bean.getAll", { userEmail: session.user.email }],
+                ["bean.getAll", { userEmail: session?.user?.email }],
                 (oldData: Array<Bean> | undefined) => {
                     if (oldData) {
                         return [...oldData, data];

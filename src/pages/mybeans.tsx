@@ -13,18 +13,17 @@ const MyBeans: NextPage = () => {
         duration: 100,
     });
 
-    const { data: user, isSuccess: foundUser } = trpc.useQuery(
-        ["user.byEmail", { email: session?.user?.email as string }],
-        {
-            enabled: !!session,
-        }
-    );
+    let foundUser = false;
     const { data: beans } = trpc.useQuery(
-        ["bean.getAll", { userId: user?.id as string }],
+        ["bean.getAll", { userEmail: session?.user.email }],
         {
             enabled: foundUser,
         }
     );
+
+    if (session && session.user) {
+        foundUser = true;
+    }
 
     if (!session) {
         return <Unauthorized />;

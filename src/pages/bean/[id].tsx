@@ -54,7 +54,7 @@ const BeanPage: NextPage = () => {
     const { mutate: deleteMutate } = trpc.useMutation("bean.delete", {
         onSuccess(variables) {
             utils.queryClient.setQueryData(
-                ["bean.getAll", { userId: variables.userId }],
+                ["bean.getAll", { userEmail: variables.userEmail }],
                 (oldData: Array<Bean> | undefined) => {
                     if (oldData) {
                         return oldData.filter((bean: Bean) => bean.id !== id);

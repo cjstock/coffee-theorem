@@ -68,8 +68,8 @@ model Bean {
   altitude   String?
   roast      String?
   isFavorite Boolean?
-  User       User?    @relation(fields: [userId], references: [id])
-  userId     String?
+  User       User     @relation(fields: [userEmail], references: [email])
+  userEmail  String
 
   sellerTastingNotes String?
   sellerBrewMethods  String?

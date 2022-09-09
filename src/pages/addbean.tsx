@@ -73,7 +73,7 @@ const AddBean: NextPage = () => {
                         myBrewMethods: beanState.myBrewMethods,
                         myAddtionalNotes: beanState.myAdditionalNotes,
                         isFavorite: beanState.isFavorite,
-                        userEmail: session.user.email,
+                        userEmail: session?.user?.email as string,
                     });
                     Router.push("/");
                 }}

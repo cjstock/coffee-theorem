@@ -5,13 +5,9 @@ import BeanCard from "../components/beancard";
 import AddBeanCard from "../components/addbeancard";
 import { useSession } from "next-auth/react";
 import Unauthorized from "../components/unauthorized";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const MyBeans: NextPage = () => {
     const { data: session } = useSession();
-    const [listRef] = useAutoAnimate<HTMLDivElement>({
-        duration: 100,
-    });
 
     let foundUser = false;
     const { data: beans } = trpc.useQuery(
@@ -21,21 +17,18 @@ const MyBeans: NextPage = () => {
         }
     );
 
-    if (session && session.user) {
-        foundUser = true;
+    if (!session) {
+        return <h1>Login you dummy!</h1>;
     }
 
-    if (!session) {
-        return <Unauthorized />;
+    if (session !== null) {
+        foundUser = true;
     }
 
     return (
         <>
             <div className="max-w-2xl mx-auto lg:max-w-5xl md:max-w-2xl">
-                <div
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-content-center"
-                    ref={listRef}
-                >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 place-content-center">
                     {beans?.map((bean) => {
                         return (
                             <Link key={bean.id} href={`/bean/${bean.id}`}>

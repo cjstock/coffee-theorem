@@ -1,13 +1,12 @@
 import { NextPage } from "next";
-import Layout from "../../components/layout";
-import LearnImage from "../../components/learnimage";
-import LearnSection from "../../components/learnsection";
 
 import coffeeFruitImage from "../../../public/learn-cards/fruit.png";
+import LearnImage from "../../components/pages/learn/learnimage";
+import LearnSection from "../../components/pages/learn/learnsection";
 
 const AboutFruitPage: NextPage = () => {
     return (
-        <Layout selectedBottomTab="learn">
+        <>
             <h1 className="text-4xl place-self-start font-bold p-4">
                 The Coffee Fruit
             </h1>
@@ -37,7 +36,7 @@ const AboutFruitPage: NextPage = () => {
                 cup, and are roasted differently to best enhance their
                 characteristics.
             </LearnSection>
-        </Layout>
+        </>
     );
 };
 

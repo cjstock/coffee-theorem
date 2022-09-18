@@ -2,12 +2,9 @@ import { Bean } from "@prisma/client";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import Input from "../../components/inputfield";
-import Layout from "../../components/layout";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import TextArea from "../../components/textarea";
 import { trpc } from "../../utils/trpc";
-import { Map, Places } from "../../components/map";
+import Layout from "../../components/common/layout";
 
 const BeanPage: NextPage = () => {
     const utils = trpc.useContext();
@@ -120,7 +117,7 @@ const BeanPage: NextPage = () => {
 
     return (
         <>
-            <Layout selectedBottomTab="track">
+            <Layout>
                 <form
                     className="w-full p-3 form-control"
                     onSubmit={(event) => {

@@ -5,6 +5,8 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
+import { MyAppProvider } from "../utils/AppContext";
+import Layout from "../components/common/layout";
 
 const MyApp: AppType = ({
     Component,
@@ -12,7 +14,11 @@ const MyApp: AppType = ({
 }) => {
     return (
         <SessionProvider session={session}>
-            <Component {...pageProps} />
+            <MyAppProvider>
+                <Layout>
+                    <Component {...pageProps} />
+                </Layout>
+            </MyAppProvider>
         </SessionProvider>
     );
 };
@@ -47,5 +53,5 @@ export default withTRPC<AppRouter>({
     /**
      * @link https://trpc.io/docs/ssr
      */
-    ssr: false,
+    ssr: true,
 })(MyApp);

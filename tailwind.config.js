@@ -3,24 +3,25 @@
 module.exports = {
     content: ["./src/**/*.{js,ts,jsx,tsx}"],
     theme: {
-        extend: {},
-    },
-    plugins: [require("@tailwindcss/typography"), require("daisyui")],
-    daisyui: {
-        themes: [
-            {
-                coffeetheorem: {
-                    primary: "#7ec160",
-                    secondary: "#523525",
-                    accent: "#9e6749",
-                    neutral: "#120C12",
-                    "base-100": "#1f140d",
-                    info: "#8CCAC1",
-                    success: "#9CB686",
-                    warning: "#FFD261",
-                    error: "#FC9783",
-                },
+        colors: {
+            coffee: {
+                100: "#7B5137",
+                200: "#5C3B29",
+                300: "#392419",
+                400: "#20130C",
+                500: "#130A05",
             },
-        ],
+            matcha: {
+                100: "#77BB5B",
+                200: "#619848",
+                300: "#4B7938",
+                400: "#395F2A",
+                500: "#29471D",
+            },
+        },
     },
+    plugins: [
+        require("@tailwindcss/typography"),
+        require("@tailwindcss/forms"),
+    ],
 };

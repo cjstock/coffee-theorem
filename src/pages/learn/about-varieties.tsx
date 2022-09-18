@@ -1,15 +1,14 @@
 import { NextPage } from "next";
-import Layout from "../../components/layout";
-import LearnCollapse from "../../components/learncollapse";
-import LearnSection from "../../components/learnsection";
-import VarietyTable from "../../components/varietytable";
+import LearnCollapse from "../../components/pages/learn/learncollapse";
+import LearnSection from "../../components/pages/learn/learnsection";
+import VarietyTable from "../../components/pages/learn/varietytable";
 import { trpc } from "../../utils/trpc";
 
 const AboutVarietiesPage: NextPage = () => {
     const { data: varieties } = trpc.useQuery(["variety.getAll"]);
 
     return (
-        <Layout selectedBottomTab="learn">
+        <>
             <h1 className="text-4xl place-self-start font-bold p-4">
                 Coffee Varieties
             </h1>
@@ -55,7 +54,7 @@ const AboutVarietiesPage: NextPage = () => {
                         );
                     })}
             </>
-        </Layout>
+        </>
     );
 };
 

@@ -1,16 +1,15 @@
 import { NextPage } from "next";
-import Layout from "../../components/layout";
-import LearnSection from "../../components/learnsection";
 
 import arabicaDiagram from "../../../public/coffee-tree/arabica-diagram.png";
 import soldiersImg from "../../../public/learn-cards/soldiers.png";
 import seedlingImg from "../../../public/coffee-tree/seedlings.png";
-import LearnImage from "../../components/learnimage";
+import LearnSection from "../../components/pages/learn/learnsection";
+import LearnImage from "../../components/pages/learn/learnimage";
 
 const AboutTreePage: NextPage = () => {
     return (
-        <Layout selectedBottomTab="learn">
-            <h1 className="text-4xl place-self-start font-bold p-4">
+        <>
+            <h1 className="text-4xl place-self-start font-bold p-4 text-matcha-100">
                 The Coffee Tree
             </h1>
             <LearnSection title="Arabica vs Robusta">
@@ -70,7 +69,7 @@ const AboutTreePage: NextPage = () => {
                 fully ripen before being picked. While this leads to a higher
                 quality yield, it is very expensive.
             </LearnSection>
-        </Layout>
+        </>
     );
 };
 

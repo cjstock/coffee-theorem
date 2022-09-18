@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Heading from "../components/pages/bean/Heading";
+import Heading from "../components/pages/coffee-collection/Heading";
 import { trpc } from "../utils/trpc";
 import { Reorder } from "framer-motion";
-import BeanCard from "../components/pages/bean/BeanCard";
+import BeanCard from "../components/pages/coffee-collection/BeanCard";
 import { Bean } from "@prisma/client";
 import Link from "next/link";
 
@@ -44,7 +44,7 @@ const Home: NextPage = () => {
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     {beanState.map((bean) => (
-                        <Link key={bean.id} href={`coffee/[${bean.id}]`}>
+                        <Link key={bean.id} href={`coffee/${bean.id}`}>
                             <a>
                                 <BeanCard bean={bean} />
                             </a>

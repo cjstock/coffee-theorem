@@ -10,6 +10,8 @@ const BeanCard: React.FC<Props> = ({ bean }: Props) => {
     return (
         <Reorder.Item
             value={bean}
+            key={bean.id}
+            exit={{ scale: 2 }}
             className="flex flex-col rounded-lg bg-coffee-300 text-left transition-colors"
         >
             <ul className="flex flex-1 flex-col p-8">

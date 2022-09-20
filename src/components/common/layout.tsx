@@ -30,15 +30,13 @@ const Layout = ({ children }: LayoutProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="h-screen grid place-items-start bg-coffee-500"
+                className="min-h-screen grid place-items-start bg-coffee-500"
             >
                 <div className="container mx-auto max-w-screen-2xl bg-coffee-500">
                     <NavBar selectedNavTab={router.route} />
-                    <AnimatePresence exitBeforeEnter>
-                        <div className="p-3 grid grid-flow-row place-items-center pb-20">
-                            {children}
-                        </div>
-                    </AnimatePresence>
+                    <div className="p-3 grid grid-flow-row place-items-center pb-20">
+                        {children}
+                    </div>
                 </div>
             </motion.main>
         </>

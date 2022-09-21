@@ -2,6 +2,7 @@ import { Dispatch, Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
+import classNames from "../../../utils/ClassNames";
 
 const publishingOptions = [
     {
@@ -16,10 +17,6 @@ const publishingOptions = [
         current: false,
     },
 ];
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 interface Props {
     value: "Blend" | "Single Origin";

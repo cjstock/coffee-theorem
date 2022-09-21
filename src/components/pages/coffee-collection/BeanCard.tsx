@@ -1,10 +1,10 @@
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 
-import type { Bean } from "@prisma/client";
 import { Reorder } from "framer-motion";
+import { CoffeeCard } from "../../../utils/types";
 
 interface Props {
-    bean: Bean;
+    bean: CoffeeCard;
 }
 const BeanCard: React.FC<Props> = ({ bean }: Props) => {
     return (

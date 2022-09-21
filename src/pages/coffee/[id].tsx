@@ -15,7 +15,7 @@ import Divider from "../../components/pages/coffee/Divider";
 const Coffee: NextPage = () => {
     const router = useRouter();
     const id = router.query.id as string;
-    const titleRef = useRef(null);
+    const titleRef = useRef<HTMLInputElement>(null);
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -55,6 +55,7 @@ const Coffee: NextPage = () => {
     );
 
     useEffect(() => {
+        if (!titleRef.current) throw Error("titleRef is not assigned!");
         titleRef.current.focus();
     }, []);
 

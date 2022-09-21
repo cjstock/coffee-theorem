@@ -6,7 +6,7 @@ import BeanCard from "./BeanCard";
 interface Props {
     beans: Array<Bean>;
 }
-const BeanGrid: React.FC = ({ beans }: Props) => {
+const BeanGrid: React.FC<Props> = ({ beans }: Props) => {
     const [beanState, setBeanState] = useState(beans);
 
     return (

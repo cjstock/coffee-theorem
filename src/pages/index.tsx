@@ -8,6 +8,7 @@ import Link from "next/link";
 import Heading from "../components/pages/coffee-collection/Heading";
 import BeanCard from "../components/pages/coffee-collection/BeanCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { CoffeeCard } from "../utils/types";
 
 const Home: NextPage = () => {
     const session = useSession();
@@ -70,7 +71,7 @@ const Home: NextPage = () => {
         </div>
     );
 
-    const [beanState, setBeanState] = useState<Array<Bean>>([]);
+    const [beanState, setBeanState] = useState<Array<CoffeeCard>>([]);
 
     useEffect(() => {
         beans && setBeanState(beans);
@@ -79,13 +80,13 @@ const Home: NextPage = () => {
     isLoading && <Heading leftSide={leftSide} rightSide={rightSide} />;
 
     return (
-        isSuccess && (
-            <AnimatePresence>
-                <Heading
-                    key={"heading"}
-                    leftSide={leftSide}
-                    rightSide={rightSide}
-                />
+        <AnimatePresence>
+            <Heading
+                key={"heading"}
+                leftSide={leftSide}
+                rightSide={rightSide}
+            />
+            {isSuccess && (
                 <Reorder.Group
                     axis="x"
                     values={beanState}
@@ -104,8 +105,8 @@ const Home: NextPage = () => {
                         </Link>
                     ))}
                 </Reorder.Group>
-            </AnimatePresence>
-        )
+            )}
+        </AnimatePresence>
     );
 };
 

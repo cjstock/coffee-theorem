@@ -1,5 +1,5 @@
-import type { Variety } from "../utils/variety";
-import { qualities } from "../utils/variety";
+import { Variety } from "@prisma/client";
+import { qualities } from "../../../utils/variety";
 
 interface Props {
     variety: Variety;

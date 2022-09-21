@@ -5,7 +5,6 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.css";
-import { MyAppProvider } from "../utils/AppContext";
 import Layout from "../components/common/layout";
 
 const MyApp: AppType = ({
@@ -14,11 +13,9 @@ const MyApp: AppType = ({
 }) => {
     return (
         <SessionProvider session={session}>
-            <MyAppProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </MyAppProvider>
+            <Layout>
+                <Component {...pageProps} />
+            </Layout>
         </SessionProvider>
     );
 };

@@ -65,7 +65,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                         return (
                                             <Link
                                                 key={element.name}
-                                                href={element.hrefs[0]}
+                                                href={element.hrefs[0]!}
                                                 passHref
                                             >
                                                 <a

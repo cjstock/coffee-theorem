@@ -81,7 +81,11 @@ const Home: NextPage = () => {
     return (
         isSuccess && (
             <AnimatePresence>
-                <Heading leftSide={leftSide} rightSide={rightSide} />
+                <Heading
+                    key={"heading"}
+                    leftSide={leftSide}
+                    rightSide={rightSide}
+                />
                 <Reorder.Group
                     axis="x"
                     values={beanState}
@@ -89,6 +93,7 @@ const Home: NextPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    key={"cards"}
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     {beanState.map((bean) => (

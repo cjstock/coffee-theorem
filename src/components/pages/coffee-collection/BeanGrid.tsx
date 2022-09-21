@@ -1,5 +1,5 @@
 import { Bean } from "@prisma/client";
-import {Reorder } from "framer-motion";
+import { Reorder } from "framer-motion";
 import { useState } from "react";
 import BeanCard from "./BeanCard";
 

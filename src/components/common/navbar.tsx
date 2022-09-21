@@ -8,16 +8,13 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useSession, signIn, signOut } from "next-auth/react";
+import classNames from "../../utils/ClassNames";
 
 const navigation = [
     { name: "Coffee Collection", hrefs: ["/", "/coffee/[id]"] },
     { name: "Learn", hrefs: ["/learn"] },
     { name: "Recipes", hrefs: ["#"] },
 ];
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 const mobileMenuAnimateVariants = {
     hidden: { opacity: 0, height: 0 },

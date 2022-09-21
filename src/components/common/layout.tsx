@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import NavBar from "./navbar";
 import Head from "next/head";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
 const variants = {
@@ -16,7 +16,6 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
     const router = useRouter();
-    console.log(router.route);
 
     return (
         <>

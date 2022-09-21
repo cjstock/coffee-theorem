@@ -30,15 +30,16 @@ const Coffee: NextPage = () => {
             <div className="mt-1">
                 <input
                     type="text"
-                    name="name"
-                    id="name"
+                    name="originName"
+                    id="originName"
                     ref={titleRef}
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
                     placeholder={state.isBlend ? "Name" : "Origin"}
                     value={state.originName}
                     onChange={(e) =>
                         dispatch({
-                            type: "setOriginName",
+                            type: "HANDLE INPUT TEXT",
+                            field: e.currentTarget.name,
                             payload: e.currentTarget.value,
                         })
                     }
@@ -66,8 +67,7 @@ const Coffee: NextPage = () => {
                 animate={{ opacity: 1, scale: 1 }}
             >
                 <Heading leftSide={leftHeading} rightSide={rightHeading} />
-                <SellerSection />
-
+                <SellerSection dispatch={dispatch} />
                 <Divider />
                 <RoasterSection />
                 <Divider />

@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { AnimatePresence, Reorder } from "framer-motion";
-import { Bean } from "@prisma/client";
 import Link from "next/link";
 import Heading from "../components/pages/coffee-collection/Heading";
 import BeanCard from "../components/pages/coffee-collection/BeanCard";

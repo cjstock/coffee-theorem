@@ -4,7 +4,7 @@ import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import classNames from "../../../utils/ClassNames";
 
-const publishingOptions = [
+const coffeeType = [
     {
         title: "Single Origin",
         description: "Coffee sourced from a single crop or producer",
@@ -26,7 +26,7 @@ const CoffeeTypeSelect = ({ value, dispatch }: Props) => {
     return (
         <Listbox
             value={value}
-            onChange={() => dispatch({ type: "toggleIsBlend" })}
+            onChange={() => dispatch({ type: "TOGGLE ISBLEND" })}
         >
             {({ open }) => (
                 <>
@@ -66,7 +66,7 @@ const CoffeeTypeSelect = ({ value, dispatch }: Props) => {
                             leaveTo="opacity-0"
                         >
                             <Listbox.Options className="absolute right-0 z-10 mt-2 w-72 origin-top-right divide-y divide-coffee-400 overflow-hidden rounded-md bg-coffee-400 shadow-lg ring-1 ring-coffee-300 ring-opacity-5 focus:outline-none">
-                                {publishingOptions.map((option) => (
+                                {coffeeType.map((option) => (
                                     <Listbox.Option
                                         key={option.title}
                                         className={({ active }) =>

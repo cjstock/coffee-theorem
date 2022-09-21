@@ -1,4 +1,11 @@
-const SellerSection = () => {
+import { Dispatch } from "react";
+import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
+import InputEmail from "../../common/InputEmail";
+
+interface SellerSectionProps {
+    dispatch: Dispatch<ACTIONTYPE>;
+}
+const SellerSection = ({ dispatch }: SellerSectionProps) => {
     return (
         <>
             <div>
@@ -18,26 +25,11 @@ const SellerSection = () => {
                             <div className="shadow sm:overflow-hidden sm:rounded-md">
                                 <div className="space-y-6 bg-coffee-400 px-4 py-5 sm:p-6">
                                     <div className="grid grid-cols-3 gap-6">
-                                        <div className="col-span-3 sm:col-span-2">
-                                            <label
-                                                htmlFor="company-website"
-                                                className="block text-sm font-medium text-matcha-100"
-                                            >
-                                                Website
-                                            </label>
-                                            <div className="mt-1 flex rounded-md shadow-sm">
-                                                <span className="inline-flex items-center rounded-l-md border border-r-0 border-matcha-300 bg-coffee-300 px-3 text-sm text-matcha-100">
-                                                    http://
-                                                </span>
-                                                <input
-                                                    type="text"
-                                                    name="company-website"
-                                                    id="company-website"
-                                                    className="block w-full flex-1 rounded-none rounded-r-md text-matcha-100 bg-coffee-300 border-matcha-400 focus:border-matcha-200 focus:ring-matcha-200 sm:text-sm"
-                                                    placeholder="www.example.com"
-                                                />
-                                            </div>
-                                        </div>
+                                        <InputEmail
+                                            title="Website"
+                                            id="sellerUrl"
+                                            dispatch={dispatch}
+                                        />
                                     </div>
 
                                     <div>

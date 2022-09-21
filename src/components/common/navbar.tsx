@@ -90,7 +90,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                                     }
                                                     onClick={() =>
                                                         (selectedNavTab =
-                                                            element.hrefs[0])
+                                                            element.hrefs[0]!)
                                                     }
                                                 >
                                                     {element.name}
@@ -166,7 +166,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                         >
                             {navigation.map((item) => (
                                 <Link
-                                    href={item.hrefs[0]}
+                                    href={item.hrefs[0]!}
                                     key={item.name}
                                     passHref
                                 >
@@ -192,7 +192,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                                 : undefined
                                         }
                                         onClick={() =>
-                                            (selectedNavTab = item.hrefs[0])
+                                            (selectedNavTab = item.hrefs[0]!)
                                         }
                                     >
                                         {item.name}

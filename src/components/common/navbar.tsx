@@ -173,7 +173,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                     <Disclosure.Button
                                         key={item.name}
                                         as="a"
-                                        href={item.hrefs[0]}
+                                        href={item.hrefs[0]!}
                                         className={classNames(
                                             item.hrefs.find(
                                                 (href) =>

@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
-import InputEmail from "../../common/InputEmail";
+import InputText from "../../common/InputText";
 
 interface SellerSectionProps {
     dispatch: Dispatch<ACTIONTYPE>;
@@ -25,9 +25,25 @@ const SellerSection = ({ dispatch }: SellerSectionProps) => {
                             <div className="shadow sm:overflow-hidden sm:rounded-md">
                                 <div className="space-y-6 bg-coffee-400 px-4 py-5 sm:p-6">
                                     <div className="grid grid-cols-3 gap-6">
-                                        <InputEmail
+                                        <InputText
+                                            title="Name"
+                                            id="sellerName"
+                                            type="text"
+                                            placeholder="Coffee McShop"
+                                            dispatch={dispatch}
+                                        />
+                                        <InputText
                                             title="Website"
                                             id="sellerUrl"
+                                            type="url"
+                                            placeholder="www.coffee-mcshop.com"
+                                            dispatch={dispatch}
+                                        />
+                                        <InputText
+                                            title="Address"
+                                            id="sellerAddress"
+                                            type="text"
+                                            placeholder="123 Coffee St."
                                             dispatch={dispatch}
                                         />
                                     </div>

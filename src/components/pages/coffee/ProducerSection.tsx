@@ -5,10 +5,10 @@ const ProducerSection = () => {
                 <div className="md:grid md:grid-cols-3 md:gap-6">
                     <div className="md:col-span-1">
                         <div className="px-4 sm:px-0">
-                            <h3 className="text-lg font-medium leading-6 text-gray-900">
+                            <h3 className="text-lg font-medium leading-6 text-matcha-100">
                                 Notifications
                             </h3>
-                            <p className="mt-1 text-sm text-gray-600">
+                            <p className="mt-1 text-sm text-matcha-100">
                                 Decide which communications youd like to receive
                                 and how.
                             </p>
@@ -23,35 +23,12 @@ const ProducerSection = () => {
                                             By Email
                                         </legend>
                                         <div
-                                            className="text-base font-medium text-gray-900"
+                                            className="text-base font-medium text-matcha-100"
                                             aria-hidden="true"
                                         >
                                             By Email
                                         </div>
                                         <div className="mt-4 space-y-4">
-                                            <div className="flex items-start">
-                                                <div className="flex h-5 items-center">
-                                                    <input
-                                                        id="comments"
-                                                        name="comments"
-                                                        type="checkbox"
-                                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                    />
-                                                </div>
-                                                <div className="ml-3 text-sm">
-                                                    <label
-                                                        htmlFor="comments"
-                                                        className="font-medium text-gray-700"
-                                                    >
-                                                        Comments
-                                                    </label>
-                                                    <p className="text-gray-500">
-                                                        Get notified when
-                                                        someones posts a comment
-                                                        on a posting.
-                                                    </p>
-                                                </div>
-                                            </div>
                                             <div className="flex items-start">
                                                 <div className="flex h-5 items-center">
                                                     <input

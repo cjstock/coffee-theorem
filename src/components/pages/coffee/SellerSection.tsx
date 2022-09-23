@@ -18,7 +18,10 @@ const SellerSection = ({ dispatch }: SellerSectionProps) => {
                                 Seller
                             </h3>
                             <p className="mt-1 text-sm text-coffee-100">
-                                Where did you buy the beans?
+                                Where did you buy the beans? This could be a
+                                subscription service, coffee shop, or other
+                                retailer. They could have also roasted the
+                                beans.
                             </p>
                         </div>
                     </div>
@@ -55,7 +58,7 @@ const SellerSection = ({ dispatch }: SellerSectionProps) => {
                                             dispatch={dispatch}
                                         />
                                         <Checkbox
-                                            title="Seller is also Roaster"
+                                            title="Coffee was also roasted here"
                                             id="sellerIsRoaster"
                                             dispatch={dispatch}
                                         />

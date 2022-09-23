@@ -69,11 +69,11 @@ const Coffee: NextPage = () => {
                 <Heading leftSide={leftHeading} rightSide={rightHeading} />
                 <SellerSection dispatch={dispatch} />
                 <Divider />
-                <RoasterSection />
+                <RoasterSection dispatch={dispatch} />
                 <Divider />
-                <ProducerSection />
+                <ProducerSection dispatch={dispatch} />
                 <Divider />
-                <BrewerSection />
+                <BrewerSection dispatch={dispatch} />
             </motion.div>
         </AnimatePresence>
     );

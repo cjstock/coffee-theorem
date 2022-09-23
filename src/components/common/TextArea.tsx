@@ -21,7 +21,7 @@ const TextArea = ({ id, title, dispatch, placeholder }: TextAreaProps) => {
                     name={id}
                     id={id}
                     rows={3}
-                    className={`form-input block w-full flex-1 rounded-md text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-matcha-200 focus:ring-matcha-200 sm:text-sm transition-colors`}
+                    className={`form-input block w-full flex-1 rounded-md text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
                     placeholder={placeholder || "Example Text"}
                     onChange={(e) =>
                         dispatch({

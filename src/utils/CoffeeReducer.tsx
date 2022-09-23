@@ -1,3 +1,5 @@
+import type { Bean } from "@prisma/client";
+
 export const initialState = {
     isBlend: false,
     originName: "",
@@ -17,6 +19,8 @@ export const initialState = {
     producerUrl: "",
     producerAddress: "",
     producerInfo: "",
+
+    beans: new Array<Bean>(),
 };
 
 export type ACTIONTYPE =

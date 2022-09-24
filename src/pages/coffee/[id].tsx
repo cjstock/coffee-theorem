@@ -20,6 +20,18 @@ const Coffee: NextPage = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    const buttonVariants = {
+        initial: {
+            scale: 0
+        },
+        ready: {
+            scale: 1,
+        },
+        clicked: {
+            scale: 1.2,
+        }
+    }
+
     const {
         data: coffee,
         isLoading,
@@ -38,6 +50,7 @@ const Coffee: NextPage = () => {
                     type="text"
                     name="originName"
                     id="originName"
+                    key="left"
                     ref={titleRef}
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
                     placeholder={state.isBlend ? "Name" : "Origin"}
@@ -56,6 +69,7 @@ const Coffee: NextPage = () => {
 
     const rightHeading = (
         <CoffeeTypeSelect
+            key="right"
             value={state.isBlend ? "Blend" : "Single Origin"}
             dispatch={dispatch}
         />
@@ -70,8 +84,9 @@ const Coffee: NextPage = () => {
     return (
         <AnimatePresence>
             <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1}}
+                key={"body"}
             >
                 <Heading leftSide={leftHeading} rightSide={rightHeading} />
                 <SellerSection dispatch={dispatch} />
@@ -83,11 +98,13 @@ const Coffee: NextPage = () => {
                 <BrewerSection dispatch={dispatch} />
             </motion.div>
             <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 1 }}
+                variants={buttonVariants}
+                initial="initial"
+                animate="ready"
+                whileTap="clicked"
+                key={"button"}
                 type="submit"
-                className="fixed bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none focus:ring-2 focus:ring-matcha-100 focus:ring-offset-2"
+                className="fixed bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
             >
                 <CheckIcon className="h-10 w-10" />
             </motion.button>

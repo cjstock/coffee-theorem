@@ -66,28 +66,33 @@ model Coffee {
   beans      Bean[]
   isFavorite Boolean
 
-  user      User   @relation(fields: [userEmail], references: [email], onDelete: Cascade)
-  userEmail String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
 
-  seller   Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  sellerId String @unique
+  seller   Seller? @relation(fields: [sellerId], references: [id])
+  sellerId String  @unique
 
-  roaster   Roaster @relation(fields: [roasterId], references: [id], onDelete: Cascade)
-  roasterId String  @unique
+  roaster   Roaster? @relation(fields: [roasterId], references: [id])
+  roasterId String   @unique
 
-  producer   Producer @relation(fields: [producerId], references: [id], onDelete: Cascade)
-  producerId String   @unique
+  producer   Producer? @relation(fields: [producerId], references: [id])
+  producerId String    @unique
+
+  brewer   Brewer? @relation(fields: [brewerId], references: [id])
+  brewerId String  @unique
 }
 
 model Bean {
-  id        String    @id @default(cuid())
-  origin    String
-  process   String?
-  varieties Variety[]
-  altitude  String?
-  roast     String?
-  coffee    Coffee    @relation(fields: [coffeeId], references: [id])
-  coffeeId  String
+  id           String    @id @default(cuid())
+  origin       String
+  process      String?
+  varieties    Variety[]
+  altitude     String?
+  roast        String?
+  tastingNotes String?
+  recipes      String?
+  coffee       Coffee    @relation(fields: [coffeeId], references: [id])
+  coffeeId     String
 }
 
 model Roaster {
@@ -95,8 +100,7 @@ model Roaster {
   name      String
   url       String?
   address   String?
-  info      String?
-  isRoaster Boolean
+  info      String? @db.LongText
   coffee    Coffee?
   coffeeId  String
 }
@@ -106,8 +110,7 @@ model Producer {
   name      String
   url       String?
   address   String?
-  info      String?
-  isRoaster Boolean
+  info      String? @db.LongText
   coffee    Coffee?
   coffeeId  String
 }
@@ -117,10 +120,22 @@ model Seller {
   name      String
   url       String?
   address   String?
-  info      String?
+  info      String? @db.LongText
   isRoaster Boolean
   coffee    Coffee?
   coffeeId  String
+}
+
+model Brewer {
+  id           String  @id @default(cuid())
+  name         String
+  url          String?
+  address      String?
+  info         String? @db.LongText
+  tastingNotes String?
+  recipes      String?
+  coffee       Coffee?
+  coffeeId     String
 }
 
 model Variety {
@@ -143,4 +158,25 @@ model Variety {
 
   bean   Bean   @relation(fields: [beanId], references: [id])
   beanId String
+}
+
+generator zod {
+  provider = "zod-prisma"
+  output   = "./zod" // (default) the directory where generated zod schemas will be saved
+
+  relationModel = true // (default) Create and export both plain and related models.
+  // relationModel         = "default" // Do not export model without relations.
+  // relationModel         = false // Do not generate related model
+
+  modelCase = "camelCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
+  // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
+
+  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
+  // prismaJsonNullability = false // allows null assignment to optional JSON fields
 }

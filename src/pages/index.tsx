@@ -7,17 +7,18 @@ import Link from "next/link";
 import Heading from "../components/pages/coffee-collection/Heading";
 import BeanCard from "../components/pages/coffee-collection/BeanCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { CoffeeCard } from "../utils/types";
+import { Coffee } from "@prisma/client";
+import Router from "next/router";
 
 const Home: NextPage = () => {
     const session = useSession();
 
     const {
-        data: beans,
+        data: coffees,
         isLoading,
         isSuccess,
-    } = trpc.useQuery(
-        ["bean.getAll", { userEmail: session.data?.user?.email as string }],
+    } = trpc.coffee.getAll.useQuery(
+        { userId: session.data?.user?.id as string },
         {
             enabled: session.status === "authenticated",
         }
@@ -34,6 +35,7 @@ const Home: NextPage = () => {
             <button
                 type="button"
                 className="inline-flex items-center rounded-md border border-transparent bg-matcha-200 mr-5 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-matcha-100 focus:outline-none focus:ring-0 transition-colors"
+                onClick={() => Router.push("coffee/add")}
             >
                 Add Coffee
             </button>
@@ -70,11 +72,18 @@ const Home: NextPage = () => {
         </div>
     );
 
-    const [beanState, setBeanState] = useState<Array<CoffeeCard>>([]);
+    const [beanState, setBeanState] = useState<
+        Array<
+            Omit<
+                Coffee,
+                "userId" | "sellerId" | "roasterId" | "producerId" | "brewerId"
+            >
+        >
+    >([]);
 
     useEffect(() => {
-        beans && setBeanState(beans);
-    }, [beans]);
+        coffees && setBeanState(coffees);
+    }, [coffees]);
 
     isLoading && <Heading leftSide={leftSide} rightSide={rightSide} />;
 

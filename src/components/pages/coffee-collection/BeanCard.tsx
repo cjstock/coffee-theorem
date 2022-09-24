@@ -1,9 +1,10 @@
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { Bean } from "@prisma/client";
 
 import { Reorder } from "framer-motion";
 
 interface Props {
-    bean: CoffeeCard;
+    bean: Bean;
 }
 const BeanCard: React.FC<Props> = ({ bean }: Props) => {
     return (
@@ -15,7 +16,7 @@ const BeanCard: React.FC<Props> = ({ bean }: Props) => {
         >
             <ul className="flex flex-1 flex-col p-8">
                 <h1 className="mx-auto text-xl text-matcha-100">
-                    {`${bean.country} | ${bean.region}`}
+                    {`${bean.origin}`}
                 </h1>
                 <dl className="mt-1 flex flex-grow flex-col">
                     <dt className="text-matcha-100 text-sm mt-3">Process</dt>
@@ -29,7 +30,7 @@ const BeanCard: React.FC<Props> = ({ bean }: Props) => {
                     </dt>
                     <dd className="mt-1">
                         <span className="text-md font-medium text-matcha-100">
-                            {bean.sellerTastingNotes && bean.sellerTastingNotes}
+                            {bean.tastingNotes && bean.tastingNotes}
                         </span>
                     </dd>
                 </dl>

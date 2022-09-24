@@ -108,7 +108,6 @@ const Home: NextPage = () => {
                     {beanState.map((bean) => (
                         <Link key={bean.id} href={`coffee/${bean.id}`}>
                             <a>
-                                <BeanCard bean={bean} />
                             </a>
                         </Link>
                     ))}

@@ -5,7 +5,6 @@ import { trpc } from "../utils/trpc";
 import { AnimatePresence, Reorder } from "framer-motion";
 import Link from "next/link";
 import Heading from "../components/pages/coffee-collection/Heading";
-import BeanCard from "../components/pages/coffee-collection/BeanCard";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Coffee } from "@prisma/client";
 import Router from "next/router";

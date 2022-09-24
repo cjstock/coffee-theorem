@@ -1,7 +1,6 @@
 import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 
 import { Reorder } from "framer-motion";
-import { CoffeeCard } from "../../../utils/types";
 
 interface Props {
     bean: CoffeeCard;

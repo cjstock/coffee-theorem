@@ -22,15 +22,15 @@ const Coffee: NextPage = () => {
 
     const buttonVariants = {
         initial: {
-            scale: 0
+            scale: 0,
         },
         ready: {
             scale: 1,
         },
         clicked: {
             scale: 1.2,
-        }
-    }
+        },
+    };
 
     const {
         data: coffee,
@@ -85,7 +85,7 @@ const Coffee: NextPage = () => {
         <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1}}
+                animate={{ opacity: 1 }}
                 key={"body"}
             >
                 <Heading leftSide={leftHeading} rightSide={rightHeading} />
@@ -104,7 +104,7 @@ const Coffee: NextPage = () => {
                 whileTap="clicked"
                 key={"button"}
                 type="submit"
-                className="fixed bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
+                className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
             >
                 <CheckIcon className="h-10 w-10" />
             </motion.button>

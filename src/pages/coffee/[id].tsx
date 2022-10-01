@@ -49,19 +49,14 @@ const Coffee: NextPage = () => {
             enabled: id !== "add" && session.status === "authenticated",
             onSuccess(data) {
                 dispatch({
-                    type: "HANDLE INPUT TEXT",
-                    field: "id",
-                    payload: data!.id,
+                    type: "SET ALL",
+                    payload: data,
                 });
             },
         }
     );
 
-    const createMutation = trpc.coffee.upsertCoffee.useMutation({
-        onError(error) {
-            throw new Error(error.message);
-        },
-    });
+    const createCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
 
     const leftHeading = (
         <div>
@@ -103,7 +98,7 @@ const Coffee: NextPage = () => {
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        createMutation.mutate({ coffee: state });
+        createCoffeeMutation.mutate({ coffee: state });
     };
 
     return (

@@ -25,10 +25,11 @@ const SearchBox = ({ title, id, options, dispatch }: SearchBoxProps) => {
               });
 
     const handleAddTastingNote = () => {
-        selectedOption && {
-            type: "HANDLE ADD TASTING NOTE",
-            payload: selectedOption,
-        };
+        selectedOption &&
+            dispatch({
+                type: "HANDLE ADD TASTING NOTE",
+                payload: selectedOption.note,
+            });
     };
 
     return (

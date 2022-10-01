@@ -5,7 +5,7 @@ export const initialState = {
     origin: "",
     altitude: 0,
     process: "",
-    tastingNotes: Array<string>(),
+    tastingNotes: Array<string>(0),
     recipes: "",
     roast: "",
     variety: "",
@@ -30,7 +30,8 @@ export const initialState = {
 
 export type ACTIONTYPE =
     | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
-    | { type: "HANDLE ADD TASTING NOTE"; payload: string };
+    | { type: "HANDLE ADD TASTING NOTE"; payload: string }
+    | { type: "SET ALL"; payload: typeof initialState };
 
 export function reducer(
     state: typeof initialState,
@@ -47,10 +48,19 @@ export function reducer(
             return { ...state, [action.field]: action.payload };
         }
         case "HANDLE ADD TASTING NOTE": {
+            if (state.tastingNotes?.length < 1) {
+                return {
+                    ...state,
+                    tastingNotes: [action.payload],
+                };
+            }
             return {
                 ...state,
-                tastingNotes: [...state.tastingNotes, action.payload],
+                tastingNotes: [action.payload, ...state.tastingNotes],
             };
+        }
+        case "SET ALL": {
+            return action.payload;
         }
         default: {
             throw new Error("Invalid reducer action!");

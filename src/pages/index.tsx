@@ -72,10 +72,10 @@ const Home: NextPage = () => {
         </div>
     );
 
-    const [beanState, setBeanState] = useState<Array<Coffee>>([]);
+    const [coffeeState, setCoffeeState] = useState<Array<Coffee>>([]);
 
     useEffect(() => {
-        coffees && setBeanState(coffees as never[]);
+        coffees && setCoffeeState(coffees as never[]);
     }, [coffees]);
 
     isLoading && <Heading leftSide={leftSide} rightSide={rightSide} />;
@@ -90,18 +90,18 @@ const Home: NextPage = () => {
             {isSuccess && (
                 <Reorder.Group
                     axis="x"
-                    values={beanState}
-                    onReorder={setBeanState}
+                    values={coffeeState}
+                    onReorder={setCoffeeState}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     key={"cards"}
                     className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 >
-                    {beanState.map((bean) => (
-                        <Link key={bean.id} href={`coffee/${bean.id}`}>
+                    {coffeeState.map((coffee) => (
+                        <Link key={coffee.id} href={`coffee/${coffee.id}`}>
                             <a>
-                                <BeanCard bean={bean} />
+                                <BeanCard coffee={coffee} />
                             </a>
                         </Link>
                     ))}

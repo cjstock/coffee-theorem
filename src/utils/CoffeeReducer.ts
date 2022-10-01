@@ -1,63 +1,56 @@
-import { CompleteCoffee } from "../../prisma/zod";
-
-export type Coffee = CompleteCoffee;
-
-export const initialState: Omit<
-    Coffee,
-    "user" | "sellerId" | "roasterId" | "producerId" | "brewerId"
-> = {
+export const initialState = {
     id: "",
     userId: "",
-    isBlend: false,
     isFavorite: false,
-    originName: "",
-    beans: [],
-    seller: {
-        id: "",
-        coffeeId: "",
-        name: "",
-        url: "",
-        address: "",
-        info: "",
-        isRoaster: false,
-    },
-    roaster: {
-        id: "",
-        coffeeId: "",
-        name: "",
-        url: "",
-        address: "",
-        info: "",
-    },
-    producer: {
-        id: "",
-        coffeeId: "",
-        name: "",
-        url: "",
-        address: "",
-        info: "",
-    },
-    brewer: {
-        id: "",
-        coffeeId: "",
-        name: "",
-        url: "",
-        address: "",
-        info: "",
-    },
+    origin: "",
+    altitude: 0,
+    process: "",
+    tastingNotes: Array<string>(),
+    recipes: "",
+    roast: "",
+    variety: "",
+    sellerName: "",
+    sellerUrl: "",
+    sellerAddress: "",
+    sellerInfo: "",
+    sellerIsRoaster: false,
+    roasterName: "",
+    roasterUrl: "",
+    roasterAddress: "",
+    roasterInfo: "",
+    producerName: "",
+    producerUrl: "",
+    producerAddress: "",
+    producerInfo: "",
+    brewerName: "",
+    brewerUrl: "",
+    brewerAddress: "",
+    brewerInfo: "",
 };
 
 export type ACTIONTYPE =
-    | { type: "TOGGLE ISBLEND" }
-    | { type: "HANDLE INPUT TEXT"; field: string; payload: string };
+    | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
+    | { type: "HANDLE ADD TASTING NOTE"; payload: string };
 
-export function reducer(state: typeof initialState, action: ACTIONTYPE) {
+export function reducer(
+    state: typeof initialState,
+    action: ACTIONTYPE
+): typeof initialState {
     switch (action.type) {
-        case "TOGGLE ISBLEND": {
-            return { ...state, isBlend: !state.isBlend };
-        }
         case "HANDLE INPUT TEXT": {
+            if (action.field === "altitude") {
+                return {
+                    ...state,
+                    ["altitude"]: Number.parseInt(action.payload),
+                };
+            }
             return { ...state, [action.field]: action.payload };
+        }
+        case "HANDLE ADD TASTING NOTE": {
+            return {
+                ...state,
+                tastingNotes: [...state.tastingNotes, action.payload],
+            };
         }
         default: {
             throw new Error("Invalid reducer action!");

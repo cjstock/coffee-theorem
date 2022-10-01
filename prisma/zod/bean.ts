@@ -1,20 +1,21 @@
 import * as z from "zod"
-import { CompleteVariety, relatedVarietyModel, CompleteCoffee, relatedCoffeeModel } from "./index"
+import { Process, Roast } from "@prisma/client"
+import { CompleteTastingNote, relatedTastingNoteModel, CompleteCoffee, relatedCoffeeModel } from "./index"
 
 export const beanModel = z.object({
   id: z.string(),
-  origin: z.string(),
-  process: z.string().nullish(),
-  altitude: z.string().nullish(),
-  roast: z.string().nullish(),
-  tastingNotes: z.string().nullish(),
+  origin: z.string().nullish(),
+  process: z.nativeEnum(Process).nullish(),
+  variety: z.string().nullish(),
+  altitude: z.number().int().nullish(),
+  roast: z.nativeEnum(Roast).nullish(),
   recipes: z.string().nullish(),
   coffeeId: z.string(),
 })
 
 export interface CompleteBean extends z.infer<typeof beanModel> {
-  varieties: CompleteVariety[]
-  coffee: CompleteCoffee
+  tastingNotes: CompleteTastingNote[]
+  coffee?: CompleteCoffee | null
 }
 
 /**
@@ -23,6 +24,6 @@ export interface CompleteBean extends z.infer<typeof beanModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedBeanModel: z.ZodSchema<CompleteBean> = z.lazy(() => beanModel.extend({
-  varieties: relatedVarietyModel.array(),
-  coffee: relatedCoffeeModel,
+  tastingNotes: relatedTastingNoteModel.array(),
+  coffee: relatedCoffeeModel.nullish(),
 }))

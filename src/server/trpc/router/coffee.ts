@@ -3,9 +3,9 @@ import { z } from "zod";
 import {
     brewerModel,
     producerModel,
-    relatedCoffeeModel,
     roasterModel,
     sellerModel,
+    coffeeModel,
 } from "../../../../prisma/zod";
 
 export const coffeeRouter = t.router({
@@ -18,10 +18,10 @@ export const coffeeRouter = t.router({
                 },
                 select: {
                     id: true,
-                    beans: true,
-                    isBlend: true,
                     isFavorite: true,
-                    originName: true,
+                    origin: true,
+                    process: true,
+                    tastingNotes: true,
                 },
             });
         }),
@@ -34,33 +34,35 @@ export const coffeeRouter = t.router({
                 },
             });
         }),
-    createCoffee: t.procedure
-        .input(z.object({ coffee: relatedCoffeeModel }))
+    upsertCoffee: t.procedure
+        .input(z.object({ coffee: coffeeModel }))
         .mutation(({ ctx, input }) => {
-            return ctx.prisma.coffee.create({
-                data: {
-                    originName: input.coffee.originName,
-                    isBlend: input.coffee.isBlend,
+            return ctx.prisma.coffee.upsert({
+                where: {
+                    id: input.coffee.id,
+                },
+                create: {
+                    origin: input.coffee.origin,
                     isFavorite: input.coffee.isFavorite,
+                    process: input.coffee.process,
+                    roast: input.coffee.roast,
+                    altitude: input.coffee.altitude,
                     user: {
                         connect: {
                             id: input.coffee.userId,
                         },
                     },
-                    beans: {
-                        create: input.coffee.beans,
-                    },
-                    seller: {
-                        create: input.coffee.seller || undefined,
-                    },
-                    roaster: {
-                        create: input.coffee.roaster || undefined,
-                    },
-                    producer: {
-                        create: input.coffee.producer || undefined,
-                    },
-                    brewer: {
-                        create: input.coffee.brewer || undefined,
+                },
+                update: {
+                    origin: input.coffee.origin,
+                    isFavorite: input.coffee.isFavorite,
+                    process: input.coffee.process,
+                    roast: input.coffee.roast,
+                    altitude: input.coffee.altitude,
+                    user: {
+                        connect: {
+                            id: input.coffee.userId,
+                        },
                     },
                 },
             });

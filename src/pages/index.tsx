@@ -8,6 +8,8 @@ import Heading from "../components/pages/coffee-collection/Heading";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Coffee } from "@prisma/client";
 import Router from "next/router";
+import Coffee from "./coffee/[id]";
+import BeanCard from "../components/pages/coffee-collection/BeanCard";
 
 const Home: NextPage = () => {
     const session = useSession();
@@ -71,17 +73,10 @@ const Home: NextPage = () => {
         </div>
     );
 
-    const [beanState, setBeanState] = useState<
-        Array<
-            Omit<
-                Coffee,
-                "userId" | "sellerId" | "roasterId" | "producerId" | "brewerId"
-            >
-        >
-    >([]);
+    const [beanState, setBeanState] = useState<Array<Coffee>>([]);
 
     useEffect(() => {
-        coffees && setBeanState(coffees);
+        coffees && setBeanState(coffees as never[]);
     }, [coffees]);
 
     isLoading && <Heading leftSide={leftSide} rightSide={rightSide} />;
@@ -106,7 +101,9 @@ const Home: NextPage = () => {
                 >
                     {beanState.map((bean) => (
                         <Link key={bean.id} href={`coffee/${bean.id}`}>
-                            <a></a>
+                            <a>
+                                <BeanCard bean={bean} />
+                            </a>
                         </Link>
                     ))}
                 </Reorder.Group>

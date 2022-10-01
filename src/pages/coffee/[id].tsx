@@ -4,7 +4,6 @@ import { useEffect, useReducer, useRef } from "react";
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from "../../utils/trpc";
 import { initialState, reducer } from "../../utils/CoffeeReducer";
-import CoffeeTypeSelect from "../../components/pages/coffee/CoffeeTypeSelect";
 import SellerSection from "../../components/pages/coffee/SellerSection";
 import { AnimatePresence, motion } from "framer-motion";
 import BrewerSection from "../../components/pages/coffee/BrewerSection";
@@ -12,10 +11,13 @@ import ProducerSection from "../../components/pages/coffee/ProducerSection";
 import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import Divider from "../../components/pages/coffee/Divider";
 import { CheckIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
+import BeanSection from "../../components/pages/coffee/BeanSection";
 
 const Coffee: NextPage = () => {
     const router = useRouter();
     const id = router.query.id as string;
+    const session = useSession();
     const titleRef = useRef<HTMLInputElement>(null);
 
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -32,6 +34,11 @@ const Coffee: NextPage = () => {
         },
     };
 
+    const { data: tastingNotes } = trpc.tastingNotes.getAll.useQuery(
+        undefined,
+        { refetchOnWindowFocus: false }
+    );
+
     const {
         data: coffee,
         isLoading,
@@ -39,22 +46,35 @@ const Coffee: NextPage = () => {
     } = trpc.coffee.byId.useQuery(
         { coffeeId: id },
         {
-            enabled: id !== "add",
+            enabled: id !== "add" && session.status === "authenticated",
+            onSuccess(data) {
+                dispatch({
+                    type: "HANDLE INPUT TEXT",
+                    field: "id",
+                    payload: data!.id,
+                });
+            },
         }
     );
+
+    const createMutation = trpc.coffee.upsertCoffee.useMutation({
+        onError(error) {
+            throw new Error(error.message);
+        },
+    });
 
     const leftHeading = (
         <div>
             <div className="mt-1">
                 <input
                     type="text"
-                    name="originName"
-                    id="originName"
+                    name="origin"
+                    id="origi"
                     key="left"
                     ref={titleRef}
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
-                    placeholder={state.isBlend ? "Name" : "Origin"}
-                    value={state.originName}
+                    placeholder="Origin"
+                    value={state.origin}
                     onChange={(e) =>
                         dispatch({
                             type: "HANDLE INPUT TEXT",
@@ -67,19 +87,24 @@ const Coffee: NextPage = () => {
         </div>
     );
 
-    const rightHeading = (
-        <CoffeeTypeSelect
-            key="right"
-            value={state.isBlend ? "Blend" : "Single Origin"}
-            dispatch={dispatch}
-        />
-    );
-
     useEffect(() => {
         if (titleRef.current) {
             titleRef.current.focus();
         }
-    }, []);
+
+        session.status === "authenticated" &&
+            !state.userId &&
+            dispatch({
+                type: "HANDLE INPUT TEXT",
+                field: "userId",
+                payload: session.data.user!.id,
+            });
+    }, [session.status, tastingNotes]);
+
+    const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        createMutation.mutate({ coffee: state });
+    };
 
     return (
         <AnimatePresence>
@@ -88,7 +113,13 @@ const Coffee: NextPage = () => {
                 animate={{ opacity: 1 }}
                 key={"body"}
             >
-                <Heading leftSide={leftHeading} rightSide={rightHeading} />
+                <Heading leftSide={leftHeading} />
+                <BeanSection
+                    state={state}
+                    dispatch={dispatch}
+                    tastingNotes={tastingNotes!}
+                />
+                <Divider />
                 <SellerSection dispatch={dispatch} />
                 <Divider />
                 <RoasterSection dispatch={dispatch} />
@@ -102,9 +133,10 @@ const Coffee: NextPage = () => {
                 initial="initial"
                 animate="ready"
                 whileTap="clicked"
-                key={"button"}
+                key="button"
                 type="submit"
                 className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
+                onClick={handleSaveClick}
             >
                 <CheckIcon className="h-10 w-10" />
             </motion.button>

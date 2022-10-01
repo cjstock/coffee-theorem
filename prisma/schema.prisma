@@ -60,59 +60,56 @@ model User {
 }
 
 model Coffee {
-  id         String  @id @default(cuid())
-  originName String
-  isBlend    Boolean
-  beans      Bean[]
-  isFavorite Boolean
+  id           String        @id @default(cuid())
+  origin       String
+  isFavorite   Boolean
+  process      String?
+  variety      String?
+  altitude     Int?
+  roast        String?
+  tastingNotes TastingNote[]
+  recipes      String?
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
   seller   Seller? @relation(fields: [sellerId], references: [id])
-  sellerId String  @unique
+  sellerId String? @unique
 
   roaster   Roaster? @relation(fields: [roasterId], references: [id])
-  roasterId String   @unique
+  roasterId String?  @unique
 
   producer   Producer? @relation(fields: [producerId], references: [id])
-  producerId String    @unique
+  producerId String?   @unique
 
   brewer   Brewer? @relation(fields: [brewerId], references: [id])
-  brewerId String  @unique
+  brewerId String? @unique
 }
 
-model Bean {
-  id           String    @id @default(cuid())
-  origin       String
-  process      String?
-  varieties    Variety[]
-  altitude     String?
-  roast        String?
-  tastingNotes String?
-  recipes      String?
-  coffee       Coffee    @relation(fields: [coffeeId], references: [id])
-  coffeeId     String
+model TastingNote {
+  id      String   @id @default(cuid())
+  note    String
+  coffees Coffee[]
 }
 
 model Roaster {
-  id        String  @id @default(cuid())
-  name      String
-  url       String?
-  address   String?
-  info      String? @db.LongText
-  coffee    Coffee?
-  coffeeId  String
+  id       String  @id @default(cuid())
+  name     String
+  url      String?
+  address  String?
+  info     String? @db.LongText
+  coffee   Coffee?
+  coffeeId String
 }
 
 model Producer {
-  id        String  @id @default(cuid())
-  name      String
-  url       String?
-  address   String?
-  info      String? @db.LongText
-  coffee    Coffee?
-  coffeeId  String
+  id       String  @id @default(cuid())
+  name     String
+  url      String?
+  address  String?
+  info     String? @db.LongText
+  coffee   Coffee?
+  coffeeId String
 }
 
 model Seller {
@@ -155,9 +152,6 @@ model Variety {
   lineage            String?
   breeder            String?
   history            String? @db.LongText
-
-  bean   Bean   @relation(fields: [beanId], references: [id])
-  beanId String
 }
 
 generator zod {

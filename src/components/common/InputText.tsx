@@ -5,7 +5,7 @@ interface InputTextProps {
     title: string;
     id: string;
     placeholder?: string;
-    type?: "text" | "email" | "url" | "number" | "search";
+    type?: "text" | "email" | "url" | "search";
     dispatch: Dispatch<ACTIONTYPE>;
 }
 const InputText = ({
@@ -15,6 +15,14 @@ const InputText = ({
     dispatch,
     placeholder,
 }: InputTextProps) => {
+    let roundedClass = "";
+    if (type === "url") {
+        roundedClass = "rounded-r-md";
+    } else if (id === "altitude") {
+        roundedClass = "rounded-l-md";
+    } else {
+        roundedClass = "rounded-md";
+    }
     return (
         <div className="col-span-3 sm:col-span-2">
             <label
@@ -33,10 +41,8 @@ const InputText = ({
                     type={type || "text"}
                     name={id}
                     id={id}
-                    className={`form-input block w-full flex-1 ${
-                        type === "url" ? "rounded-r-md" : "rounded-md"
-                    }  text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
-                    placeholder={placeholder || "Example Text"}
+                    className={`form-input block w-full flex-1 ${roundedClass} text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
+                    placeholder={placeholder || ""}
                     onChange={(e) =>
                         dispatch({
                             type: "HANDLE INPUT TEXT",
@@ -45,6 +51,14 @@ const InputText = ({
                         })
                     }
                 />
+                {id === "altitude" && (
+                    <span
+                        className="inline-flex items-center rounded-r-md border border-l-0 border-coffee-200 bg-coffee-300 px-3 text-coffee-100 sm:text-sm"
+                        id="altitude-meters"
+                    >
+                        Meters (above sea level)
+                    </span>
+                )}
             </div>
         </div>
     );

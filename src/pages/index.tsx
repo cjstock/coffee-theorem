@@ -8,7 +8,6 @@ import Heading from "../components/pages/coffee-collection/Heading";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Coffee } from "@prisma/client";
 import Router from "next/router";
-import Coffee from "./coffee/[id]";
 import BeanCard from "../components/pages/coffee-collection/BeanCard";
 
 const Home: NextPage = () => {

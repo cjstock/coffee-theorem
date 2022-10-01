@@ -38,14 +38,14 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                             title="Roast Level"
                                             id="roast"
                                             options={roastOptions}
-                                            selected={state.roast}
+                                            selected={state.coffee.roast || ""}
                                             dispatch={dispatch}
                                         />
                                         <Select
                                             title="Processing Method"
                                             id="process"
                                             options={processOptions}
-                                            selected={state.process}
+                                            selected={state.coffee.process || ""}
                                             dispatch={dispatch}
                                         />
                                         <SearchBox

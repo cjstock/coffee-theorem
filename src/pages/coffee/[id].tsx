@@ -34,29 +34,27 @@ const Coffee: NextPage = () => {
         },
     };
 
-    const { data: tastingNotes } = trpc.tastingNotes.getAll.useQuery(
+    const tastingNotes = trpc.tastingNotes.getAll.useQuery(
         undefined,
         { refetchOnWindowFocus: false }
     );
 
-    const {
-        data: coffee,
-        isLoading,
-        isSuccess,
-    } = trpc.coffee.byId.useQuery(
+    const coffee = trpc.coffee.byId.useQuery(
         { coffeeId: id },
         {
             enabled: id !== "add" && session.status === "authenticated",
             onSuccess(data) {
-                dispatch({
+
+                data && dispatch({
                     type: "SET ALL",
-                    payload: data,
+                    payload: { coffee: data },
                 });
             },
         }
     );
 
-    const createCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
+    const createCoffeeMutation = trpc.coffee.createCoffee.useMutation();
+    const updateCoffeeMutation = trpc.coffee.updateCoffee.useMutation();
 
     const leftHeading = (
         <div>
@@ -69,7 +67,7 @@ const Coffee: NextPage = () => {
                     ref={titleRef}
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
                     placeholder="Origin"
-                    value={state.origin}
+                    value={state.coffee.origin}
                     onChange={(e) =>
                         dispatch({
                             type: "HANDLE INPUT TEXT",
@@ -87,18 +85,19 @@ const Coffee: NextPage = () => {
             titleRef.current.focus();
         }
 
-        session.status === "authenticated" &&
-            !state.userId &&
+        session.data?.user &&
             dispatch({
                 type: "HANDLE INPUT TEXT",
                 field: "userId",
-                payload: session.data.user!.id,
+                payload: session.data.user.id,
             });
-    }, [session.status, tastingNotes]);
+    }, [session.data?.user, coffee.data]);
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        createCoffeeMutation.mutate({ coffee: state });
+        coffee.data ?
+            updateCoffeeMutation.mutate(state)
+            : createCoffeeMutation.mutate(state)
     };
 
     return (
@@ -112,7 +111,7 @@ const Coffee: NextPage = () => {
                 <BeanSection
                     state={state}
                     dispatch={dispatch}
-                    tastingNotes={tastingNotes!}
+                    tastingNotes={tastingNotes.data}
                 />
                 <Divider />
                 <SellerSection dispatch={dispatch} />

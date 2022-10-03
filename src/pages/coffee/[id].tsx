@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useReducer, useRef } from "react";
 import Heading from "../../components/pages/coffee-collection/Heading";
@@ -13,8 +13,9 @@ import Divider from "../../components/pages/coffee/Divider";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
+import LoadingCoffee from "../../components/common/LoadingCoffee";
 
-const Coffee: NextPage = () => {
+function Coffee() {
     const router = useRouter();
     const id = router.query.id as string;
     const session = useSession();
@@ -34,10 +35,7 @@ const Coffee: NextPage = () => {
         },
     };
 
-    const tastingNotes = trpc.tastingNotes.getAll.useQuery(
-        undefined,
-        { refetchOnWindowFocus: false }
-    );
+    const tastingNotes = trpc.tastingNotes.getAll.useQuery(undefined, { refetchOnWindowFocus: false })
 
     const coffee = trpc.coffee.byId.useQuery(
         { coffeeId: id },
@@ -68,14 +66,11 @@ const Coffee: NextPage = () => {
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
                     placeholder="Origin"
                     value={state.coffee.origin}
-                    onChange={(e) =>
-                        dispatch({
-                            type: "HANDLE INPUT TEXT",
-                            field: e.currentTarget.name,
-                            payload: e.currentTarget.value,
-                        })
-                    }
-                />
+                    onChange={(e) => dispatch({
+                        type: "HANDLE INPUT TEXT",
+                        field: e.currentTarget.name,
+                        payload: e.currentTarget.value,
+                    })} />
             </div>
         </div>
     );
@@ -97,22 +92,23 @@ const Coffee: NextPage = () => {
         e.preventDefault();
         coffee.data ?
             updateCoffeeMutation.mutate(state)
-            : createCoffeeMutation.mutate(state)
+            : createCoffeeMutation.mutate(state);
     };
 
-    return (
-        <AnimatePresence>
+    if (id === "add") {
+        return <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 key={"body"}
             >
                 <Heading leftSide={leftHeading} />
-                <BeanSection
-                    state={state}
-                    dispatch={dispatch}
-                    tastingNotes={tastingNotes.data}
-                />
+                {tastingNotes.data &&
+                    <BeanSection
+                        state={state}
+                        dispatch={dispatch}
+                        tastingNotes={tastingNotes.data} />
+                }
                 <Divider />
                 <SellerSection dispatch={dispatch} />
                 <Divider />
@@ -134,8 +130,49 @@ const Coffee: NextPage = () => {
             >
                 <CheckIcon className="h-10 w-10" />
             </motion.button>
-        </AnimatePresence>
-    );
-};
+        </AnimatePresence>;
+    } else if (coffee.isLoading) {
+        return <LoadingCoffee />;
+    } else {
+        return (
+            <AnimatePresence>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    key={"body"}
+                >
+                    <Heading leftSide={leftHeading} />
+                    {tastingNotes.data &&
+                        <BeanSection
+                            state={state}
+                            dispatch={dispatch}
+                            tastingNotes={tastingNotes.data} />
+                    }
+                    <Divider />
+                    <SellerSection dispatch={dispatch} />
+                    <Divider />
+                    <RoasterSection dispatch={dispatch} />
+                    <Divider />
+                    <ProducerSection dispatch={dispatch} />
+                    <Divider />
+                    <BrewerSection dispatch={dispatch} />
+                </motion.div>
+                <motion.button
+                    variants={buttonVariants}
+                    initial="initial"
+                    animate="ready"
+                    whileTap="clicked"
+                    key="button"
+                    type="submit"
+                    className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
+                    onClick={handleSaveClick}
+                >
+                    <CheckIcon className="h-10 w-10" />
+                </motion.button>
+            </AnimatePresence>
+        );
+    }
+}
+
 
 export default Coffee;

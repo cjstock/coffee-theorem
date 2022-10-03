@@ -1,17 +1,16 @@
-import React, { Dispatch, useState } from "react";
+import React, { useState } from "react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { Combobox } from "@headlessui/react";
 import classNames from "../../utils/ClassNames";
-import { ACTIONTYPE } from "../../utils/CoffeeReducer";
 import { TastingNote } from "@prisma/client";
 
-interface SearchBoxProps {
+interface Props {
     title: string;
     id: string;
     options: TastingNote[];
-    dispatch: Dispatch<ACTIONTYPE>;
+    onClickAdd: () => void;
 }
-const SearchBox = ({ title, id, options, dispatch }: SearchBoxProps) => {
+const TastingNotes = ({ title, id, options, onClickAdd }: Props) => {
     const [query, setQuery] = useState("");
     const [selectedOption, setSelectedOption] = useState<TastingNote>();
 
@@ -19,18 +18,11 @@ const SearchBox = ({ title, id, options, dispatch }: SearchBoxProps) => {
         query === ""
             ? options
             : options.filter((option) => {
-                  return option.note
-                      .toLowerCase()
-                      .includes(query.toLowerCase());
-              });
-
-    const handleAddTastingNote = () => {
-        selectedOption &&
-            dispatch({
-                type: "HANDLE ADD TASTING NOTE",
-                payload: selectedOption.note,
+                return option.note
+                    .toLowerCase()
+                    .includes(query.toLowerCase());
             });
-    };
+
 
     return (
         <div className="col-span-3 sm:col-span-2">
@@ -57,7 +49,7 @@ const SearchBox = ({ title, id, options, dispatch }: SearchBoxProps) => {
                         className="rounded-r-md border border-coffee-200 px-3 text-matcha-100 bg-coffee-300 sm:text-sm focus:outline-none"
                         type="button"
                         id="tastingNotes"
-                        onClick={handleAddTastingNote}
+                        onClick={onClickAdd}
                     >
                         Add
                     </button>
@@ -117,4 +109,4 @@ const SearchBox = ({ title, id, options, dispatch }: SearchBoxProps) => {
     );
 };
 
-export default SearchBox;
+export default TastingNotes;

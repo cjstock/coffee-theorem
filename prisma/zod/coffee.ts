@@ -1,24 +1,26 @@
 import * as z from "zod"
-import { CompleteTastingNote, relatedTastingNoteModel, CompleteUser, relatedUserModel, CompleteSeller, relatedSellerModel, CompleteRoaster, relatedRoasterModel, CompleteProducer, relatedProducerModel, CompleteBrewer, relatedBrewerModel } from "./index"
+import { CompleteCoffeeTastingNote, relatedCoffeeTastingNoteModel, CompleteUser, relatedUserModel, CompleteSeller, relatedSellerModel, CompleteRoaster, relatedRoasterModel, CompleteProducer, relatedProducerModel, CompleteBrewer, relatedBrewerModel } from "./index"
 
 export const coffeeModel = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   origin: z.string(),
   isFavorite: z.boolean(),
-  process: z.string().nullish(),
-  variety: z.string().nullish(),
-  altitude: z.number().int().nullish(),
-  roast: z.string().nullish(),
-  recipes: z.string().nullish(),
+  process: z.string().optional(),
+  variety: z.string().optional(),
+  altitude: z.number().int().optional(),
+  roast: z.string().optional(),
+  recipes: z.string().optional(),
   userId: z.string(),
-  sellerId: z.string().nullish(),
-  roasterId: z.string().nullish(),
-  producerId: z.string().nullish(),
-  brewerId: z.string().nullish(),
+  sellerId: z.string().optional(),
+  roasterId: z.string().optional(),
+  producerId: z.string().optional(),
+  brewerId: z.string().optional(),
 })
 
+export type IcoffeeModel = z.infer<typeof coffeeModel>
+
 export interface CompleteCoffee extends z.infer<typeof coffeeModel> {
-  tastingNotes: CompleteTastingNote[]
+  coffeeTastingNote: CompleteCoffeeTastingNote[]
   user: CompleteUser
   seller?: CompleteSeller | null
   roaster?: CompleteRoaster | null
@@ -32,10 +34,10 @@ export interface CompleteCoffee extends z.infer<typeof coffeeModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedCoffeeModel: z.ZodSchema<CompleteCoffee> = z.lazy(() => coffeeModel.extend({
-  tastingNotes: relatedTastingNoteModel.array(),
+  coffeeTastingNote: relatedCoffeeTastingNoteModel.array(),
   user: relatedUserModel,
-  seller: relatedSellerModel.nullish(),
-  roaster: relatedRoasterModel.nullish(),
-  producer: relatedProducerModel.nullish(),
-  brewer: relatedBrewerModel.nullish(),
+  seller: relatedSellerModel.optional(),
+  roaster: relatedRoasterModel.optional(),
+  producer: relatedProducerModel.optional(),
+  brewer: relatedBrewerModel.optional(),
 }))

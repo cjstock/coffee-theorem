@@ -15,7 +15,6 @@ export const coffeeRouter = t.router({
                     isFavorite: true,
                     origin: true,
                     process: true,
-                    tastingNotes: true,
                 },
             });
         }),
@@ -33,7 +32,12 @@ export const coffeeRouter = t.router({
         .mutation(({ ctx, input }) => {
             return ctx.prisma.coffee.create({
                 data: {
-                    ...input.coffee,
+                    origin: input.coffee.origin,
+                    isFavorite: input.coffee.isFavorite,
+                    altitude: input.coffee.altitude,
+                    process: input.coffee.process,
+                    roast: input.coffee.roast,
+                    userId: input.coffee.userId,
                 }
             })
         }),

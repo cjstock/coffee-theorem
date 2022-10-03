@@ -1,13 +1,15 @@
 import * as z from "zod"
-import { CompleteCoffee, relatedCoffeeModel } from "./index"
+import { CompleteCoffeeTastingNote, relatedCoffeeTastingNoteModel } from "./index"
 
 export const tastingNoteModel = z.object({
-  id: z.string(),
+  id: z.number().int().optional(),
   note: z.string(),
 })
 
+export type ItastingNoteModel = z.infer<typeof tastingNoteModel>
+
 export interface CompleteTastingNote extends z.infer<typeof tastingNoteModel> {
-  coffees: CompleteCoffee[]
+  coffeeTastingNote: CompleteCoffeeTastingNote[]
 }
 
 /**
@@ -16,5 +18,5 @@ export interface CompleteTastingNote extends z.infer<typeof tastingNoteModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedTastingNoteModel: z.ZodSchema<CompleteTastingNote> = z.lazy(() => tastingNoteModel.extend({
-  coffees: relatedCoffeeModel.array(),
+  coffeeTastingNote: relatedCoffeeTastingNoteModel.array(),
 }))

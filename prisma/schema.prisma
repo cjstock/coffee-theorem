@@ -60,15 +60,15 @@ model User {
 }
 
 model Coffee {
-  id           String        @id @default(cuid())
-  origin       String
-  isFavorite   Boolean
-  process      String?
-  variety      String?
-  altitude     Int?
-  roast        String?
-  tastingNotes TastingNote[]
-  recipes      String?
+  id                String              @id @default(cuid())
+  origin            String
+  isFavorite        Boolean
+  process           String?
+  variety           String?
+  altitude          Int?
+  roast             String?
+  coffeeTastingNote CoffeeTastingNote[]
+  recipes           String?
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
@@ -87,9 +87,19 @@ model Coffee {
 }
 
 model TastingNote {
-  id      String   @id @default(cuid())
-  note    String
-  coffees Coffee[]
+  id                Int                 @id @default(autoincrement())
+  note              String
+  coffeeTastingNote CoffeeTastingNote[]
+}
+
+model CoffeeTastingNote {
+  id            Int         @default(dbgenerated())
+  coffee        Coffee      @relation(fields: [coffeeId], references: [id])
+  tastingNote   TastingNote @relation(fields: [id], references: [id])
+  coffeeId      String
+  tastingNoteId Int
+
+  @@id([coffeeId, tastingNoteId])
 }
 
 model Roaster {
@@ -155,7 +165,7 @@ model Variety {
 }
 
 generator zod {
-  provider = "zod-prisma"
+  provider = "zod-prisma-updated"
   output   = "./zod" // (default) the directory where generated zod schemas will be saved
 
   relationModel = true // (default) Create and export both plain and related models.

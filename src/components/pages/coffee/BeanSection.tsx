@@ -4,8 +4,11 @@ import { processOptions, roastOptions } from "../../../types/coffee";
 import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import Checkbox from "../../common/Checkbox";
 import InputText from "../../common/InputText";
-import SearchBox from "../../common/SearchBox";
+import SearchBox from "../../common/TastingNotes";
 import Select from "../../common/Select";
+import React from 'react';
+import { trpc } from '../../../utils/trpc';
+import TastingNotes from "../../common/TastingNotes";
 
 interface BeanSectionProps {
     state: typeof initialState;
@@ -13,6 +16,8 @@ interface BeanSectionProps {
     tastingNotes: Array<TastingNote>;
 }
 const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
+
+
     return (
         <>
             <div>
@@ -48,11 +53,9 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                             selected={state.coffee.process || ""}
                                             dispatch={dispatch}
                                         />
-                                        <SearchBox
-                                            title="Tasting Notes"
-                                            id="tastingNotes"
+                                        <TastingNotes
                                             options={tastingNotes}
-                                            dispatch={dispatch}
+                                            onClickSubmit={() => console.log("hello")}
                                         />
                                         <InputText
                                             title="Altitude"

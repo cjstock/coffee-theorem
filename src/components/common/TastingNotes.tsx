@@ -8,9 +8,8 @@ interface Props {
     title: string;
     id: string;
     options: TastingNote[];
-    onClickAdd: () => void;
 }
-const TastingNotes = ({ title, id, options, onClickAdd }: Props) => {
+const TastingNotes = ({ title, id, options }: Props) => {
     const [query, setQuery] = useState("");
     const [selectedOption, setSelectedOption] = useState<TastingNote>();
 
@@ -49,7 +48,6 @@ const TastingNotes = ({ title, id, options, onClickAdd }: Props) => {
                         className="rounded-r-md border border-coffee-200 px-3 text-matcha-100 bg-coffee-300 sm:text-sm focus:outline-none"
                         type="button"
                         id="tastingNotes"
-                        onClick={onClickAdd}
                     >
                         Add
                     </button>

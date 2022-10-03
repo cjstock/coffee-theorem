@@ -54,8 +54,9 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                             dispatch={dispatch}
                                         />
                                         <TastingNotes
+                                            title="Tasting Notes"
+                                            id="tastingNotes"
                                             options={tastingNotes}
-                                            onClickSubmit={() => console.log("hello")}
                                         />
                                         <InputText
                                             title="Altitude"

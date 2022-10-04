@@ -4,7 +4,7 @@ import { ACTIONTYPE } from "../../utils/CoffeeReducer";
 interface InputTextProps {
     title: string;
     id: string;
-    value: string | number
+    value?: string | number
     placeholder?: string;
     type?: "text" | "email" | "url" | "search";
     dispatch: Dispatch<ACTIONTYPE>;

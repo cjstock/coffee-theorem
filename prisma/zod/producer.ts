@@ -2,15 +2,13 @@ import * as z from "zod"
 import { CompleteCoffee, relatedCoffeeModel } from "./index"
 
 export const producerModel = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   name: z.string(),
-  url: z.string().optional(),
-  address: z.string().optional(),
-  info: z.string().optional(),
+  url: z.string().nullish(),
+  address: z.string().nullish(),
+  info: z.string().nullish(),
   coffeeId: z.string(),
 })
-
-export type IproducerModel = z.infer<typeof producerModel>
 
 export interface CompleteProducer extends z.infer<typeof producerModel> {
   coffee?: CompleteCoffee | null
@@ -22,5 +20,5 @@ export interface CompleteProducer extends z.infer<typeof producerModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedProducerModel: z.ZodSchema<CompleteProducer> = z.lazy(() => producerModel.extend({
-  coffee: relatedCoffeeModel.optional(),
+  coffee: relatedCoffeeModel.nullish(),
 }))

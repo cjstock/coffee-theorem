@@ -7,8 +7,6 @@ export const coffeeTastingNoteModel = z.object({
   tastingNoteId: z.number().int(),
 })
 
-export type IcoffeeTastingNoteModel = z.infer<typeof coffeeTastingNoteModel>
-
 export interface CompleteCoffeeTastingNote extends z.infer<typeof coffeeTastingNoteModel> {
   coffee: CompleteCoffee
   tastingNote: CompleteTastingNote

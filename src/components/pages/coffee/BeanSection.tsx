@@ -4,10 +4,8 @@ import { processOptions, roastOptions } from "../../../types/coffee";
 import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import Checkbox from "../../common/Checkbox";
 import InputText from "../../common/InputText";
-import SearchBox from "../../common/TastingNotes";
 import Select from "../../common/Select";
 import React from 'react';
-import { trpc } from '../../../utils/trpc';
 import TastingNotes from "../../common/TastingNotes";
 
 interface BeanSectionProps {
@@ -16,8 +14,6 @@ interface BeanSectionProps {
     tastingNotes: Array<TastingNote>;
 }
 const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
-
-
     return (
         <>
             <div>
@@ -43,14 +39,14 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                             title="Roast Level"
                                             id="roast"
                                             options={roastOptions}
-                                            selected={state.coffee.roast || ""}
+                                            selected={state.roast || ""}
                                             dispatch={dispatch}
                                         />
                                         <Select
                                             title="Processing Method"
                                             id="process"
                                             options={processOptions}
-                                            selected={state.coffee.process || ""}
+                                            selected={state.process || ""}
                                             dispatch={dispatch}
                                         />
                                         <TastingNotes
@@ -61,6 +57,7 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                         <InputText
                                             title="Altitude"
                                             id="altitude"
+                                            value={state.altitude || 0}
                                             dispatch={dispatch}
                                         />
 

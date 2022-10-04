@@ -1,20 +1,32 @@
-import { CoffeeInput } from '../types/coffee';
-export const initialState: CoffeeInput = {
-    coffee: {
+import { Input, CoffeeByIdOutput } from '../types/coffee';
+export const initialState: Input = {
+    id: "",
+    userId: "",
+    origin: "",
+    isFavorite: false,
+    altitude: 0,
+    process: "",
+    roast: "",
+    variety: "",
+    sellerId: "",
+    roasterId: "",
+    producerId: "",
+    brewerId: "",
+    seller: {
         id: "",
-        userId: "",
-        origin: "",
-        isFavorite: false,
-        altitude: 0,
-        process: "",
-        roast: "",
-        recipes: "",
+        name: "",
+        coffeeId: "",
+        isRoaster: false,
+        address: "",
+        info: "",
+        url: ""
     }
 }
 
 export type ACTIONTYPE =
+    | { type: "SET BASE INFO"; payload: CoffeeByIdOutput }
     | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
-    | { type: "SET ALL"; payload: typeof initialState };
+    | { type: "HANDLE SELLER INPUT"; field: string; payload: string }
 
 export function reducer(
     state: typeof initialState,
@@ -24,21 +36,26 @@ export function reducer(
         case "HANDLE INPUT TEXT": {
             if (action.field === "altitude") {
                 return {
-                    coffee: {
-                        ...state.coffee,
-                        altitude: Number.parseInt(action.payload)
-                    },
+                    ...state,
+                    altitude: Number.parseInt(action.payload)
                 };
             }
             return {
-                coffee: {
-                    ...state.coffee,
-                    [action.field]: action.payload
-                }
+                ...state,
+                [action.field]: action.payload
             };
         }
-        case "SET ALL": {
-            return { ...action.payload }
+        case "SET BASE INFO": {
+            return {
+                ...state,
+                ...action.payload,
+            }
+        }
+        case "HANDLE SELLER INPUT": {
+            return {
+                ...state,
+                seller: { ...state.seller, [action.field]: action.payload }
+            }
         }
         default: {
             throw new Error("Invalid reducer action!");

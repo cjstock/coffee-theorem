@@ -2,11 +2,9 @@ import * as z from "zod"
 import { CompleteCoffeeTastingNote, relatedCoffeeTastingNoteModel } from "./index"
 
 export const tastingNoteModel = z.object({
-  id: z.number().int().optional(),
+  id: z.number().int(),
   note: z.string(),
 })
-
-export type ItastingNoteModel = z.infer<typeof tastingNoteModel>
 
 export interface CompleteTastingNote extends z.infer<typeof tastingNoteModel> {
   coffeeTastingNote: CompleteCoffeeTastingNote[]

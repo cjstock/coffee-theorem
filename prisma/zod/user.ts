@@ -2,14 +2,12 @@ import * as z from "zod"
 import { CompleteCoffee, relatedCoffeeModel, CompleteAccount, relatedAccountModel, CompleteSession, relatedSessionModel } from "./index"
 
 export const userModel = z.object({
-  id: z.string().optional(),
-  name: z.string().optional(),
+  id: z.string(),
+  name: z.string().nullish(),
   email: z.string(),
-  emailVerified: z.date().optional(),
-  image: z.string().optional(),
+  emailVerified: z.date().nullish(),
+  image: z.string().nullish(),
 })
-
-export type IuserModel = z.infer<typeof userModel>
 
 export interface CompleteUser extends z.infer<typeof userModel> {
   coffees: CompleteCoffee[]

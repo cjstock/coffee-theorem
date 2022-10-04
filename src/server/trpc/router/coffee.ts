@@ -15,6 +15,7 @@ export const coffeeRouter = t.router({
                     isFavorite: true,
                     origin: true,
                     process: true,
+                    roast: true
                 },
             });
         }),
@@ -27,28 +28,26 @@ export const coffeeRouter = t.router({
                 },
             });
         }),
-    createCoffee: t.procedure
+    upsertCoffee: t.procedure
         .input(z.object({ coffee: coffeeModel }))
         .mutation(({ ctx, input }) => {
-            return ctx.prisma.coffee.create({
-                data: {
+            return ctx.prisma.coffee.upsert({
+                where: {
+                    id: input.coffee.id
+                },
+                create: {
                     origin: input.coffee.origin,
                     isFavorite: input.coffee.isFavorite,
                     altitude: input.coffee.altitude,
                     process: input.coffee.process,
                     roast: input.coffee.roast,
-                    userId: input.coffee.userId,
-                }
-            })
-        }),
-    updateCoffee: t.procedure
-        .input(z.object({ coffee: coffeeModel }))
-        .mutation(({ ctx, input }) => {
-            return ctx.prisma.coffee.update({
-                where: {
-                    id: input.coffee.id
+                    user: {
+                        connect: {
+                            id: input.coffee.userId
+                        }
+                    },
                 },
-                data: {
+                update: {
                     ...input.coffee
                 }
             })

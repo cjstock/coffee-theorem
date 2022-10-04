@@ -4,6 +4,7 @@ import { ACTIONTYPE } from "../../utils/CoffeeReducer";
 interface InputTextProps {
     title: string;
     id: string;
+    value: string | number
     placeholder?: string;
     type?: "text" | "email" | "url" | "search";
     dispatch: Dispatch<ACTIONTYPE>;
@@ -12,6 +13,7 @@ const InputText = ({
     id,
     title,
     type,
+    value,
     dispatch,
     placeholder,
 }: InputTextProps) => {
@@ -41,6 +43,7 @@ const InputText = ({
                     type={type || "text"}
                     name={id}
                     id={id}
+                    value={value}
                     className={`form-input block w-full flex-1 ${roundedClass} text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
                     placeholder={placeholder || ""}
                     onChange={(e) =>

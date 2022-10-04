@@ -5,5 +5,3 @@ export const verificationTokenModel = z.object({
   token: z.string(),
   expires: z.date(),
 })
-
-export type IverificationTokenModel = z.infer<typeof verificationTokenModel>

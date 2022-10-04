@@ -1,11 +1,10 @@
-import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from "../../utils/trpc";
-import { initialState, reducer } from "../../utils/CoffeeReducer";
+import { initialState, reducer } from '../../utils/CoffeeReducer';
 import SellerSection from "../../components/pages/coffee/SellerSection";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import BrewerSection from "../../components/pages/coffee/BrewerSection";
 import ProducerSection from "../../components/pages/coffee/ProducerSection";
 import RoasterSection from "../../components/pages/coffee/RoasterSection";
@@ -23,17 +22,8 @@ function Coffee() {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const buttonVariants = {
-        initial: {
-            scale: 0,
-        },
-        ready: {
-            scale: 1,
-        },
-        clicked: {
-            scale: 1.2,
-        },
-    };
+
+    const animation = useAnimation()
 
     const tastingNotes = trpc.tastingNotes.getAll.useQuery(undefined, { refetchOnWindowFocus: false })
 
@@ -44,15 +34,15 @@ function Coffee() {
             onSuccess(data) {
 
                 data && dispatch({
-                    type: "SET ALL",
-                    payload: { coffee: data },
+                    type: "SET BASE INFO",
+                    payload: data,
                 });
+                console.log(data);
             },
         }
     );
 
-    const createCoffeeMutation = trpc.coffee.createCoffee.useMutation();
-    const updateCoffeeMutation = trpc.coffee.updateCoffee.useMutation();
+    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
 
     const leftHeading = (
         <div>
@@ -65,7 +55,7 @@ function Coffee() {
                     ref={titleRef}
                     className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
                     placeholder="Origin"
-                    value={state.coffee.origin}
+                    value={state.origin}
                     onChange={(e) => dispatch({
                         type: "HANDLE INPUT TEXT",
                         field: e.currentTarget.name,
@@ -90,9 +80,10 @@ function Coffee() {
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        coffee.data ?
-            updateCoffeeMutation.mutate(state)
-            : createCoffeeMutation.mutate(state);
+        upsertCoffeeMutation.mutate({ coffee: state })
+        animation.start({
+            scale: [1, 1.2, 1.2, 1],
+        })
     };
 
     if (id === "add") {
@@ -119,10 +110,7 @@ function Coffee() {
                 <BrewerSection dispatch={dispatch} />
             </motion.div>
             <motion.button
-                variants={buttonVariants}
-                initial="initial"
-                animate="ready"
-                whileTap="clicked"
+                animate="animation"
                 key="button"
                 type="submit"
                 className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
@@ -158,13 +146,15 @@ function Coffee() {
                     <BrewerSection dispatch={dispatch} />
                 </motion.div>
                 <motion.button
-                    variants={buttonVariants}
-                    initial="initial"
-                    animate="ready"
-                    whileTap="clicked"
+                    initial={{ width: 70, height: 70 }}
+                    animate={animation}
+                    transition={{
+                        duration: 1,
+                        times: [0, 0.25, 0.75, 1]
+                    }}
                     key="button"
                     type="submit"
-                    className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
+                    className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center text-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
                     onClick={handleSaveClick}
                 >
                     <CheckIcon className="h-10 w-10" />

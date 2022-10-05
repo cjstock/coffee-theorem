@@ -30,7 +30,7 @@
         "superjson": "1.9.1",
         "vercel": "^28.4.5",
         "zod": "^3.18.0",
-        "zod-prisma-updated": "^0.5.7"
+        "zod-prisma": "^0.5.4"
     },
     "devDependencies": {
         "@prisma/client": "^4.4.0",

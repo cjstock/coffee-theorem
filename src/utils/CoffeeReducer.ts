@@ -60,6 +60,12 @@ export function reducer(
                 seller: { ...state.seller, [action.field]: action.payload }
             }
         }
+        case "SET SELLER INFO": {
+            return {
+                ...state,
+                seller: action.payload
+            }
+        }
         case "RESET": {
             return { ...initialState, userId: action.payload }
         }

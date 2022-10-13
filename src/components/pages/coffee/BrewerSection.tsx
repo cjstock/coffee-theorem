@@ -1,9 +1,12 @@
 import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 
-const BrewerSection = () => {
+interface Props {
+    isActive: boolean;
+}
+const BrewerSection = ({ isActive }: Props) => {
 
-    return (
+    return isActive ?
         <>
             <div>
                 <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -55,7 +58,8 @@ const BrewerSection = () => {
                 </div>
             </div>
         </>
-    );
+        :
+        <div className="bg-matcha-100">Brewer</div>
 };
 
 export default BrewerSection;

@@ -28,10 +28,12 @@ const CoffeeSectionAdd = ({ state, handler }: Props) => {
                     <Disclosure.Panel>
                         {isOpen && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }} className="flex flex-col">
-                                <motion.button key="Seller" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
-                                    <span className="text-matcha-100">{"Seller"}</span>
-                                    <span className="text-matcha-200">{"Where you bought the coffee"}</span>
-                                </motion.button>
+                                {!state.hasSeller &&
+                                    <motion.button key="Seller" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
+                                        <span className="text-matcha-100">{"Seller"}</span>
+                                        <span className="text-matcha-200">{"Where you bought the coffee"}</span>
+                                    </motion.button>
+                                }
                                 <motion.button key="Roaster" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
                                     <span className="text-matcha-100">{"Roaster"}</span>
                                     <span className="text-matcha-200">{"Where the coffee was roasted"}</span>
@@ -54,4 +56,4 @@ const CoffeeSectionAdd = ({ state, handler }: Props) => {
     )
 }
 
-export default CoffeeSectionAdd;
+export default CoffeeSectionAdd

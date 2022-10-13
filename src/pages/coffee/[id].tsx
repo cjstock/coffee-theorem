@@ -12,7 +12,6 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import { useCoffee, useCoffeeDispatch } from '../../utils/CoffeeContext';
-import CoffeeSectionAdd from "../../components/pages/coffee/CoffeeSectionAdd";
 
 export type SectionsState = {
     hasSeller: boolean,
@@ -47,16 +46,22 @@ function Coffee() {
         {
             enabled: id !== "add" && session.status === "authenticated",
             onSuccess(data) {
-                data && dispatch({ type: "SET BASE INFO", payload: data });
+                if (data) {
+                    dispatch({ type: "SET BASE INFO", payload: data });
+                    dispatch({ type: "HANDLE SELLER INPUT", field: "coffeeId", payload: state.id })
+                }
             },
         }
     );
     const seller = trpc.seller.byId.useQuery(
         { sellerId: coffee.data?.sellerId },
         {
-            enabled: !!coffee.data && sectionState.hasSeller,
+            enabled: !!coffee.data?.sellerId,
             onSuccess(data) {
-                data && dispatch({ type: "SET SELLER INFO", payload: data })
+                if (data) {
+                    dispatch({ type: "SET SELLER INFO", payload: data })
+                    setSectionState({ ...sectionState, hasSeller: true, hasRoaster: !data.isRoaster })
+                }
             },
         }
     )
@@ -79,7 +84,7 @@ function Coffee() {
         upsertCoffeeMutation.mutate({ coffee: state })
         sectionState.hasSeller && upsertSellerMutation.mutate({ seller: state.seller })
         animation.start({
-            scale: [1, 1.2, 1.2, 1],
+            scale: [1, 1.2, 1, 1.2, 1],
         })
     };
 
@@ -87,7 +92,7 @@ function Coffee() {
         <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: 1, transition: { duration: 1 } }}
                 key={"body"}
             >
                 <Heading leftSide={
@@ -114,11 +119,10 @@ function Coffee() {
                     <BeanSection
                         tastingNotes={tastingNotes.data} />
                 }
-                {sectionState.hasSeller && <><Divider /><SellerSection /></>}
-                {sectionState.hasRoaster && <><Divider /><RoasterSection /></>}
-                {sectionState.hasProducer && <><Divider /><ProducerSection /></>}
-                {sectionState.hasBrewer && <><Divider /><BrewerSection /></>}
-                <CoffeeSectionAdd state={sectionState} handler={setSectionState} />
+                <Divider /><SellerSection isActive={sectionState.hasSeller} />
+                <Divider /><RoasterSection isActive={sectionState.hasRoaster} />
+                <Divider /><ProducerSection isActive={sectionState.hasProducer} />
+                <Divider /><BrewerSection isActive={sectionState.hasBrewer} />
             </motion.div>
             <motion.button
                 initial={{ width: 70, height: 70 }}
@@ -129,12 +133,12 @@ function Coffee() {
                 }}
                 key="button"
                 type="submit"
-                className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center text-center rounded-full border border-transparent bg-matcha-200 p-3 text-coffee-500 shadow-sm hover:bg-matcha-100 focus:outline-none transition-colors"
+                className="fixed bottom-10 md:bottom-20 right-10 md:right-20 inline-flex items-center text-center rounded-full border border-transparent bg-matcha-100 p-3 text-coffee-500 shadow-sm focus:outline-none transition-colors"
                 onClick={handleSaveClick}
             >
                 <CheckIcon className="h-10 w-10" />
             </motion.button>
-        </AnimatePresence>
+        </AnimatePresence >
     );
 }
 

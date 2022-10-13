@@ -1,4 +1,3 @@
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Coffee } from "@prisma/client";
 import clsx from "clsx";
 import { Reorder } from "framer-motion";
@@ -8,7 +7,6 @@ interface Props {
 }
 const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
 
-    console.log(coffee.roast)
     const bgColor = clsx(
         coffee.roast === "Light" && "bg-coffee-100"
         || coffee.roast === "Light Medium" && "bg-coffee-200"
@@ -53,23 +51,6 @@ const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
                     </dd>
                 </dl>
             </ul>
-            <div className="mt-auto flex place-self-end w-full">
-                <div className="flex flex-1">
-                    <button className={`-mr-px inline-flex w-0 flex-1 items-center justify-center rounded-bl-lg border border-transparent py-4 text-sm font-medium ${textColor} hover:${textColor}`}>
-                        <PencilSquareIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                        />
-                        <span className="ml-3">Edit</span>
-                    </button>
-                </div>
-                <div className="-ml-px flex flex-1">
-                    <button className={` inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium ${textColor} hover:${textColor}`}>
-                        <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                        <span className="ml-3">Delete</span>
-                    </button>
-                </div>
-            </div>
         </Reorder.Item>
     );
 };

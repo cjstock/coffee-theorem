@@ -60,7 +60,7 @@ model User {
 }
 
 model Coffee {
-  id                String              @id @default(cuid()) @unique
+  id                String              @id @unique @default(cuid())
   origin            String
   isFavorite        Boolean
   process           String?
@@ -123,14 +123,14 @@ model Producer {
 }
 
 model Seller {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   url       String?
   address   String?
-  info      String? @db.LongText
+  info      String?  @db.LongText
   isRoaster Boolean
-  coffee    Coffee?
-  coffeeId  String
+  coffee   Coffee?
+  coffeeId String
 }
 
 model Brewer {

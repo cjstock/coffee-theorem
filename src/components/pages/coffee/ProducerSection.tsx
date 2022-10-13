@@ -1,8 +1,11 @@
 import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 
-const ProducerSection = () => {
-    return (
+interface Props {
+    isActive: boolean;
+}
+const ProducerSection = ({ isActive }: Props) => {
+    return isActive ?
         <>
             <div>
                 <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -55,7 +58,8 @@ const ProducerSection = () => {
                 </div>
             </div>
         </>
-    );
+        :
+        <div className="bg-matcha-100">Producer</div>
 };
 
 export default ProducerSection;

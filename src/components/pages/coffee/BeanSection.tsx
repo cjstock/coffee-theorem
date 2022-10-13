@@ -14,7 +14,7 @@ const BeanSection = ({ tastingNotes }: BeanSectionProps) => {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
     return (
-        <motion.div layout initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto", transition: { duration: 1 } }} exit={{ opacity: 0 }}>
+        <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 1 } }} exit={{ opacity: 0 }}>
             <div className="md:grid md:grid-cols-3 md:gap-6">
                 <div className="md:col-span-1">
                     <div className="px-4 sm:px-0">

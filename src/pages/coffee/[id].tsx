@@ -12,6 +12,9 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import { useCoffee, useCoffeeDispatch } from '../../utils/CoffeeContext';
+import CoffeeSectionAdd from "../../components/pages/coffee/CoffeeSectionAdd";
+import { Coffee, Seller } from "@prisma/client";
+import React from 'react';
 
 export type SectionsState = {
     hasSeller: boolean,
@@ -29,17 +32,50 @@ function Coffee() {
     //Manage local state
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
-    const [sectionState, setSectionState] = useState<SectionsState>({
-        hasSeller: false,
-        hasRoaster: false,
-        hasProducer: false,
-        hasBrewer: false,
-    });
+    const [hasSeller, setHasSeller] = useState(false);
+    const [hasRoaster, setHasRoaster] = useState(false);
+    const [hasProducer, setHasProducer] = useState(false);
+    const [hasBrewer, setHasBrewer] = useState(false);
+
 
     const animation = useAnimation()
 
     //TRPC queries and mutations
     const tastingNotes = trpc.tastingNotes.getAll.useQuery(undefined, { refetchOnWindowFocus: false })
+
+    function loadData(data: Coffee) {
+        dispatch({ type: "SET BASE INFO", payload: data });
+        dispatch({ type: "HANDLE SELLER INPUT", field: "coffeeId", payload: state.id })
+    }
+
+    function loadSeller(data: Seller) {
+        dispatch({ type: "SET SELLER INFO", payload: data })
+        setHasSeller(true)
+        setHasRoaster(!data.isRoaster)
+    }
+
+    function handleSectionChange(event: React.MouseEvent<HTMLButtonElement>) {
+        switch (event.currentTarget.name) {
+            case "Seller": {
+                setHasSeller(true)
+                break
+            }
+            case "Roaster": {
+                setHasRoaster(true)
+                break
+            }
+            case "Producer": {
+                setHasProducer(true)
+                break
+            }
+            case "Brewer": {
+                setHasBrewer(true)
+                break
+            }
+            default:
+                break;
+        }
+    }
 
     const coffee = trpc.coffee.byId.useQuery(
         { coffeeId: id },
@@ -47,8 +83,7 @@ function Coffee() {
             enabled: id !== "add" && session.status === "authenticated",
             onSuccess(data) {
                 if (data) {
-                    dispatch({ type: "SET BASE INFO", payload: data });
-                    dispatch({ type: "HANDLE SELLER INPUT", field: "coffeeId", payload: state.id })
+                    loadData(data);
                 }
             },
         }
@@ -59,8 +94,7 @@ function Coffee() {
             enabled: !!coffee.data?.sellerId,
             onSuccess(data) {
                 if (data) {
-                    dispatch({ type: "SET SELLER INFO", payload: data })
-                    setSectionState({ ...sectionState, hasSeller: true, hasRoaster: !data.isRoaster })
+                    loadSeller(data);
                 }
             },
         }
@@ -82,7 +116,7 @@ function Coffee() {
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         upsertCoffeeMutation.mutate({ coffee: state })
-        sectionState.hasSeller && upsertSellerMutation.mutate({ seller: state.seller })
+        hasSeller && upsertSellerMutation.mutate({ seller: state.seller })
         animation.start({
             scale: [1, 1.2, 1, 1.2, 1],
         })
@@ -92,7 +126,7 @@ function Coffee() {
         <AnimatePresence>
             <motion.div
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1, transition: { duration: 1 } }}
+                animate={{ opacity: 1 }}
                 key={"body"}
             >
                 <Heading leftSide={
@@ -119,11 +153,12 @@ function Coffee() {
                     <BeanSection
                         tastingNotes={tastingNotes.data} />
                 }
-                <Divider /><SellerSection isActive={sectionState.hasSeller} />
-                <Divider /><RoasterSection isActive={sectionState.hasRoaster} />
-                <Divider /><ProducerSection isActive={sectionState.hasProducer} />
-                <Divider /><BrewerSection isActive={sectionState.hasBrewer} />
-            </motion.div>
+                {hasSeller && <><Divider /><SellerSection /></>}
+                {hasRoaster && <><Divider /><RoasterSection /></>}
+                {hasProducer && <><Divider /><ProducerSection /></>}
+                {hasBrewer && <><Divider /><BrewerSection /></>}
+                <CoffeeSectionAdd hasSeller={hasSeller} hasRoaster={hasRoaster} hasProducer={hasProducer} hasBrewer={hasBrewer} handler={handleSectionChange} />
+            </motion.div >
             <motion.button
                 initial={{ width: 70, height: 70 }}
                 animate={animation}

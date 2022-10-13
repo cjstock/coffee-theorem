@@ -28,15 +28,15 @@ const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
         || "bg-coffee-300"
     )
 
-
     return (
         <Reorder.Item
             value={coffee}
             key={coffee.id}
-            className={`flex flex-col w-80 rounded-lg ${bgColor} text-left transition-colors`}
+            drag={false}
+            className={`flex flex-col w-80 rounded-lg ${bgColor} border border-coffee-300 text-left transition-colors`}
         >
             <ul className="flex flex-1 flex-col p-8">
-                <h1 className={`mx-auto text-xl ${textColor}`}>
+                <h1 className={`mx-auto text-xl text-matcha-100`}>
                     {`${coffee.origin}`}
                 </h1>
                 <dl className="mt-1 flex flex-grow flex-col">

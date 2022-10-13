@@ -1,13 +1,11 @@
-import { Dispatch } from "react";
-import { ACTIONTYPE } from "../../utils/CoffeeReducer";
-
 interface TextAreaProps {
     title: string;
     id: string;
     placeholder?: string;
-    dispatch: Dispatch<ACTIONTYPE>;
+    value?: string;
+    handleChange?: React.ChangeEventHandler<HTMLTextAreaElement>
 }
-const TextArea = ({ id, title, dispatch, placeholder }: TextAreaProps) => {
+const TextArea = ({ id, title, value, handleChange, placeholder }: TextAreaProps) => {
     return (
         <div className="col-span-3 sm:col-span-2">
             <label
@@ -23,13 +21,8 @@ const TextArea = ({ id, title, dispatch, placeholder }: TextAreaProps) => {
                     rows={3}
                     className={`form-input block w-full flex-1 rounded-md text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
                     placeholder={placeholder || "Example Text"}
-                    onChange={(e) =>
-                        dispatch({
-                            type: "HANDLE INPUT TEXT",
-                            field: id,
-                            payload: e.currentTarget.value,
-                        })
-                    }
+                    value={value}
+                    onChange={handleChange}
                 />
             </div>
         </div>

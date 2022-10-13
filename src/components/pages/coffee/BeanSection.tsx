@@ -1,19 +1,18 @@
 import { TastingNote } from "@prisma/client";
-import { Dispatch } from "react";
 import { processOptions, roastOptions } from "../../../types/coffee";
-import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import Checkbox from "../../common/Checkbox";
 import InputText from "../../common/InputText";
 import Select from "../../common/Select";
 import React from 'react';
 import TastingNotes from "../../common/TastingNotes";
+import { useCoffee, useCoffeeDispatch } from '../../../utils/CoffeeContext';
 
 interface BeanSectionProps {
-    state: typeof initialState;
-    dispatch: Dispatch<ACTIONTYPE>;
     tastingNotes: Array<TastingNote>;
 }
-const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
+const BeanSection = ({ tastingNotes }: BeanSectionProps) => {
+    const state = useCoffee();
+    const dispatch = useCoffeeDispatch();
     return (
         <>
             <div>
@@ -58,13 +57,7 @@ const BeanSection = ({ state, dispatch, tastingNotes }: BeanSectionProps) => {
                                             title="Altitude"
                                             id="altitude"
                                             value={state.altitude || 0}
-                                            dispatch={dispatch}
-                                        />
-
-                                        <Checkbox
-                                            title="Coffee was also roasted here"
-                                            id="sellerIsRoaster"
-                                            dispatch={dispatch}
+                                            handleChange={(e) => dispatch({ type: "HANDLE INPUT TEXT", field: "altitude", payload: e.currentTarget.value })}
                                         />
                                     </div>
                                 </div>

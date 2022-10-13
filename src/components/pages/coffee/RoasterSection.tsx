@@ -1,12 +1,7 @@
-import { Dispatch } from "react";
-import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
 import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 
-interface RoasterSectionProps {
-    dispatch: Dispatch<ACTIONTYPE>;
-}
-const RoasterSection = ({ dispatch }: RoasterSectionProps) => {
+const RoasterSection = () => {
     return (
         <>
             <div>
@@ -32,27 +27,23 @@ const RoasterSection = ({ dispatch }: RoasterSectionProps) => {
                                             id="roasterName"
                                             type="text"
                                             placeholder="Roasty McRoasterson"
-                                            dispatch={dispatch}
                                         />
                                         <InputText
                                             title="Website"
                                             id="roasterUrl"
                                             type="url"
                                             placeholder="www.coffee-mcroasterson.com"
-                                            dispatch={dispatch}
                                         />
                                         <InputText
                                             title="Address"
                                             id="roasterAddress"
                                             type="text"
                                             placeholder="123 Roaster St."
-                                            dispatch={dispatch}
                                         />
                                         <TextArea
                                             title="About"
                                             id="roasterInfo"
                                             placeholder="The roast it so good."
-                                            dispatch={dispatch}
                                         />
                                     </div>
                                 </div>

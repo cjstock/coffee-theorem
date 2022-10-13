@@ -23,6 +23,7 @@ enum Process {
 
 export type CoffeeInput = inferProcedureInput<AppRouter["coffee"]["upsertCoffee"]>
 export type CoffeeByIdOutput = inferProcedureOutput<AppRouter["coffee"]["byId"]>
+export type SellerByIdOutput = inferProcedureOutput<AppRouter["seller"]["byId"]>
 
 export interface Input extends Omit<CompleteCoffee, "user" | "roaster" | "producer" | "brewer" | "coffeeTastingNote"> {
     seller: CompleteSeller

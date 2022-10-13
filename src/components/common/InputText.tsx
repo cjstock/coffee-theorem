@@ -1,5 +1,4 @@
-import { Dispatch } from "react";
-import { ACTIONTYPE } from "../../utils/CoffeeReducer";
+import React from 'react';
 
 interface InputTextProps {
     title: string;
@@ -7,14 +6,14 @@ interface InputTextProps {
     value?: string | number
     placeholder?: string;
     type?: "text" | "email" | "url" | "search";
-    dispatch: Dispatch<ACTIONTYPE>;
+    handleChange?: React.ChangeEventHandler<HTMLInputElement>
 }
 const InputText = ({
     id,
     title,
     type,
     value,
-    dispatch,
+    handleChange,
     placeholder,
 }: InputTextProps) => {
     let roundedClass = "";
@@ -46,13 +45,7 @@ const InputText = ({
                     value={value}
                     className={`form-input block w-full flex-1 ${roundedClass} text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
                     placeholder={placeholder || ""}
-                    onChange={(e) =>
-                        dispatch({
-                            type: "HANDLE INPUT TEXT",
-                            field: id,
-                            payload: e.currentTarget.value,
-                        })
-                    }
+                    onChange={handleChange}
                 />
                 {id === "altitude" && (
                     <span

@@ -3,7 +3,7 @@ import { initialState, ACTIONTYPE, reducer } from './CoffeeReducer';
 
 const CoffeeContext = createContext(initialState);
 
-const CoffeeDispatchContext = createContext<Dispatch<ACTIONTYPE>>({} as Dispatch<ACTIONTYPE>);
+const CoffeeDispatchContext = createContext<Dispatch<ACTIONTYPE>>(() => initialState);
 
 interface Props {
     children: ReactNode;

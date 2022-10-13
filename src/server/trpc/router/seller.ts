@@ -4,11 +4,11 @@ import { sellerModel } from '../../../../prisma/zod/seller';
 
 export const sellerRouter = t.router({
     byId: t.procedure
-        .input(z.object({ sellerId: z.string() }))
+        .input(z.object({ sellerId: z.string().nullish() }))
         .query(({ ctx, input }) => {
             return ctx.prisma.seller.findUnique({
                 where: {
-                    id: input.sellerId,
+                    id: input.sellerId || undefined,
                 },
             });
         }),

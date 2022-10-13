@@ -1,4 +1,5 @@
-import { Input, CoffeeByIdOutput } from '../types/coffee';
+import { Input, CoffeeByIdOutput, SellerByIdOutput } from '../types/coffee';
+
 export const initialState: Input = {
     id: "",
     userId: "",
@@ -26,7 +27,9 @@ export const initialState: Input = {
 export type ACTIONTYPE =
     | { type: "SET BASE INFO"; payload: CoffeeByIdOutput }
     | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
-    | { type: "HANDLE SELLER INPUT"; field: string; payload: string }
+    | { type: "HANDLE SELLER INPUT"; field: keyof typeof initialState.seller; payload: string | boolean }
+    | { type: "SET SELLER INFO"; payload: SellerByIdOutput }
+    | { type: "RESET"; payload: string }
 
 export function reducer(
     state: typeof initialState,
@@ -56,6 +59,9 @@ export function reducer(
                 ...state,
                 seller: { ...state.seller, [action.field]: action.payload }
             }
+        }
+        case "RESET": {
+            return { ...initialState, userId: action.payload }
         }
         default: {
             throw new Error("Invalid reducer action!");

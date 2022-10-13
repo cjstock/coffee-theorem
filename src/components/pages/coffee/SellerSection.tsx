@@ -1,13 +1,11 @@
-import { Dispatch } from "react";
-import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
 import Checkbox from "../../common/Checkbox";
 import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
+import { useCoffeeDispatch, useCoffee } from '../../../utils/CoffeeContext';
 
-interface SellerSectionProps {
-    dispatch: Dispatch<ACTIONTYPE>;
-}
-const SellerSection = ({ dispatch }: SellerSectionProps) => {
+const SellerSection = () => {
+    const state = useCoffee();
+    const dispatch = useCoffeeDispatch();
     return (
         <>
             <div>
@@ -35,32 +33,37 @@ const SellerSection = ({ dispatch }: SellerSectionProps) => {
                                             id="sellerName"
                                             type="text"
                                             placeholder="Coffee McShop"
-                                            dispatch={dispatch}
+                                            value={state.seller.name}
+                                            handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "name", payload: e.currentTarget.value })}
                                         />
                                         <InputText
                                             title="Website"
                                             id="sellerUrl"
                                             type="url"
                                             placeholder="www.coffee-mcshop.com"
-                                            dispatch={dispatch}
+                                            value={state.seller.url || ""}
+                                            handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "url", payload: e.currentTarget.value })}
                                         />
                                         <InputText
                                             title="Address"
                                             id="sellerAddress"
                                             type="text"
                                             placeholder="123 Coffee St."
-                                            dispatch={dispatch}
+                                            value={state.seller.address || ""}
+                                            handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "address", payload: e.currentTarget.value })}
                                         />
                                         <TextArea
                                             title="About"
                                             id="sellerInfo"
                                             placeholder="They sell the best stufferino"
-                                            dispatch={dispatch}
+                                            value={state.seller.info || ""}
+                                            handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "info", payload: e.currentTarget.value })}
                                         />
                                         <Checkbox
                                             title="Coffee was also roasted here"
                                             id="sellerIsRoaster"
-                                            dispatch={dispatch}
+                                            isChecked={state.seller.isRoaster}
+                                            handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "isRoaster", payload: e.currentTarget.checked })}
                                         />
                                     </div>
                                 </div>

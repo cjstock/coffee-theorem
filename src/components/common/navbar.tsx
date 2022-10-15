@@ -13,7 +13,7 @@ import classNames from "../../utils/ClassNames";
 const navigation = [
     { name: "Coffee Collection", hrefs: ["/", "/coffee/[id]"] },
     { name: "Learn", hrefs: ["/learn"] },
-    { name: "Recipes", hrefs: ["#"] },
+    { name: "Recipes", hrefs: ["/recipes"] },
 ];
 
 interface Props {

@@ -13,15 +13,8 @@ import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import { useCoffee, useCoffeeDispatch } from '../../utils/CoffeeContext';
 import CoffeeSectionAdd from "../../components/pages/coffee/CoffeeSectionAdd";
-import { Coffee, Seller } from "@prisma/client";
+import { Brewer, Coffee, Producer, Roaster, Seller } from "@prisma/client";
 import React from 'react';
-
-export type SectionsState = {
-    hasSeller: boolean,
-    hasRoaster: boolean,
-    hasProducer: boolean,
-    hasBrewer: boolean,
-};
 
 function Coffee() {
     const router = useRouter();
@@ -33,6 +26,7 @@ function Coffee() {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
     const [hasSeller, setHasSeller] = useState(false);
+    const [sellerIsRoaster, setSellerIsRoaster] = useState(false);
     const [hasRoaster, setHasRoaster] = useState(false);
     const [hasProducer, setHasProducer] = useState(false);
     const [hasBrewer, setHasBrewer] = useState(false);
@@ -45,13 +39,29 @@ function Coffee() {
 
     function loadData(data: Coffee) {
         dispatch({ type: "SET BASE INFO", payload: data });
-        dispatch({ type: "HANDLE SELLER INPUT", field: "coffeeId", payload: state.id })
+        dispatch({ type: "HANDLE SELLER INPUT", field: "coffeeId", payload: data.id })
+        dispatch({ type: "HANDLE ROASTER INPUT", field: "coffeeId", payload: data.id })
+        dispatch({ type: "HANDLE PRODUCER INPUT", field: "coffeeId", payload: data.id })
+        dispatch({ type: "HANDLE BREWER INPUT", field: "coffeeId", payload: data.id })
     }
 
     function loadSeller(data: Seller) {
         dispatch({ type: "SET SELLER INFO", payload: data })
         setHasSeller(true)
-        setHasRoaster(!data.isRoaster)
+        setSellerIsRoaster(data.isRoaster)
+    }
+
+    function loadRoaster(data: Roaster) {
+        dispatch({ type: "SET ROASTER INFO", payload: data })
+        !sellerIsRoaster && setHasRoaster(true)
+    }
+    function loadProducer(data: Producer) {
+        dispatch({ type: "SET PRODUCER INFO", payload: data })
+        setHasProducer(true)
+    }
+    function loadBrewer(data: Brewer) {
+        dispatch({ type: "SET BREWER INFO", payload: data })
+        setHasBrewer(true)
     }
 
     function handleSectionChange(event: React.MouseEvent<HTMLButtonElement>) {
@@ -80,6 +90,7 @@ function Coffee() {
     const coffee = trpc.coffee.byId.useQuery(
         { coffeeId: id },
         {
+            refetchOnWindowFocus: false,
             enabled: id !== "add" && session.status === "authenticated",
             onSuccess(data) {
                 if (data) {
@@ -91,6 +102,7 @@ function Coffee() {
     const seller = trpc.seller.byId.useQuery(
         { sellerId: coffee.data?.sellerId },
         {
+            refetchOnWindowFocus: false,
             enabled: !!coffee.data?.sellerId,
             onSuccess(data) {
                 if (data) {
@@ -100,27 +112,81 @@ function Coffee() {
         }
     )
 
+    const roaster = trpc.roaster.byId.useQuery(
+        { roasterId: coffee.data?.roasterId },
+        {
+            refetchOnWindowFocus: false,
+            enabled: !!coffee.data?.roasterId,
+            onSuccess(data) {
+                if (data) {
+                    loadRoaster(data);
+                }
+            },
+        }
+    )
+
+    const producer = trpc.producer.byId.useQuery(
+        { producerId: coffee.data?.producerId },
+        {
+            refetchOnWindowFocus: false,
+            enabled: !!coffee.data?.producerId,
+            onSuccess(data) {
+                if (data) {
+                    loadProducer(data);
+                }
+            },
+        }
+    )
+    const brewer = trpc.brewer.byId.useQuery(
+        { brewerId: coffee.data?.brewerId },
+        {
+            refetchOnWindowFocus: false,
+            enabled: !!coffee.data?.brewerId,
+            onSuccess(data) {
+                if (data) {
+                    loadBrewer(data);
+                }
+            },
+        }
+    )
+
     const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
     const upsertSellerMutation = trpc.seller.upsertSeller.useMutation();
+    const upsertRoasterMutatuion = trpc.roaster.upsertRoaster.useMutation();
+    const upsertProducerMutation = trpc.producer.upsertRoaster.useMutation();
+    const upsertBrewerMutation = trpc.brewer.upsertBrewer.useMutation();
 
 
     useEffect(() => {
         if (titleRef.current) {
             titleRef.current.focus();
         }
-        if (id === "add" && session.data?.user) {
+        if (session.data?.user) {
             dispatch({ type: "RESET", payload: session.data?.user?.id })
         }
     }, [dispatch, id, session.data?.user]);
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        upsertCoffeeMutation.mutate({ coffee: state })
-        hasSeller && upsertSellerMutation.mutate({ seller: state.seller })
+        upsertCoffeeMutation.mutate(
+            { coffee: state },
+            {
+                onSuccess(data) {
+                    hasSeller && upsertSellerMutation.mutate({ seller: { ...state.seller, coffeeId: data.id } })
+                    hasRoaster && upsertRoasterMutatuion.mutate({ roaster: { ...state.roaster, coffeeId: data.id } })
+                    hasProducer && upsertProducerMutation.mutate({ producer: { ...state.producer, coffeeId: data.id } })
+                    hasBrewer && upsertBrewerMutation.mutate({ brewer: { ...state.brewer, coffeeId: data.id } })
+                },
+            }
+        )
         animation.start({
             scale: [1, 1.2, 1, 1.2, 1],
         })
     };
+
+    function handleRoastedHereChange() {
+        setSellerIsRoaster(!sellerIsRoaster)
+    }
 
     return (
         <AnimatePresence>
@@ -130,37 +196,33 @@ function Coffee() {
                 key={"body"}
             >
                 <Heading leftSide={
-                    <div>
-                        <div className="mt-1">
-                            <input
-                                type="text"
-                                name="origin"
-                                id="origin"
-                                key="left"
-                                ref={titleRef}
-                                className="block w-full border-0 bg-coffee-500 focus:ring-0 text-3xl text-matcha-100"
-                                placeholder="Origin"
-                                value={state.origin}
-                                onChange={(e) => dispatch({
-                                    type: "HANDLE INPUT TEXT",
-                                    field: e.currentTarget.name,
-                                    payload: e.currentTarget.value,
-                                })} />
-                        </div>
-                    </div>
+                    <input
+                        type="text"
+                        name="origin"
+                        id="origin"
+                        key="left"
+                        ref={titleRef}
+                        className="block w-full border-0 bg-coffee-500 focus:ring-0 text-2xl text-matcha-100"
+                        placeholder="Origin"
+                        value={state.origin}
+                        onChange={(e) => dispatch({
+                            type: "HANDLE INPUT TEXT",
+                            field: e.currentTarget.name,
+                            payload: e.currentTarget.value,
+                        })} />
                 } />
                 {tastingNotes.data &&
                     <BeanSection
                         tastingNotes={tastingNotes.data} />
                 }
-                {hasSeller && <><Divider /><SellerSection /></>}
-                {hasRoaster && <><Divider /><RoasterSection /></>}
+                {hasSeller && <><Divider /><SellerSection handleRoastedHereChange={() => handleRoastedHereChange} /></>}
+                {hasRoaster && !sellerIsRoaster && <><Divider /><RoasterSection /></>}
                 {hasProducer && <><Divider /><ProducerSection /></>}
                 {hasBrewer && <><Divider /><BrewerSection /></>}
                 <CoffeeSectionAdd hasSeller={hasSeller} hasRoaster={hasRoaster} hasProducer={hasProducer} hasBrewer={hasBrewer} handler={handleSectionChange} />
             </motion.div >
             <motion.button
-                initial={{ width: 70, height: 70 }}
+                initial={{ width: "auto", height: "atuo" }}
                 animate={animation}
                 transition={{
                     duration: 1,

@@ -4,9 +4,18 @@ import TextArea from "../../common/TextArea";
 import { useCoffeeDispatch, useCoffee } from '../../../utils/CoffeeContext';
 import { motion } from "framer-motion";
 
-const SellerSection = () => {
+interface Props {
+    handleRoastedHereChange: () => void
+}
+const SellerSection = ({ handleRoastedHereChange }: Props) => {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
+
+    function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+        dispatch({ type: "HANDLE SELLER INPUT", field: "isRoaster", payload: event.currentTarget.checked })
+        handleRoastedHereChange
+    }
+
     return <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 1 } }} exit={{ opacity: 0 }}>
         <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
@@ -62,7 +71,7 @@ const SellerSection = () => {
                                     title="Coffee was also roasted here"
                                     id="sellerIsRoaster"
                                     isChecked={state.seller.isRoaster}
-                                    handleChange={(e) => dispatch({ type: "HANDLE SELLER INPUT", field: "isRoaster", payload: e.currentTarget.checked })}
+                                    handleChange={handleCheckboxChange}
                                 />
                             </div>
                         </div>

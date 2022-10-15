@@ -1,8 +1,12 @@
+import { motion } from "framer-motion";
+import { useCoffee, useCoffeeDispatch } from "../../../utils/CoffeeContext";
 import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 
 const BrewerSection = () => {
-    return <div>
+    const state = useCoffee();
+    const dispatch = useCoffeeDispatch();
+    return <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 1 } }} exit={{ opacity: 0 }}>
         <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
                 <div className="px-4 sm:px-0">
@@ -26,23 +30,31 @@ const BrewerSection = () => {
                                     id="brewerName"
                                     type="text"
                                     placeholder="Brewy McBrewerson"
+                                    value={state.brewer.name}
+                                    handleChange={e => dispatch({ type: "HANDLE BREWER INPUT", field: "name", payload: e.currentTarget.value })}
                                 />
                                 <InputText
                                     title="Website"
                                     id="brewerUrl"
                                     type="url"
                                     placeholder="www.coffee-shop.com"
+                                    value={state.brewer.url || ""}
+                                    handleChange={e => dispatch({ type: "HANDLE BREWER INPUT", field: "url", payload: e.currentTarget.value })}
                                 />
                                 <InputText
                                     title="Address"
                                     id="brewerAddress"
                                     type="text"
                                     placeholder="123 Lovecup Way."
+                                    value={state.brewer.address || ""}
+                                    handleChange={e => dispatch({ type: "HANDLE BREWER INPUT", field: "address", payload: e.currentTarget.value })}
                                 />
                                 <TextArea
                                     title="About"
                                     id="brewerInfo"
                                     placeholder="Mmmmmm coffee."
+                                    value={state.brewer.info || ""}
+                                    handleChange={e => dispatch({ type: "HANDLE BREWER INPUT", field: "info", payload: e.currentTarget.value })}
                                 />
                             </div>
                         </div>
@@ -50,7 +62,7 @@ const BrewerSection = () => {
                 </form>
             </div>
         </div>
-    </div>
+    </motion.div>
 };
 
 export default BrewerSection;

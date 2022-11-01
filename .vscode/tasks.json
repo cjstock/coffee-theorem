@@ -9,7 +9,7 @@
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "dedicated",
+        "panel": "new",
         "showReuseMessage": true,
         "clear": false
       },
@@ -23,7 +23,7 @@
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "dedicated",
+        "panel": "new",
         "showReuseMessage": true,
         "clear": false
       },
@@ -37,7 +37,7 @@
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "dedicated",
+        "panel": "new",
         "showReuseMessage": true,
         "clear": false
       },

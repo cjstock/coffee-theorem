@@ -1,4 +1,7 @@
-import { Input, CoffeeByIdOutput, SellerByIdOutput, RoasterByIdOutput, ProducerByIdOutput, BrewerByIdOutput } from '../types/coffee';
+import { Input, CoffeeByIdOutput, SellerByIdOutput, RoasterByIdOutput, ProducerByIdOutput, BrewerByIdOutput, CoffeeTastingNoteAddOutput, TastingNoteAddOutput } from '../types/coffee';
+import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
+import { CompleteTastingNote } from '../../prisma/zod/tastingnote';
+import { TastingNote } from '@prisma/client';
 
 export const initialState: Input = {
     id: "",
@@ -9,6 +12,8 @@ export const initialState: Input = {
     process: "",
     roast: "",
     variety: "",
+    coffeeTastingNotes: Array<CompleteCoffeeTastingNote>(),
+    tastingNotes: Array<TastingNote>(),
     sellerId: "",
     roasterId: "",
     producerId: "",
@@ -61,6 +66,8 @@ export type ACTIONTYPE =
     | { type: "SET PRODUCER INFO"; payload: ProducerByIdOutput }
     | { type: "HANDLE BREWER INPUT"; field: keyof typeof initialState.brewer; payload: string | boolean }
     | { type: "SET BREWER INFO"; payload: BrewerByIdOutput }
+    | { type: "ADD TASTING NOTE"; payload: TastingNote }
+    | { type: "SET TASTING NOTES"; payload: TastingNote[] }
     | { type: "RESET"; payload: string }
 
 export function reducer(
@@ -142,6 +149,12 @@ export function reducer(
                 ...state,
                 brewer: action.payload
             }
+        }
+        case "ADD TASTING NOTE": {
+            return { ...state, tastingNotes: [...state.tastingNotes, action.payload] }
+        }
+        case "SET TASTING NOTES": {
+            return { ...state, tastingNotes: action.payload }
         }
         case "RESET": {
             return { ...initialState, userId: action.payload }

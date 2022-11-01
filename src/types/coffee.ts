@@ -5,6 +5,8 @@ import { CompleteSeller } from "../../prisma/zod";
 import { CompleteRoaster } from '../../prisma/zod/roaster';
 import { CompleteProducer } from '../../prisma/zod/producer';
 import { CompleteBrewer } from '../../prisma/zod/brewer';
+import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
+import { TastingNote } from '@prisma/client';
 
 enum Roast {
     light = "Light",
@@ -31,12 +33,17 @@ export type SellerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["selle
 export type RoasterByIdOutput = NonNullable<inferProcedureOutput<AppRouter["roaster"]["byId"]>>
 export type ProducerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["producer"]["byId"]>>
 export type BrewerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["brewer"]["byId"]>>
+export type CoffeeTastingNoteAddOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["connectCoffeeToNote"]>>
+export type TastingNoteAddOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["addTastingNote"]>>
+export type TastingNotesByCoffeeIdOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["byCoffeeId"]>>
 
-export interface Input extends Omit<CompleteCoffee, "user" | "coffeeTastingNote"> {
+export interface Input extends Omit<CompleteCoffee, "user"> {
     seller: CompleteSeller,
     roaster: CompleteRoaster,
     producer: CompleteProducer,
-    brewer: CompleteBrewer
+    brewer: CompleteBrewer,
+    coffeeTastingNotes: CompleteCoffeeTastingNote[],
+    tastingNotes: TastingNote[]
 }
 
 export const roastOptions = Object.values(Roast);

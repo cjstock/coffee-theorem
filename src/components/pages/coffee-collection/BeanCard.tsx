@@ -31,6 +31,9 @@ const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
             value={coffee}
             key={coffee.id}
             drag={false}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1, transition: { duration: 0.5 } }}
+            exit={{ opacity: 0, scale: 0 }}
             className={`flex flex-col w-80 rounded-lg ${bgColor} border border-coffee-300 text-left transition-colors`}
         >
             <ul className="flex flex-1 flex-col p-8">

@@ -3,18 +3,10 @@ import { Disclosure } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from 'react';
 
-interface Props {
-    hasSeller: boolean
-    hasRoaster: boolean
-    hasProducer: boolean
-    hasBrewer: boolean
-    handler: React.MouseEventHandler<HTMLButtonElement>;
-}
-const CoffeeSectionAdd = ({ hasSeller, hasRoaster, hasProducer, hasBrewer, handler }: Props) => {
+const CoffeeSectionAdd = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     function handleButtonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        handler(event)
         setIsOpen(false);
     }
 
@@ -29,20 +21,20 @@ const CoffeeSectionAdd = ({ hasSeller, hasRoaster, hasProducer, hasBrewer, handl
                     <Disclosure.Panel static>
                         {isOpen && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { staggerChildren: 0.5 } }} className="flex flex-col">
-                                {!hasSeller && <motion.button key="Seller" name="Seller" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
+                                {<motion.button key="Seller" name="Seller" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
                                     <span className="text-matcha-100">{"Seller"}</span>
                                     <span className="text-matcha-200">{"Where you bought the coffee"}</span>
                                 </motion.button>
                                 }
-                                {!hasRoaster && <motion.button key="Roaster" name="Roaster" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
+                                {<motion.button key="Roaster" name="Roaster" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
                                     <span className="text-matcha-100">{"Roaster"}</span>
                                     <span className="text-matcha-200">{"Where the coffee was roasted"}</span>
                                 </motion.button>}
-                                {!hasProducer && <motion.button key="Producer" name="Producer" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
+                                {<motion.button key="Producer" name="Producer" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
                                     <span className="text-matcha-100">{"Producer"}</span>
                                     <span className="text-matcha-200">{"Who produced the coffee"}</span>
                                 </motion.button>}
-                                {!hasBrewer && <motion.button key="Brewer" name="Brewer" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
+                                {<motion.button key="Brewer" name="Brewer" onClick={handleButtonClick} initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-between py-2 px-4 hover:bg-coffee-400">
                                     <span className="text-matcha-100">{"Brewer"}</span>
                                     <span className="text-matcha-200">{"Did you or someone else brew them?"}</span>
                                 </motion.button>}

@@ -1,4 +1,3 @@
-import { TastingNote } from "@prisma/client";
 import { processOptions, roastOptions } from "../../../types/coffee";
 import InputText from "../../common/InputText";
 import Select from "../../common/Select";
@@ -7,10 +6,7 @@ import TastingNotes from "../../common/TastingNotes";
 import { useCoffee, useCoffeeDispatch } from '../../../utils/CoffeeContext';
 import { motion } from "framer-motion";
 
-interface BeanSectionProps {
-    tastingNotes: Array<TastingNote>;
-}
-const BeanSection = ({ tastingNotes }: BeanSectionProps) => {
+const BeanSection = () => {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
     return (
@@ -50,7 +46,6 @@ const BeanSection = ({ tastingNotes }: BeanSectionProps) => {
                                     <TastingNotes
                                         title="Tasting Notes"
                                         id="tastingNotes"
-                                        options={tastingNotes}
                                     />
                                     <InputText
                                         title="Altitude"

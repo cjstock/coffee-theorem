@@ -3,20 +3,29 @@ import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 import { useCoffeeDispatch, useCoffee } from '../../../utils/CoffeeContext';
 import { motion } from "framer-motion";
+import { trpc } from "../../../utils/trpc";
+import Divider from "./Divider";
 
 interface Props {
-    handleRoastedHereChange: () => void
+    sellerId: string | undefined | null;
 }
-const SellerSection = ({ handleRoastedHereChange }: Props) => {
+const SellerSection = ({ sellerId }: Props) => {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
 
+    const seller = trpc.seller.byId.useQuery({ sellerId: sellerId }, {
+        enabled: !!sellerId,
+        onSuccess(data) {
+            data && dispatch({ type: "SET SELLER INFO", payload: data })
+        },
+    })
+
     function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
         dispatch({ type: "HANDLE SELLER INPUT", field: "isRoaster", payload: event.currentTarget.checked })
-        handleRoastedHereChange
     }
 
     return <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 1 } }} exit={{ opacity: 0 }}>
+        <Divider />
         <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
                 <div className="px-4 sm:px-0">

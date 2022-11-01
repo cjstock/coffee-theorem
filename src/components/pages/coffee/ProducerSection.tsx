@@ -2,11 +2,13 @@ import InputText from "../../common/InputText";
 import TextArea from "../../common/TextArea";
 import { useCoffee, useCoffeeDispatch } from '../../../utils/CoffeeContext';
 import { motion } from "framer-motion";
+import Divider from "./Divider";
 
 const ProducerSection = () => {
     const state = useCoffee();
     const dispatch = useCoffeeDispatch();
     return <motion.div layout initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 1 } }} exit={{ opacity: 0 }}>
+        <Divider />
         <div className="md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
                 <div className="px-4 sm:px-0">

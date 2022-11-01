@@ -30,7 +30,6 @@ const TastingNotes = ({ title }: Props) => {
     });
     const tastingNotesQuery = trpc.tastingNotes.byCoffeeId.useQuery({ coffeeId: state.id }, {
         enabled: !!state.id,
-        refetchOnWindowFocus: false,
         onSuccess(data) {
             dispatch({ type: "SET TASTING NOTES", payload: data })
         }

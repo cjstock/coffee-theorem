@@ -1,5 +1,3 @@
-
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from '../../utils/trpc';
@@ -9,17 +7,14 @@ import BrewerSection from "../../components/pages/coffee/BrewerSection";
 import ProducerSection from "../../components/pages/coffee/ProducerSection";
 import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import { useCoffee, useCoffeeDispatch } from '../../utils/CoffeeContext';
 import CoffeeSectionAdd from "../../components/pages/coffee/CoffeeSectionAdd";
-import { Coffee } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
 import { CoffeeTastingNoteAddOutput } from '../../types/coffee';
 
 function AddCoffee() {
-    const session = useSession();
     const titleRef = useRef<HTMLInputElement>(null);
     const queryClient = useQueryClient();
 
@@ -34,13 +29,6 @@ function AddCoffee() {
 
     const animation = useAnimation()
 
-    function loadData(data: Coffee) {
-        dispatch({ type: "SET BASE INFO", payload: data });
-        data.sellerId && setIsSellerEnabled(true)
-        data.roasterId && setIsRoasterEnabled(true)
-        data.producerId && setIsProducerEnabled(true)
-        data.brewerId && setIsBrewerEnabled(true)
-    }
 
     const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation({});
 

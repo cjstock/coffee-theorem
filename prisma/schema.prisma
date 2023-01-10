@@ -3,13 +3,12 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider             = "mysql"
   url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  relationMode = "prisma"
 }
 
 // Necessary for Next auth
@@ -28,8 +27,8 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -38,6 +37,7 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -57,18 +57,19 @@ model User {
   coffees       Coffee[]
   accounts      Account[]
   sessions      Session[]
+  @@index([id])
 }
 
 model Coffee {
-  id                String              @id @unique @default(cuid())
-  origin            String
-  isFavorite        Boolean
-  process           String?
-  variety           String?
-  altitude          Int?
-  roast             String?
+  id                 String              @id @unique @default(cuid())
+  origin             String
+  isFavorite         Boolean
+  process            String?
+  variety            String?
+  altitude           Int?
+  roast              String?
   coffeeTastingNotes CoffeeTastingNote[]
-  recipes           String?
+  recipes            String?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -84,22 +85,26 @@ model Coffee {
 
   brewer   Brewer? @relation(fields: [brewerId], references: [id])
   brewerId String? @unique
+
+  @@index([userId])
 }
 
 model TastingNote {
-  id                Int                 @id @default(autoincrement())
-  note              String
-  coffeeTastingNote CoffeeTastingNote[]
+  id                 Int                 @id @default(autoincrement())
+  note               String
+  coffeeTastingNotes CoffeeTastingNote[]
 }
 
 model CoffeeTastingNote {
-  id            Int         @default(dbgenerated())
+  id            Int      @default(dbgenerated())
   coffee        Coffee      @relation(fields: [coffeeId], references: [id])
-  tastingNote   TastingNote @relation(fields: [id], references: [id])
+  tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id])
   coffeeId      String
   tastingNoteId Int
 
   @@id([coffeeId, tastingNoteId])
+  @@index([coffeeId])
+  @@index([tastingNoteId])
 }
 
 model Roaster {
@@ -123,14 +128,14 @@ model Producer {
 }
 
 model Seller {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
   name      String
   url       String?
   address   String?
-  info      String?  @db.LongText
+  info      String? @db.LongText
   isRoaster Boolean
-  coffee   Coffee?
-  coffeeId String
+  coffee    Coffee?
+  coffeeId  String
 }
 
 model Brewer {

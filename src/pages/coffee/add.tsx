@@ -1,3 +1,4 @@
+
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
@@ -17,9 +18,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
 import { CoffeeTastingNoteAddOutput } from '../../types/coffee';
 
-function Coffee() {
-    const router = useRouter();
-    const id = router.query.id as string;   //Get coffee id or "add"
+function AddCoffee() {
     const session = useSession();
     const titleRef = useRef<HTMLInputElement>(null);
     const queryClient = useQueryClient();
@@ -43,24 +42,7 @@ function Coffee() {
         data.brewerId && setIsBrewerEnabled(true)
     }
 
-    const coffee = trpc.coffee.byId.useQuery(
-        { coffeeId: id },
-        {
-            enabled: session.status === "authenticated",
-            onSuccess(data) {
-                if (data) {
-                    loadData(data);
-                }
-            },
-        }
-    );
-    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation({
-        onSuccess(data) {
-            queryClient.setQueryData(["coffee.byId", id], () => {
-                return data
-            })
-        },
-    });
+    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation({});
 
     const connectCoffeeToTastingNotesMutation = trpc.tastingNotes.connectCoffeeToNote.useMutation({
         onSuccess(data) {
@@ -99,7 +81,7 @@ function Coffee() {
 
     return (
         <AnimatePresence>
-            {(!coffee.isLoading) && (<>
+            <>
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { duration: 1.5 } }}
@@ -142,9 +124,9 @@ function Coffee() {
                 >
                     <CheckIcon className="h-10 w-10" />
                 </motion.button>
-            </>)}
+            </>
         </AnimatePresence >
     );
 }
 
-export default Coffee;
+export default AddCoffee;

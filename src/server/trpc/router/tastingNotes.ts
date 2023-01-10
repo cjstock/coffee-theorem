@@ -27,16 +27,7 @@ export const tastingNotesRouter = t.router({
             return await ctx.prisma.coffeeTastingNote.create({
                 data: {
                     tastingNoteId: input.noteId,
-                    tastingNote: {
-                        connect: {
-                            id: input.noteId
-                        }
-                    },
-                    coffee: {
-                        connect: {
-                            id: input.coffeeId
-                        }
-                    }
+                    coffeeId: input.coffeeId,
                 }
             })
         }),
@@ -45,7 +36,7 @@ export const tastingNotesRouter = t.router({
         .query(async ({ input, ctx }) => {
             return await ctx.prisma.tastingNote.findMany({
                 where: {
-                    coffeeTastingNote: {
+                    coffeeTastingNotes: {
                         some: {
                             coffeeId: input.coffeeId
                         }

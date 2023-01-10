@@ -7,7 +7,7 @@ export const tastingNoteModel = z.object({
 })
 
 export interface CompleteTastingNote extends z.infer<typeof tastingNoteModel> {
-  coffeeTastingNote: CompleteCoffeeTastingNote[]
+  coffeeTastingNotes: CompleteCoffeeTastingNote[]
 }
 
 /**
@@ -16,5 +16,5 @@ export interface CompleteTastingNote extends z.infer<typeof tastingNoteModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedTastingNoteModel: z.ZodSchema<CompleteTastingNote> = z.lazy(() => tastingNoteModel.extend({
-  coffeeTastingNote: relatedCoffeeTastingNoteModel.array(),
+  coffeeTastingNotes: relatedCoffeeTastingNoteModel.array(),
 }))

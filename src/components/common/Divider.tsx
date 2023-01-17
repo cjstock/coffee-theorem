@@ -1,8 +1,8 @@
 const Divider = () => {
     return (
-        <div className="sm:block" aria-hidden="true">
+        <div className="z-40 sm:block" aria-hidden="true">
             <div className="py-5">
-                <div className="border-t border-dashed border-coffee-100" />
+                <div className="z-40 border-t border-dashed border-coffee-100" />
             </div>
         </div>
     );

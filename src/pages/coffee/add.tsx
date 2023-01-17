@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useReducer, Key } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from '../../utils/trpc';
 import SellerSection from "../../components/pages/coffee/SellerSection";
@@ -8,29 +8,35 @@ import ProducerSection from "../../components/pages/coffee/ProducerSection";
 import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import BeanSection from "../../components/pages/coffee/BeanSection";
-import { useCoffee, useCoffeeDispatch } from '../../utils/CoffeeContext';
-import CoffeeSectionAdd from "../../components/pages/coffee/CoffeeSectionAdd";
+import { initialState, reducer } from "../../utils/CoffeeReducer";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
 import { CoffeeTastingNoteAddOutput } from '../../types/coffee';
+import SectionAdd from '../../components/pages/coffee/SectionAdd';
+import { useSession } from 'next-auth/react';
 
 function AddCoffee() {
     const titleRef = useRef<HTMLInputElement>(null);
     const queryClient = useQueryClient();
+    const session = useSession();
 
     //Manage local state
-    const state = useCoffee();
-    const dispatch = useCoffeeDispatch();
+    const [state, dispatch] = useReducer(reducer, initialState)
 
-    const [isSellerEnabled, setIsSellerEnabled] = useState(false);
-    const [isRoasterEnabled, setIsRoasterEnabled] = useState(false);
-    const [isProducerEnabled, setIsProducerEnabled] = useState(false);
-    const [isBrewerEnabled, setIsBrewerEnabled] = useState(false);
+    const [enabledSections, setEnabledSections] = useState<Array<string>>([])
 
     const animation = useAnimation()
 
 
-    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation({});
+    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
+    const upsertSellerMutation = trpc.seller.upsertSeller.useMutation({
+        onSuccess(data) {
+            //*TODO add data.seller.id to state
+        }
+    });
+    const upsertRoasterMutation = trpc.roaster.upsertRoaster.useMutation();
+    const upsertProducerMutation = trpc.producer.upsertProducer.useMutation();
+    const upsertBrewerMutation = trpc.brewer.upsertBrewer.useMutation();
 
     const connectCoffeeToTastingNotesMutation = trpc.tastingNotes.connectCoffeeToNote.useMutation({
         onSuccess(data) {
@@ -49,30 +55,53 @@ function AddCoffee() {
         }
     }, []);
 
+    const enableSection = (element: string) => {
+        setEnabledSections(curr => {
+            return curr.includes(element) ?
+                curr :
+                [...curr, element]
+        })
+
+    }
+
+    const disableSection = (element: string) => {
+        setEnabledSections(curr => {
+            return curr.filter(section => section !== element)
+        })
+    }
+
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        upsertCoffeeMutation.mutate(
-            { coffee: state },
-            {
-                onSuccess(data) {
-                    state.tastingNotes.forEach(tastingNote => {
-                        connectCoffeeToTastingNotesMutation.mutate({ coffeeId: data.id || state.id, noteId: tastingNote.id })
-                    })
-                },
-            }
-        )
+        session.data?.user &&
+            upsertCoffeeMutation.mutate(
+                { coffee: { ...state, userId: session.data?.user?.id } },
+                {
+                    onSuccess(data) {
+                        state.tastingNotes.forEach(tastingNote => {
+                            connectCoffeeToTastingNotesMutation.mutate({ coffeeId: data.id || state.id, noteId: tastingNote.id })
+                        })
+                    },
+                }
+            )
 
         animation.start({
             scale: [1, 1.2, 1, 1.2, 1],
         })
     };
 
+    const sections: Record<string, JSX.Element> = {
+        "seller": <SellerSection state={state} dispatch={dispatch} />,
+        "roaster": <RoasterSection state={state} dispatch={dispatch} />,
+        "producer": <ProducerSection state={state} dispatch={dispatch} />,
+        "brewer": <BrewerSection state={state} dispatch={dispatch} />,
+    }
+
     return (
         <AnimatePresence>
             <>
                 <motion.div
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1, transition: { duration: 1.5 } }}
+                    animate={{ opacity: 1, transition: { duration: 0.5 } }}
                     key={"body"}
                 >
                     <Heading leftSide={
@@ -91,12 +120,13 @@ function AddCoffee() {
                                 payload: e.currentTarget.value,
                             })} />
                     } />
-                    <BeanSection />
-                    {isSellerEnabled && <SellerSection sellerId={state.sellerId} />}
-                    {isRoasterEnabled && <RoasterSection />}
-                    {isProducerEnabled && <ProducerSection />}
-                    {isBrewerEnabled && <BrewerSection />}
-                    <CoffeeSectionAdd />
+                    <BeanSection state={state} dispatch={dispatch} />
+                    {enabledSections.map(name => sections[name])}
+                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={() => enableSection("seller")} />}
+                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={() => enableSection("roaster")} />}
+                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={() => enableSection("producer")} />}
+                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={() => enableSection("brewer")} />}
+
                 </motion.div >
                 <motion.button
                     initial={{ width: "auto", height: "atuo" }}

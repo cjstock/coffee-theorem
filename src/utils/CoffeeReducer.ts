@@ -1,6 +1,5 @@
 import { Input, CoffeeByIdOutput, SellerByIdOutput, RoasterByIdOutput, ProducerByIdOutput, BrewerByIdOutput, CoffeeTastingNoteAddOutput, TastingNoteAddOutput } from '../types/coffee';
 import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
-import { CompleteTastingNote } from '../../prisma/zod/tastingnote';
 import { TastingNote } from '@prisma/client';
 
 export const initialState: Input = {
@@ -72,7 +71,7 @@ export type ACTIONTYPE =
 
 export function reducer(
     state: typeof initialState,
-    action: ACTIONTYPE
+    action: ACTIONTYPE,
 ): typeof initialState {
     switch (action.type) {
         case "SET COFFEE ID": {

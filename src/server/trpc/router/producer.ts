@@ -12,7 +12,7 @@ export const producerRoute = t.router({
                 },
             });
         }),
-    upsertRoaster: t.procedure
+    upsertProducer: t.procedure
         .input(z.object({ producer: producerModel }))
         .mutation(({ ctx, input }) => {
             return ctx.prisma.producer.upsert({
@@ -36,7 +36,7 @@ export const producerRoute = t.router({
                 }
             })
         }),
-    deleteRoaster: t.procedure
+    deleteProducer: t.procedure
         .input(z.object({ producerId: z.string() }))
         .mutation(({ ctx, input }) => {
             return ctx.prisma.producer.delete({

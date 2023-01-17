@@ -49,7 +49,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                         >
-                            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-coffee-400 border-coffee-300 border-2 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm">
+                            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full rounded-md bg-coffee-400 border-coffee-300 border-2 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm">
                                 {options.map((option) => (
                                     <Listbox.Option
                                         key={option}
@@ -58,7 +58,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                                                 active
                                                     ? "text-matcha-100 bg-coffee-300"
                                                     : "text-matcha-100",
-                                                "relative cursor-default select-none py-2 pl-3 pr-9"
+                                                "relative z-50 cursor-default select-none py-2 pl-3 pr-9"
                                             )
                                         }
                                         value={option}
@@ -84,7 +84,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                                                             active
                                                                 ? "text-matcha-100"
                                                                 : "text-coffee-100",
-                                                            "absolute inset-y-0 right-0 flex items-center pr-4 transition-colors"
+                                                            "absolute z-50 inset-y-0 right-0 flex items-center pr-4 transition-colors"
                                                         )}
                                                     >
                                                         <CheckIcon

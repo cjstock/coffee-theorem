@@ -193,8 +193,8 @@ generator zod {
   // prismaJsonNullability = false // allows null assignment to optional JSON fields
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.svg"
-  theme    = "forest"
-}
+// generator erd {
+//   provider = "prisma-erd-generator"
+//   output   = "./ERD.svg"
+//   theme    = "forest"
+// }

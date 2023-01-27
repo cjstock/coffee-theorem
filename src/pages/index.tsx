@@ -25,8 +25,8 @@ const Home: NextPage = () => {
     );
 
     const leftSide = (
-        <h3 className="text-lg font-medium leading-6 text-matcha-100">
-            Your Coffee Collection
+        <h3 className="text-2xl font-semibold -tracking-wider leading-6 text-matcha-100">
+            Coffee Collection
         </h3>
     );
 

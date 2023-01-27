@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useReducer, Key } from 'react';
+import { useEffect, useRef, useState, useReducer } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from '../../utils/trpc';
 import SellerSection from "../../components/pages/coffee/SellerSection";
@@ -11,7 +11,6 @@ import BeanSection from "../../components/pages/coffee/BeanSection";
 import { initialState, reducer } from "../../utils/CoffeeReducer";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
-import { CoffeeTastingNoteAddOutput } from '../../types/coffee';
 import SectionAdd from '../../components/pages/coffee/SectionAdd';
 import { useSession } from 'next-auth/react';
 
@@ -31,23 +30,25 @@ function AddCoffee() {
     const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
     const upsertSellerMutation = trpc.seller.upsertSeller.useMutation({
         onSuccess(data) {
-            //*TODO add data.seller.id to state
+            dispatch({ type: "HANDLE SELLER INPUT", field: 'id', payload: data.id })
         }
     });
-    const upsertRoasterMutation = trpc.roaster.upsertRoaster.useMutation();
-    const upsertProducerMutation = trpc.producer.upsertProducer.useMutation();
-    const upsertBrewerMutation = trpc.brewer.upsertBrewer.useMutation();
-
-    const connectCoffeeToTastingNotesMutation = trpc.tastingNotes.connectCoffeeToNote.useMutation({
+    const upsertRoasterMutation = trpc.roaster.upsertRoaster.useMutation({
         onSuccess(data) {
-            queryClient.setQueryData(["tastingNotes.byCoffeeId"], (oldData: Array<CoffeeTastingNoteAddOutput> | undefined) => {
-                if (oldData) {
-                    return [...oldData, data]
-                }
-                return [data]
-            })
-        },
-    })
+            dispatch({ type: "HANDLE ROASTER INPUT", field: 'id', payload: data.id })
+        }
+    });
+    const upsertProducerMutation = trpc.producer.upsertProducer.useMutation({
+        onSuccess(data) {
+            dispatch({ type: "HANDLE PRODUCER INPUT", field: 'id', payload: data.id })
+        }
+    });
+    const upsertBrewerMutation = trpc.brewer.upsertBrewer.useMutation({
+        onSuccess(data) {
+            dispatch({ type: "HANDLE BREWER INPUT", field: 'id', payload: data.id })
+        }
+    });
+
 
     useEffect(() => {
         if (titleRef.current) {
@@ -72,17 +73,17 @@ function AddCoffee() {
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        session.data?.user &&
+        if (session.data?.user) {
             upsertCoffeeMutation.mutate(
                 { coffee: { ...state, userId: session.data?.user?.id } },
                 {
                     onSuccess(data) {
-                        state.tastingNotes.forEach(tastingNote => {
-                            connectCoffeeToTastingNotesMutation.mutate({ coffeeId: data.id || state.id, noteId: tastingNote.id })
-                        })
+                        dispatch({ type: "SET COFFEE IDS", payload: data.id })
+                        enabledSections.includes("seller") && upsertSellerMutation.mutate({ seller: { ...state.seller }, coffee: data })
                     },
                 }
             )
+        }
 
         animation.start({
             scale: [1, 1.2, 1, 1.2, 1],
@@ -90,10 +91,10 @@ function AddCoffee() {
     };
 
     const sections: Record<string, JSX.Element> = {
-        "seller": <SellerSection state={state} dispatch={dispatch} />,
-        "roaster": <RoasterSection state={state} dispatch={dispatch} />,
-        "producer": <ProducerSection state={state} dispatch={dispatch} />,
-        "brewer": <BrewerSection state={state} dispatch={dispatch} />,
+        "seller": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
+        "roaster": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
+        "producer": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
+        "brewer": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
     }
 
     return (

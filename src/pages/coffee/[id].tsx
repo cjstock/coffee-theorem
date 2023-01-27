@@ -11,10 +11,9 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import SectionAdd from "../../components/pages/coffee/SectionAdd";
-import { Coffee } from "@prisma/client";
+import { Coffee, CoffeeTastingNote } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
-import { CoffeeTastingNoteAddOutput } from '../../types/coffee';
 import { initialState, reducer } from "../../utils/CoffeeReducer";
 
 function Coffee() {
@@ -60,7 +59,7 @@ function Coffee() {
 
     const connectCoffeeToTastingNotesMutation = trpc.tastingNotes.connectCoffeeToNote.useMutation({
         onSuccess(data) {
-            queryClient.setQueryData(["tastingNotes.byCoffeeId"], (oldData: Array<CoffeeTastingNoteAddOutput> | undefined) => {
+            queryClient.setQueryData(["tastingNotes.byCoffeeId"], (oldData: Array<CoffeeTastingNote> | undefined) => {
                 if (oldData) {
                     return [...oldData, data]
                 }
@@ -130,7 +129,7 @@ function Coffee() {
                             id="origin"
                             key="left"
                             ref={titleRef}
-                            className="block w-full border-0 bg-coffee-500 focus:ring-0 text-2xl text-matcha-100"
+                            className="block w-full border-0 bg-gradient-to-r rounded-lg from-coffee-400 to-coffee-500 focus:ring-0 text-2xl font-semibold -tracking-tight text-matcha-100"
                             placeholder="Origin"
                             value={state.origin}
                             onChange={(e) => dispatch({

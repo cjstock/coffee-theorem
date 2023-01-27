@@ -24,7 +24,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <Disclosure as="nav" className="bg-coffee-dark">
+        <Disclosure as="nav" className="bg-coffee-dark pb-2">
             <>
                 <div className="mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
@@ -52,7 +52,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                             </div>
                             <div className="flex flex-shrink-0 items-center">
                                 <Link href={"/"} passHref>
-                                    <a className="text-2xl text-matcha-100 font-extrabold font-sans">
+                                    <a className="text-4xl tracking-tight bg-gradient-to-b text-transparent from-matcha-100 to-matcha-300 bg-clip-text font-extrabold font-sans">
                                         Coffee Theorem
                                     </a>
                                 </Link>

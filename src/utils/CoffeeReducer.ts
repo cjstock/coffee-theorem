@@ -1,6 +1,11 @@
-import { Input, CoffeeByIdOutput, SellerByIdOutput, RoasterByIdOutput, ProducerByIdOutput, BrewerByIdOutput, CoffeeTastingNoteAddOutput, TastingNoteAddOutput } from '../types/coffee';
+import { CoffeeByIdOutput, Input } from '../types/coffee';
 import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
 import { TastingNote } from '@prisma/client';
+import { CompleteSeller } from '../../prisma/zod/seller';
+import { CompleteCoffee } from '../../prisma/zod/coffee';
+import { CompleteRoaster } from '../../prisma/zod/roaster';
+import { CompleteProducer } from '../../prisma/zod/producer';
+import { CompleteBrewer } from '../../prisma/zod/brewer';
 
 export const initialState: Input = {
     id: "",
@@ -20,51 +25,51 @@ export const initialState: Input = {
     seller: {
         id: "",
         name: "",
-        coffeeId: "",
         isRoaster: false,
         address: "",
         info: "",
-        url: ""
+        url: "",
+        coffees: Array<CompleteCoffee>()
     },
     roaster: {
         id: "",
         name: "",
-        coffeeId: "",
         address: "",
         info: "",
-        url: ""
+        url: "",
+        coffees: Array<CompleteCoffee>()
     },
     producer: {
         id: "",
         name: "",
-        coffeeId: "",
         address: "",
         info: "",
-        url: ""
+        url: "",
+        coffees: Array<CompleteCoffee>()
     },
     brewer: {
         id: "",
         name: "",
-        coffeeId: "",
         address: "",
         info: "",
-        url: ""
+        url: "",
+        coffees: Array<CompleteCoffee>()
     },
 
 }
 
 export type ACTIONTYPE =
-    | { type: "SET COFFEE ID"; payload: string }
+    | { type: "SET COFFEE IDS"; payload: string }
     | { type: "SET BASE INFO"; payload: CoffeeByIdOutput }
     | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
     | { type: "HANDLE SELLER INPUT"; field: keyof typeof initialState.seller; payload: string | boolean }
-    | { type: "SET SELLER INFO"; payload: SellerByIdOutput }
+    | { type: "SET SELLER INFO"; payload: CompleteSeller }
     | { type: "HANDLE ROASTER INPUT"; field: keyof typeof initialState.roaster; payload: string | boolean }
-    | { type: "SET ROASTER INFO"; payload: RoasterByIdOutput }
+    | { type: "SET ROASTER INFO"; payload: CompleteRoaster }
     | { type: "HANDLE PRODUCER INPUT"; field: keyof typeof initialState.producer; payload: string | boolean }
-    | { type: "SET PRODUCER INFO"; payload: ProducerByIdOutput }
+    | { type: "SET PRODUCER INFO"; payload: CompleteProducer }
     | { type: "HANDLE BREWER INPUT"; field: keyof typeof initialState.brewer; payload: string | boolean }
-    | { type: "SET BREWER INFO"; payload: BrewerByIdOutput }
+    | { type: "SET BREWER INFO"; payload: CompleteBrewer }
     | { type: "ADD TASTING NOTE"; payload: TastingNote }
     | { type: "SET TASTING NOTES"; payload: TastingNote[] }
     | { type: "RESET"; payload: string }
@@ -74,15 +79,6 @@ export function reducer(
     action: ACTIONTYPE,
 ): typeof initialState {
     switch (action.type) {
-        case "SET COFFEE ID": {
-            return {
-                ...state,
-                seller: { ...state.seller, coffeeId: action.payload },
-                roaster: { ...state.roaster, coffeeId: action.payload },
-                producer: { ...state.producer, coffeeId: action.payload },
-                brewer: { ...state.brewer, coffeeId: action.payload }
-            }
-        }
         case "HANDLE INPUT TEXT": {
             if (action.field === "altitude") {
                 return {

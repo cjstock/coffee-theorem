@@ -1,4 +1,4 @@
-import { inferProcedureInput, inferProcedureOutput } from "@trpc/server";
+import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../server/trpc/router";
 import { CompleteCoffee } from '../../prisma/zod/coffee';
 import { CompleteSeller } from "../../prisma/zod";
@@ -27,15 +27,7 @@ enum Process {
     carbonicMacerated = "Carbonic Macerated"
 }
 
-export type CoffeeInput = inferProcedureInput<AppRouter["coffee"]["upsertCoffee"]>
 export type CoffeeByIdOutput = inferProcedureOutput<AppRouter["coffee"]["byId"]>
-export type SellerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["seller"]["byId"]>>
-export type RoasterByIdOutput = NonNullable<inferProcedureOutput<AppRouter["roaster"]["byId"]>>
-export type ProducerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["producer"]["byId"]>>
-export type BrewerByIdOutput = NonNullable<inferProcedureOutput<AppRouter["brewer"]["byId"]>>
-export type CoffeeTastingNoteAddOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["connectCoffeeToNote"]>>
-export type TastingNoteAddOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["addTastingNote"]>>
-export type TastingNotesByCoffeeIdOutput = NonNullable<inferProcedureOutput<AppRouter["tastingNotes"]["byCoffeeId"]>>
 
 export interface Input extends Omit<CompleteCoffee, "user"> {
     seller: CompleteSeller,

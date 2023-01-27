@@ -1,6 +1,7 @@
 import { t } from "../trpc";
 import { z } from "zod";
-import { sellerModel } from '../../../../prisma/zod/seller';
+import { relatedSellerModel } from '../../../../prisma/zod/seller';
+import { coffeeModel } from '../../../../prisma/zod/coffee';
 
 export const sellerRouter = t.router({
     byId: t.procedure
@@ -13,27 +14,27 @@ export const sellerRouter = t.router({
             });
         }),
     upsertSeller: t.procedure
-        .input(z.object({ seller: sellerModel }))
+        .input(z.object({ seller: relatedSellerModel, coffee: coffeeModel }))
         .mutation(({ ctx, input }) => {
             return ctx.prisma.seller.upsert({
                 where: {
                     id: input.seller.id
                 },
                 create: {
-                    isRoaster: input.seller.isRoaster,
-                    name: input.seller.name,
-                    address: input.seller.address,
-                    info: input.seller.info,
-                    url: input.seller.url,
-                    coffeeId: input.seller.coffeeId,
-                    coffee: {
-                        connect: {
-                            id: input.seller.coffeeId
+                    ...input.seller,
+                    coffees: {
+                        createMany: {
+                            data: [input.coffee]
                         }
-                    },
+                    }
                 },
                 update: {
-                    ...input.seller
+                    ...input.seller,
+                    coffees: {
+                        createMany: {
+                            data: [input.coffee]
+                        }
+                    }
                 }
             })
         }),

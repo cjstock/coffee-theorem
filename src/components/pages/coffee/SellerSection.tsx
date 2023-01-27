@@ -6,6 +6,7 @@ import { Input } from "../../../types/coffee";
 import { Dispatch } from "react";
 import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
 import CoffeeSection from "../../common/CoffeeSection";
+import { CompleteSeller } from '../../../../prisma/zod/seller';
 
 interface Props {
     state: Input,
@@ -16,7 +17,7 @@ const SellerSection = ({ state, dispatch }: Props) => {
     const seller = trpc.seller.byId.useQuery({ sellerId: state.seller.id }, {
         enabled: !!state.seller.id,
         onSuccess(data) {
-            data && dispatch({ type: "SET SELLER INFO", payload: data })
+            data && dispatch({ type: "SET SELLER INFO", payload: data as CompleteSeller })
         },
     })
 

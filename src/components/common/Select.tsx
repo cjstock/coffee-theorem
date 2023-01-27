@@ -28,7 +28,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                         {title}
                     </Listbox.Label>
                     <div className="relative mt-1">
-                        <Listbox.Button className="relative w-full cursor-default rounded-md border border-coffee-200 bg-coffee-400 py-2 pl-3 pr-10 text-left shadow-sm focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm">
+                        <Listbox.Button className="relative w-full cursor-default rounded-md border border-coffee-200 bg-transparent py-2 pl-3 pr-10 text-left shadow-sm focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-all">
                             <span className="inline-flex w-full truncate">
                                 <span className="truncate text-matcha-100">
                                     {selected}
@@ -49,16 +49,16 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                         >
-                            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full rounded-md bg-coffee-400 border-coffee-300 border-2 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm">
+                            <Listbox.Options className="absolute z-50 mt-1 max-h-60 w-full rounded-md bg-coffee-500 border-coffee-300 border-2 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm">
                                 {options.map((option) => (
                                     <Listbox.Option
                                         key={option}
                                         className={({ active }) =>
                                             classNames(
                                                 active
-                                                    ? "text-matcha-100 bg-coffee-300"
+                                                    ? "text-matcha-100 bg-gradient-to-r from-coffee-400 to-coffee-500"
                                                     : "text-matcha-100",
-                                                "relative z-50 cursor-default select-none py-2 pl-3 pr-9"
+                                                "relative z-50 cursor-pointer select-none py-2 pl-3 pr-9"
                                             )
                                         }
                                         value={option}

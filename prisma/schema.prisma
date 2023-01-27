@@ -2,12 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
@@ -27,6 +27,7 @@ model Account {
   session_state            String?
   refresh_token_expires_in Int?
   user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
   @@index([userId])
 }
@@ -37,6 +38,7 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }
 
@@ -57,6 +59,7 @@ model User {
   coffees       Coffee[]
   accounts      Account[]
   sessions      Session[]
+
   @@index([id])
 }
 
@@ -74,19 +77,23 @@ model Coffee {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  seller   Seller? @relation(fields: [sellerId], references: [id])
-  sellerId String? @unique
+  seller Seller? @relation(fields: [sellerId], references: [id])
 
-  roaster   Roaster? @relation(fields: [roasterId], references: [id])
-  roasterId String?  @unique
+  roaster Roaster? @relation(fields: [roasterId], references: [id])
 
-  producer   Producer? @relation(fields: [producerId], references: [id])
-  producerId String?   @unique
+  producer Producer? @relation(fields: [producerId], references: [id])
 
-  brewer   Brewer? @relation(fields: [brewerId], references: [id])
-  brewerId String? @unique
+  brewer     Brewer? @relation(fields: [brewerId], references: [id])
+  sellerId   String?
+  roasterId  String?
+  producerId String?
+  brewerId   String?
 
   @@index([userId])
+  @@index([sellerId])
+  @@index([roasterId])
+  @@index([producerId])
+  @@index([brewerId])
 }
 
 model TastingNote {
@@ -96,7 +103,7 @@ model TastingNote {
 }
 
 model CoffeeTastingNote {
-  id            Int      @default(dbgenerated())
+  id            Int         @default(dbgenerated())
   coffee        Coffee      @relation(fields: [coffeeId], references: [id])
   tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id])
   coffeeId      String
@@ -108,46 +115,42 @@ model CoffeeTastingNote {
 }
 
 model Roaster {
-  id       String  @id @default(cuid())
-  name     String
-  url      String?
-  address  String?
-  info     String? @db.LongText
-  coffee   Coffee?
-  coffeeId String
+  id      String   @id @default(cuid())
+  name    String
+  url     String?
+  address String?
+  info    String?  @db.LongText
+  coffees Coffee[]
 }
 
 model Producer {
-  id       String  @id @default(cuid())
-  name     String
-  url      String?
-  address  String?
-  info     String? @db.LongText
-  coffee   Coffee?
-  coffeeId String
+  id      String   @id @default(cuid())
+  name    String
+  url     String?
+  address String?
+  info    String?  @db.LongText
+  coffees Coffee[]
 }
 
 model Seller {
-  id        String  @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   url       String?
   address   String?
-  info      String? @db.LongText
+  info      String?  @db.LongText
   isRoaster Boolean
-  coffee    Coffee?
-  coffeeId  String
+  coffees   Coffee[]
 }
 
 model Brewer {
-  id           String  @id @default(cuid())
+  id           String   @id @default(cuid())
   name         String
   url          String?
   address      String?
-  info         String? @db.LongText
+  info         String?  @db.LongText
   tastingNotes String?
   recipes      String?
-  coffee       Coffee?
-  coffeeId     String
+  coffees Coffee[]
 }
 
 model Variety {
@@ -188,4 +191,10 @@ generator zod {
   // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
   prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
   // prismaJsonNullability = false // allows null assignment to optional JSON fields
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./ERD.svg"
+  theme    = "forest"
 }

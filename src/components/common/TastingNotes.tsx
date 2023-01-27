@@ -64,7 +64,7 @@ const TastingNotes = ({ title }: Props) => {
                 </Combobox.Label>
                 <div className="flex relative mt-1">
                     <Combobox.Input
-                        className="w-full rounded-md rounded-r-none border border-coffee-200 bg-coffee-400 text-matcha-100 py-2 pl-3 pr-10 shadow-sm focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm"
+                        className="w-full rounded-md rounded-r-none border border-coffee-200 bg-transparent text-matcha-100 py-2 pl-3 pr-10 shadow-sm focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm"
                         onChange={(event) => handleTextChange(event)}
                         displayValue={(tastingNote: TastingNote) => tastingNote.note}
                     />

@@ -1,6 +1,6 @@
 import { t } from "../trpc";
 import { z } from "zod";
-import { coffeeModel } from '../../../../prisma/zod/coffee';
+import { relatedCoffeeModel, coffeeModel } from '../../../../prisma/zod/coffee';
 
 export const coffeeRouter = t.router({
     getAll: t.procedure
@@ -41,14 +41,15 @@ export const coffeeRouter = t.router({
                     altitude: input.coffee.altitude,
                     process: input.coffee.process,
                     roast: input.coffee.roast,
-                    user: {
-                        connect: {
-                            id: input.coffee.userId
-                        }
-                    },
+                    userId: input.coffee.userId
                 },
                 update: {
-                    ...input.coffee
+                    origin: input.coffee.origin,
+                    isFavorite: input.coffee.isFavorite,
+                    altitude: input.coffee.altitude,
+                    process: input.coffee.process,
+                    roast: input.coffee.roast,
+                    userId: input.coffee.userId
                 }
             })
         }),

@@ -9,11 +9,10 @@ export const brewerModel = z.object({
   info: z.string().nullish(),
   tastingNotes: z.string().nullish(),
   recipes: z.string().nullish(),
-  coffeeId: z.string(),
 })
 
 export interface CompleteBrewer extends z.infer<typeof brewerModel> {
-  coffee?: CompleteCoffee | null
+  coffees: CompleteCoffee[]
 }
 
 /**
@@ -22,5 +21,5 @@ export interface CompleteBrewer extends z.infer<typeof brewerModel> {
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
 export const relatedBrewerModel: z.ZodSchema<CompleteBrewer> = z.lazy(() => brewerModel.extend({
-  coffee: relatedCoffeeModel.nullish(),
+  coffees: relatedCoffeeModel.array(),
 }))

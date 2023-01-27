@@ -34,7 +34,7 @@ const InputText = ({
             </label>
             <div className="mt-1 flex rounded-md shadow-sm">
                 {type === "url" && (
-                    <span className="inline-flex items-center rounded-l-md border border-r-0 border-coffee-200 bg-coffee-300 px-3 text-sm text-coffee-100">
+                    <span className="inline-flex items-center rounded-l-md border border-r-0 border-coffee-300 bg-transparent px-3 text-sm text-coffee-100">
                         http://
                     </span>
                 )}
@@ -43,13 +43,13 @@ const InputText = ({
                     name={id}
                     id={id}
                     value={value}
-                    className={`form-input block w-full flex-1 ${roundedClass} text-matcha-100 bg-coffee-400 border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
+                    className={`form-input block w-full flex-1 ${roundedClass} text-matcha-100 bg-transparent border-coffee-200 focus:border-coffee-100 focus:ring-coffee-100 sm:text-sm transition-colors`}
                     placeholder={placeholder || ""}
                     onChange={handleChange}
                 />
                 {id === "altitude" && (
                     <span
-                        className="inline-flex items-center rounded-r-md border border-l-0 border-coffee-200 bg-coffee-300 px-3 text-coffee-100 sm:text-sm"
+                        className="inline-flex items-center rounded-r-md border border-l-0 border-coffee-300 bg-coffee-400 px-3 text-coffee-100 sm:text-sm"
                         id="altitude-meters"
                     >
                         Meters (above sea level)

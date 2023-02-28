@@ -2,7 +2,6 @@ import { processOptions, roastOptions } from "../../../types/coffee";
 import InputText from "../../common/InputText";
 import Select from "../../common/Select";
 import React from 'react';
-import TastingNotes from "../../common/TastingNotes";
 import { Dispatch } from 'react';
 import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import CoffeeSection from "../../common/CoffeeSection";

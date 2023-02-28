@@ -99,9 +99,7 @@ const Home: NextPage = () => {
             >
                 {coffeeState.map((coffee) => (
                     <Link key={coffee.id} href={`coffee/${coffee.id}`}>
-                        <a>
-                            <BeanCard coffee={coffee} />
-                        </a>
+                        <BeanCard coffee={coffee} />
                     </Link>
                 ))}
             </Reorder.Group>

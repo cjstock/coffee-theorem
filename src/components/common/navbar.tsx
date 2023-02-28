@@ -32,7 +32,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                             <div className="-ml-2 mr-2 flex items-center md:hidden">
                                 {/* Mobile menu button */}
                                 <Disclosure.Button
-                                    onClick={() => setIsOpen(!isOpen)}
+                                    onClickCapture={() => setIsOpen(!isOpen)}
                                     className="inline-flex items-center justify-center rounded-md p-2 text-coffee-100 hover:bg-coffee-400 focus:outline-none focus:ring-0">
                                     <span className="sr-only">
                                         Open main menu
@@ -51,10 +51,8 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                 </Disclosure.Button>
                             </div>
                             <div className="flex flex-shrink-0 items-center">
-                                <Link href={"/"} passHref>
-                                    <a className="text-4xl tracking-tight bg-gradient-to-b text-transparent from-matcha-100 to-matcha-300 bg-clip-text font-extrabold font-sans">
-                                        Coffee Theorem
-                                    </a>
+                                <Link href={"/"} className="text-4xl tracking-tight bg-gradient-to-b text-transparent from-matcha-100 to-matcha-300 bg-clip-text font-extrabold font-sans" passHref>
+                                    Coffee Theorem
                                 </Link>
                             </div>
                             <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
@@ -64,34 +62,31 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                             key={element.name}
                                             href={element.hrefs[0]!}
                                             passHref
+                                            className={classNames(
+                                                element.hrefs.find(
+                                                    (href) =>
+                                                        href ===
+                                                        selectedNavTab
+                                                )
+                                                    ? "bg-coffee-300 text-matcha-100"
+                                                    : "text-matcha-100 hover:bg-coffee-400",
+                                                "px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                            )}
+                                            aria-current={
+                                                element.hrefs.find(
+                                                    (href) =>
+                                                        href ===
+                                                        selectedNavTab
+                                                )
+                                                    ? "page"
+                                                    : undefined
+                                            }
+                                            onClick={() =>
+                                            (selectedNavTab =
+                                                element.hrefs[0]!)
+                                            }
                                         >
-                                            <a
-                                                className={classNames(
-                                                    element.hrefs.find(
-                                                        (href) =>
-                                                            href ===
-                                                            selectedNavTab
-                                                    )
-                                                        ? "bg-coffee-300 text-matcha-100"
-                                                        : "text-matcha-100 hover:bg-coffee-400",
-                                                    "px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                                                )}
-                                                aria-current={
-                                                    element.hrefs.find(
-                                                        (href) =>
-                                                            href ===
-                                                            selectedNavTab
-                                                    )
-                                                        ? "page"
-                                                        : undefined
-                                                }
-                                                onClick={() =>
-                                                (selectedNavTab =
-                                                    element.hrefs[0]!)
-                                                }
-                                            >
-                                                {element.name}
-                                            </a>
+                                            {element.name}
                                         </Link>
                                     );
                                 })}
@@ -102,7 +97,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="relative ml-3">
                                     <div>
-                                        <Menu.Button onClick={() => setIsOpen(!isOpen)} className="flex rounded-full bg-coffee-500 text-sm focus:outline-none">
+                                        <Menu.Button onClickCapture={() => setIsOpen(!isOpen)} className="flex rounded-full bg-coffee-500 text-sm focus:outline-none">
                                             <span className="sr-only">
                                                 Open user menu
                                             </span>
@@ -172,8 +167,6 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                 >
                                     <Disclosure.Button
                                         key={item.name}
-                                        as="a"
-                                        href={item.hrefs[0]!}
                                         className={classNames(
                                             item.hrefs.find(
                                                 (href) =>
@@ -191,7 +184,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                                 ? "page"
                                                 : undefined
                                         }
-                                        onClick={() =>
+                                        onClickCapture={() =>
                                             (selectedNavTab = item.hrefs[0]!)
                                         }
                                     >
@@ -209,7 +202,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                             className={
                                                 "block px-4 py-2 text-base rounded-md text-matcha-100 bg-coffee-400 hover:bg-coffee-300"
                                             }
-                                            onClick={() => signOut()}
+                                            onClickCapture={() => signOut()}
                                         >
                                             {"Logout"}
                                         </Disclosure.Button>
@@ -219,7 +212,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                                             className={
                                                 "block px-4 py-2 text-base rounded-md bg-coffee-400 text-matcha-100 hover:bg-coffee-300"
                                             }
-                                            onClick={() => signIn()}
+                                            onClickCapture={() => signIn()}
                                         >
                                             {"Login"}
                                         </Disclosure.Button>

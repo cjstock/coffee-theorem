@@ -67,6 +67,7 @@ export const coffeeRouter = t.router({
                     process: input.coffee.process,
                     variety: input.coffee.variety,
                     userId: ctx.session.user.id,
+                    roast: input.coffee.roast
                 },
             });
             const seller = input.seller && await ctx.prisma.seller.upsert({
@@ -178,6 +179,7 @@ export const coffeeRouter = t.router({
                     process: input.coffee.process,
                     variety: input.coffee.variety,
                     userId: ctx.session.user.id,
+                    roast: input.coffee.roast
                 },
             });
             input.seller && await ctx.prisma.seller.create({

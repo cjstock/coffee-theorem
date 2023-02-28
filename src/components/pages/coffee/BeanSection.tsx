@@ -32,10 +32,6 @@ const BeanSection = ({ state, dispatch }: Props) => {
                 selected={state.coffee.process || ""}
                 dispatch={dispatch}
             />
-            <TastingNotes
-                title="Tasting Notes"
-                id="tastingNotes"
-            />
             <InputText
                 title="Altitude"
                 id="altitude"

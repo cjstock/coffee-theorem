@@ -22,18 +22,6 @@ const TastingNotes = ({ title }: Props) => {
     const { data: options } = trpc.tastingNotes.getAll.useQuery(undefined, {
         refetchOnWindowFocus: false
     })
-    const addTastingNoteMutation = trpc.tastingNotes.addTastingNote.useMutation({
-        onSuccess(data) {
-            dispatch({ type: "ADD TASTING NOTE", payload: data })
-            queryClient.refetchQueries(["tastingNotes.getAll"])
-        },
-    });
-    const tastingNotesQuery = trpc.tastingNotes.byCoffeeId.useQuery({ coffeeId: state.id }, {
-        enabled: !!state.id,
-        onSuccess(data) {
-            dispatch({ type: "SET TASTING NOTES", payload: data })
-        }
-    })
 
     const filteredResults =
         query === ""
@@ -60,7 +48,6 @@ const TastingNotes = ({ title }: Props) => {
                 <Combobox.Label className="block text-sm font-medium text-matcha-100">
                     {title}
                     <br />
-                    {state.tastingNotes && state.tastingNotes.map(note => note.note).join(", ")}
                 </Combobox.Label>
                 <div className="flex relative mt-1">
                     <Combobox.Input
@@ -80,7 +67,6 @@ const TastingNotes = ({ title }: Props) => {
                         id="tastingNotes"
                         onClick={(e) => {
                             e.preventDefault()
-                            addTastingNoteMutation.mutate({ note: selectedOption?.note || query })
                             setQuery("")
                         }}
                     >

@@ -1,14 +1,14 @@
-import { Input, processOptions, roastOptions } from "../../../types/coffee";
+import { processOptions, roastOptions } from "../../../types/coffee";
 import InputText from "../../common/InputText";
 import Select from "../../common/Select";
 import React from 'react';
 import TastingNotes from "../../common/TastingNotes";
 import { Dispatch } from 'react';
-import { ACTIONTYPE } from "../../../utils/CoffeeReducer";
+import { ACTIONTYPE, initialState } from "../../../utils/CoffeeReducer";
 import CoffeeSection from "../../common/CoffeeSection";
 
 interface Props {
-    state: Input
+    state: typeof initialState
     dispatch: Dispatch<ACTIONTYPE>
 }
 const BeanSection = ({ state, dispatch }: Props) => {
@@ -22,14 +22,14 @@ const BeanSection = ({ state, dispatch }: Props) => {
                 title="Roast Level"
                 id="roast"
                 options={roastOptions}
-                selected={state.roast || ""}
+                selected={state.coffee.roast || ""}
                 dispatch={dispatch}
             />
             <Select
                 title="Processing Method"
                 id="process"
                 options={processOptions}
-                selected={state.process || ""}
+                selected={state.coffee.process || ""}
                 dispatch={dispatch}
             />
             <TastingNotes
@@ -39,8 +39,8 @@ const BeanSection = ({ state, dispatch }: Props) => {
             <InputText
                 title="Altitude"
                 id="altitude"
-                value={state.altitude || 0}
-                handleChange={(e) => dispatch({ type: "HANDLE INPUT TEXT", field: "altitude", payload: e.currentTarget.value })}
+                value={state.coffee.altitude || 0}
+                handleChange={(e) => dispatch({ type: "EditCoffeeField", field: "altitude", payload: e.currentTarget.value })}
             />
         </CoffeeSection>
     );

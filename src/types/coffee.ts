@@ -1,12 +1,11 @@
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "../server/trpc/router";
-import { CompleteCoffee } from '../../prisma/zod/coffee';
-import { CompleteSeller } from "../../prisma/zod";
-import { CompleteRoaster } from '../../prisma/zod/roaster';
-import { CompleteProducer } from '../../prisma/zod/producer';
-import { CompleteBrewer } from '../../prisma/zod/brewer';
-import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
-import { TastingNote } from '@prisma/client';
+import { coffeeModel } from '../../prisma/zod/coffee';
+import { sellerModel } from '../../prisma/zod/seller';
+import { producerModel } from '../../prisma/zod/producer';
+import { roasterModel } from '../../prisma/zod/roaster';
+import { brewerModel } from '../../prisma/zod/brewer';
+import { z } from "zod";
 
 enum Roast {
     light = "Light",
@@ -28,14 +27,14 @@ enum Process {
 }
 
 export type CoffeeByIdOutput = inferProcedureOutput<AppRouter["coffee"]["byId"]>
+export type CoffeesGetAllOutput = inferProcedureOutput<AppRouter["coffee"]["getAll"]>
 
-export interface Input extends Omit<CompleteCoffee, "user"> {
-    seller: CompleteSeller,
-    roaster: CompleteRoaster,
-    producer: CompleteProducer,
-    brewer: CompleteBrewer,
-    coffeeTastingNotes: CompleteCoffeeTastingNote[],
-    tastingNotes: TastingNote[]
+export interface CoffeeReducer {
+    coffee: z.infer<typeof coffeeModel>,
+    seller: z.infer<typeof sellerModel> | null,
+    roaster: z.infer<typeof roasterModel> | null,
+    producer: z.infer<typeof producerModel> | null,
+    brewer: z.infer<typeof brewerModel> | null
 }
 
 export const roastOptions = Object.values(Roast);

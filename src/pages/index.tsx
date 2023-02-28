@@ -2,27 +2,32 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
-import { AnimatePresence, Reorder } from "framer-motion";
+import { Reorder } from "framer-motion";
 import Link from "next/link";
 import Heading from "../components/pages/coffee-collection/Heading";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Coffee } from "@prisma/client";
 import Router from "next/router";
 import BeanCard from "../components/pages/coffee-collection/BeanCard";
+import Unauthorized from "../components/common/Unauthorized";
+import { z } from "zod";
+import { coffeeModel } from '../../prisma/zod/coffee';
 
 const Home: NextPage = () => {
     const session = useSession();
-
     const {
         data: coffees,
-        isLoading,
         isSuccess,
-    } = trpc.coffee.getAll.useQuery(
-        { userId: session.data?.user?.id as string },
-        {
-            enabled: session.status === "authenticated",
-        }
-    );
+        isLoading,
+        isError
+    } = trpc.coffee.getAll.useQuery({ userId: session.data?.user?.id }, {
+        retry: false,
+        refetchOnWindowFocus: false,
+        enabled: session.status == "authenticated",
+        onSuccess(data) {
+            setCoffeeState(data)
+        },
+    })
+
 
     const leftSide = (
         <h3 className="text-2xl font-semibold -tracking-wider leading-6 text-matcha-100">
@@ -72,43 +77,36 @@ const Home: NextPage = () => {
         </div>
     );
 
-    const [coffeeState, setCoffeeState] = useState<Array<Coffee>>([]);
+    const [coffeeState, setCoffeeState] = useState<Array<z.infer<typeof coffeeModel>>>([]);
 
-    useEffect(() => {
-        coffees && setCoffeeState(coffees as never[]);
-    }, [coffees]);
-
-    isLoading && <Heading leftSide={leftSide} rightSide={rightSide} />;
-
-    return (
-        <AnimatePresence>
-            <Heading
-                key={"heading"}
-                leftSide={leftSide}
-                rightSide={rightSide}
-            />
-            {isSuccess && (
-                <Reorder.Group
-                    axis="x"
-                    values={coffeeState}
-                    onReorder={setCoffeeState}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    key={"cards"}
-                    className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                >
-                    {coffeeState.map((coffee) => (
-                        <Link key={coffee.id} href={`coffee/${coffee.id}`}>
-                            <a>
-                                <BeanCard coffee={coffee} />
-                            </a>
-                        </Link>
-                    ))}
-                </Reorder.Group>
-            )}
-        </AnimatePresence>
-    );
+    if (session.status == "unauthenticated") return <Unauthorized />
+    return (<>
+        <Heading
+            key={"heading"}
+            leftSide={leftSide}
+            rightSide={rightSide}
+        />
+        {isSuccess && (
+            <Reorder.Group
+                axis="x"
+                values={coffeeState}
+                onReorder={setCoffeeState}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                key={"cards"}
+                className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+            >
+                {coffeeState.map((coffee) => (
+                    <Link key={coffee.id} href={`coffee/${coffee.id}`}>
+                        <a>
+                            <BeanCard coffee={coffee} />
+                        </a>
+                    </Link>
+                ))}
+            </Reorder.Group>
+        )}
+    </>);
 };
 
 export default Home;

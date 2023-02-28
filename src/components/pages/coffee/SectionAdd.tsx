@@ -16,7 +16,7 @@ const SectionAdd = ({ title, onClick }: Props) => {
                 exit={{ opacity: 0 }}
             >
                 <Disclosure.Button className="flex w-full z-40 overflow-visible justify-between rounded-md bg-coffee-500 px-4 py-4 text-center font-medium text-coffee-100">
-                    <span className="text-matcha-100">{title}</span>
+                    <span className="text-matcha-100 capitalize">{title}</span>
                     <PlusIcon className="h-5 w-5" />
                 </Disclosure.Button>
                 <Disclosure.Panel static>

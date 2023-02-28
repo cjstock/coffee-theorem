@@ -64,7 +64,7 @@ model User {
 }
 
 model Coffee {
-  id                 String              @id @unique @default(cuid())
+  id                 String              @id @default(cuid())
   origin             String
   isFavorite         Boolean
   process            String?
@@ -78,15 +78,15 @@ model Coffee {
   userId String
 
   seller Seller? @relation(fields: [sellerId], references: [id])
+  sellerId   String?
 
   roaster Roaster? @relation(fields: [roasterId], references: [id])
+  roasterId  String?
 
   producer Producer? @relation(fields: [producerId], references: [id])
+  producerId String?
 
   brewer     Brewer? @relation(fields: [brewerId], references: [id])
-  sellerId   String?
-  roasterId  String?
-  producerId String?
   brewerId   String?
 
   @@index([userId])
@@ -138,7 +138,7 @@ model Seller {
   url       String?
   address   String?
   info      String?  @db.LongText
-  isRoaster Boolean
+  isRoaster Boolean  @default(false)
   coffees   Coffee[]
 }
 
@@ -150,7 +150,7 @@ model Brewer {
   info         String?  @db.LongText
   tastingNotes String?
   recipes      String?
-  coffees Coffee[]
+  coffees      Coffee[]
 }
 
 model Variety {
@@ -176,7 +176,7 @@ generator zod {
   provider = "zod-prisma"
   output   = "./zod" // (default) the directory where generated zod schemas will be saved
 
-  relationModel = true // (default) Create and export both plain and related models.
+  relationModel = false // (default) Create and export both plain and related models.
   // relationModel         = "default" // Do not export model without relations.
   // relationModel         = false // Do not generate related model
 
@@ -189,12 +189,12 @@ generator zod {
   useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
 
   // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-  prismaJsonNullability = true // (default) uses prisma's scheme for JSON field nullability
+  prismaJsonNullability = false // (default) uses prisma's scheme for JSON field nullability
   // prismaJsonNullability = false // allows null assignment to optional JSON fields
 }
 
-// generator erd {
-//   provider = "prisma-erd-generator"
-//   output   = "./ERD.svg"
-//   theme    = "forest"
-// }
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./ERD.svg"
+  theme    = "forest"
+}

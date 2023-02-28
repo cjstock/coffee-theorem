@@ -1,7 +1,7 @@
 import { t } from "../trpc";
 import { z } from "zod";
-import { relatedSellerModel } from '../../../../prisma/zod/seller';
 import { coffeeModel } from '../../../../prisma/zod/coffee';
+import { sellerModel } from '../../../../prisma/zod/seller';
 
 export const sellerRouter = t.router({
     byId: t.procedure
@@ -14,7 +14,7 @@ export const sellerRouter = t.router({
             });
         }),
     upsertSeller: t.procedure
-        .input(z.object({ seller: relatedSellerModel, coffee: coffeeModel }))
+        .input(z.object({ seller: sellerModel, coffee: coffeeModel }))
         .mutation(({ ctx, input }) => {
             return ctx.prisma.seller.upsert({
                 where: {

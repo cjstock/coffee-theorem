@@ -14,7 +14,7 @@ interface SelectProps {
 const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
     const handleChange = (value: string) => {
         dispatch({
-            type: "HANDLE INPUT TEXT",
+            type: "EditCoffeeField",
             field: id,
             payload: value,
         });

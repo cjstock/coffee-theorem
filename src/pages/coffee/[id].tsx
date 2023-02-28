@@ -11,10 +11,11 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import SectionAdd from "../../components/pages/coffee/SectionAdd";
-import { Coffee, CoffeeTastingNote } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
-import { initialState, reducer } from "../../utils/CoffeeReducer";
+import { ACTIONTYPE, initialState, reducer } from "../../utils/CoffeeReducer";
+import { coffeeModel } from '../../../prisma/zod/coffee';
+import { z } from "zod";
 
 function Coffee() {
     const router = useRouter();
@@ -30,43 +31,28 @@ function Coffee() {
 
     const animation = useAnimation()
 
-    function loadData(data: Coffee) {
-        dispatch({ type: "SET BASE INFO", payload: data });
-        data.sellerId && enableSection("seller")
-        data.roasterId && enableSection("roaster")
-        data.producerId && enableSection("producer")
-        data.brewerId && enableSection("brewer")
-    }
-
     const coffee = trpc.coffee.byId.useQuery(
         { coffeeId: id },
         {
             enabled: session.status === "authenticated",
             onSuccess(data) {
-                if (data) {
-                    loadData(data);
+                if (data.coffee) {
+                    dispatch({ type: "LoadCoffee", coffee: data.coffee });
+                    data.seller && enableSection("seller", { type: "LoadSeller", seller: data.seller });
+                    data.roaster && enableSection("roaster", { type: "LoadRoaster", roaster: data.roaster })
+                    data.producer && enableSection("producer", { type: "LoadProducer", producer: data.producer })
+                    data.brewer && enableSection("brewer", { type: "LoadBrewer", brewer: data.brewer })
                 }
             },
         }
     );
-    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation({
+    const updateCoffee = trpc.coffee.update.useMutation({
         onSuccess(data) {
             queryClient.setQueryData(["coffee.byId", id], () => {
                 return data
             })
         },
     });
-
-    const connectCoffeeToTastingNotesMutation = trpc.tastingNotes.connectCoffeeToNote.useMutation({
-        onSuccess(data) {
-            queryClient.setQueryData(["tastingNotes.byCoffeeId"], (oldData: Array<CoffeeTastingNote> | undefined) => {
-                if (oldData) {
-                    return [...oldData, data]
-                }
-                return [data]
-            })
-        },
-    })
 
     useEffect(() => {
         if (titleRef.current) {
@@ -76,29 +62,20 @@ function Coffee() {
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        upsertCoffeeMutation.mutate(
-            { coffee: state },
-            {
-                onSuccess(data) {
-                    state.tastingNotes.forEach(tastingNote => {
-                        connectCoffeeToTastingNotesMutation.mutate({ coffeeId: data.id || state.id, noteId: tastingNote.id })
-                    })
-                },
-            }
-        )
+        updateCoffee.mutate(state)
 
         animation.start({
             scale: [1, 1.2, 1, 1.2, 1],
         })
     };
 
-    const enableSection = (element: string) => {
+    const enableSection = (element: string, type: ACTIONTYPE) => {
+        dispatch(type)
         setEnabledSections(curr => {
             return curr.includes(element) ?
                 curr :
                 [...curr, element]
         })
-
     }
 
     const disableSection = (element: string) => {
@@ -107,11 +84,27 @@ function Coffee() {
         })
     }
 
-    const sections: Record<string, JSX.Element> = {
-        "seller": <SellerSection state={state} dispatch={dispatch} />,
-        "roaster": <RoasterSection state={state} dispatch={dispatch} />,
-        "producer": <ProducerSection state={state} dispatch={dispatch} />,
-        "brewer": <BrewerSection state={state} dispatch={dispatch} />,
+    const sections = {
+        "seller": {
+            "title": "seller",
+            "jsx": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("seller", { type: "AddEmptySeller" })
+        },
+        "roaster": {
+            "title": "roaster",
+            "jsx": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("roaster", { type: "AddEmptyRoaster" })
+        },
+        "producer": {
+            "title": "producer",
+            "jsx": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("producer", { type: "AddEmptyProducer" })
+        },
+        "brewer": {
+            "title": "brewer",
+            "jsx": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("brewer", { type: "AddEmptyBrewer" })
+        }
     }
 
     return (
@@ -131,19 +124,19 @@ function Coffee() {
                             ref={titleRef}
                             className="block w-full border-0 bg-gradient-to-r rounded-lg from-coffee-400 to-coffee-500 focus:ring-0 text-2xl font-semibold -tracking-tight text-matcha-100"
                             placeholder="Origin"
-                            value={state.origin}
+                            value={state.coffee.origin}
                             onChange={(e) => dispatch({
-                                type: "HANDLE INPUT TEXT",
+                                type: "EditCoffeeField",
                                 field: e.currentTarget.name,
                                 payload: e.currentTarget.value,
                             })} />
                     } />
                     <BeanSection state={state} dispatch={dispatch} />
-                    {enabledSections.map(name => sections[name])}
-                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={() => enableSection("seller")} />}
-                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={() => enableSection("roaster")} />}
-                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={() => enableSection("producer")} />}
-                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={() => enableSection("brewer")} />}
+                    {enabledSections.map(name => sections[name as "seller" | "roaster" | "producer" | "brewer"].jsx)}
+                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={sections.seller.addFunction} />}
+                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={sections.roaster.addFunction} />}
+                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={sections.producer.addFunction} />}
+                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />}
                 </motion.div >
                 <motion.button
                     initial={{ width: "auto", height: "atuo" }}

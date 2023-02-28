@@ -8,15 +8,14 @@ import ProducerSection from "../../components/pages/coffee/ProducerSection";
 import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import BeanSection from "../../components/pages/coffee/BeanSection";
-import { initialState, reducer } from "../../utils/CoffeeReducer";
-import { useQueryClient } from "@tanstack/react-query";
+import { ACTIONTYPE, initialState, reducer } from "../../utils/CoffeeReducer";
 import React from 'react';
 import SectionAdd from '../../components/pages/coffee/SectionAdd';
 import { useSession } from 'next-auth/react';
+import Router from "next/router";
 
 function AddCoffee() {
     const titleRef = useRef<HTMLInputElement>(null);
-    const queryClient = useQueryClient();
     const session = useSession();
 
     //Manage local state
@@ -26,37 +25,24 @@ function AddCoffee() {
 
     const animation = useAnimation()
 
-
-    const upsertCoffeeMutation = trpc.coffee.upsertCoffee.useMutation();
-    const upsertSellerMutation = trpc.seller.upsertSeller.useMutation({
-        onSuccess(data) {
-            dispatch({ type: "HANDLE SELLER INPUT", field: 'id', payload: data.id })
+    const addCoffee = trpc.coffee.add.useMutation({
+        onSuccess() {
+            Router.push("/");
         }
-    });
-    const upsertRoasterMutation = trpc.roaster.upsertRoaster.useMutation({
-        onSuccess(data) {
-            dispatch({ type: "HANDLE ROASTER INPUT", field: 'id', payload: data.id })
-        }
-    });
-    const upsertProducerMutation = trpc.producer.upsertProducer.useMutation({
-        onSuccess(data) {
-            dispatch({ type: "HANDLE PRODUCER INPUT", field: 'id', payload: data.id })
-        }
-    });
-    const upsertBrewerMutation = trpc.brewer.upsertBrewer.useMutation({
-        onSuccess(data) {
-            dispatch({ type: "HANDLE BREWER INPUT", field: 'id', payload: data.id })
-        }
-    });
+    })
 
 
     useEffect(() => {
         if (titleRef.current) {
             titleRef.current.focus();
         }
-    }, []);
+        if (session.data && session.data.user) {
+            dispatch({ type: "EditCoffeeField", field: "userId", payload: session.data.user.id })
+        }
+    }, [session.data]);
 
-    const enableSection = (element: string) => {
+    const enableSection = (element: string, type: ACTIONTYPE) => {
+        dispatch(type)
         setEnabledSections(curr => {
             return curr.includes(element) ?
                 curr :
@@ -73,28 +59,30 @@ function AddCoffee() {
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        if (session.data?.user) {
-            upsertCoffeeMutation.mutate(
-                { coffee: { ...state, userId: session.data?.user?.id } },
-                {
-                    onSuccess(data) {
-                        dispatch({ type: "SET COFFEE IDS", payload: data.id })
-                        enabledSections.includes("seller") && upsertSellerMutation.mutate({ seller: { ...state.seller }, coffee: data })
-                    },
-                }
-            )
-        }
-
-        animation.start({
-            scale: [1, 1.2, 1, 1.2, 1],
-        })
+        addCoffee.mutate(state)
     };
 
-    const sections: Record<string, JSX.Element> = {
-        "seller": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
-        "roaster": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
-        "producer": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
-        "brewer": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
+    const sections = {
+        "seller": {
+            "title": "seller",
+            "jsx": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("seller", { type: "AddEmptySeller" })
+        },
+        "roaster": {
+            "title": "roaster",
+            "jsx": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("roaster", { type: "AddEmptyRoaster" })
+        },
+        "producer": {
+            "title": "producer",
+            "jsx": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("producer", { type: "AddEmptyProducer" })
+        },
+        "brewer": {
+            "title": "brewer",
+            "jsx": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
+            "addFunction": () => enableSection("brewer", { type: "AddEmptyBrewer" })
+        }
     }
 
     return (
@@ -114,19 +102,19 @@ function AddCoffee() {
                             ref={titleRef}
                             className="block w-full border-0 bg-coffee-500 focus:ring-0 text-2xl text-matcha-100"
                             placeholder="Origin"
-                            value={state.origin}
+                            value={state.coffee.origin}
                             onChange={(e) => dispatch({
-                                type: "HANDLE INPUT TEXT",
+                                type: "EditCoffeeField",
                                 field: e.currentTarget.name,
                                 payload: e.currentTarget.value,
                             })} />
                     } />
                     <BeanSection state={state} dispatch={dispatch} />
-                    {enabledSections.map(name => sections[name])}
-                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={() => enableSection("seller")} />}
-                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={() => enableSection("roaster")} />}
-                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={() => enableSection("producer")} />}
-                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={() => enableSection("brewer")} />}
+                    {enabledSections.map(name => sections[name as "seller" | "roaster" | "producer" | "brewer"].jsx)}
+                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={sections.seller.addFunction} />}
+                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={sections.roaster.addFunction} />}
+                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={sections.producer.addFunction} />}
+                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />}
 
                 </motion.div >
                 <motion.button

@@ -1,9 +1,10 @@
-import { Coffee } from "@prisma/client";
 import clsx from "clsx";
 import { Reorder } from "framer-motion";
+import { coffeeModel } from '../../../../prisma/zod/coffee';
+import { z } from "zod";
 
 interface Props {
-    coffee: Coffee;
+    coffee: z.infer<typeof coffeeModel>;
 }
 const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
 

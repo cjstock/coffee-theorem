@@ -1,158 +1,195 @@
-import { CoffeeByIdOutput, Input } from '../types/coffee';
-import { CompleteCoffeeTastingNote } from '../../prisma/zod/coffeetastingnote';
-import { TastingNote } from '@prisma/client';
-import { CompleteSeller } from '../../prisma/zod/seller';
-import { CompleteCoffee } from '../../prisma/zod/coffee';
-import { CompleteRoaster } from '../../prisma/zod/roaster';
-import { CompleteProducer } from '../../prisma/zod/producer';
-import { CompleteBrewer } from '../../prisma/zod/brewer';
+import { CoffeeReducer as CoffeeState } from '../types/coffee';
+import { sellerModel } from '../../prisma/zod/seller';
+import { z } from 'zod';
+import { roasterModel } from '../../prisma/zod/roaster';
+import { producerModel } from '../../prisma/zod/producer';
+import { brewerModel } from '../../prisma/zod/brewer';
+import { coffeeModel } from '../../prisma/zod/coffee';
 
-export const initialState: Input = {
-    id: "",
-    userId: "",
-    origin: "",
-    isFavorite: false,
-    altitude: 0,
-    process: "",
-    roast: "",
-    variety: "",
-    coffeeTastingNotes: Array<CompleteCoffeeTastingNote>(),
-    tastingNotes: Array<TastingNote>(),
-    sellerId: "",
-    roasterId: "",
-    producerId: "",
-    brewerId: "",
-    seller: {
+export const initialState: CoffeeState = {
+    coffee: {
         id: "",
-        name: "",
-        isRoaster: false,
-        address: "",
-        info: "",
-        url: "",
-        coffees: Array<CompleteCoffee>()
+        userId: "",
+        origin: "",
+        isFavorite: false,
+        altitude: 0,
+        process: "",
+        roast: "",
+        variety: "",
+        sellerId: null,
+        roasterId: null,
+        producerId: null,
+        brewerId: null,
     },
-    roaster: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: "",
-        coffees: Array<CompleteCoffee>()
-    },
-    producer: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: "",
-        coffees: Array<CompleteCoffee>()
-    },
-    brewer: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: "",
-        coffees: Array<CompleteCoffee>()
-    },
+    seller: null,
+    roaster: null,
+    producer: null,
+    brewer: null,
 
 }
 
 export type ACTIONTYPE =
-    | { type: "SET COFFEE IDS"; payload: string }
-    | { type: "SET BASE INFO"; payload: CoffeeByIdOutput }
-    | { type: "HANDLE INPUT TEXT"; field: string; payload: string }
-    | { type: "HANDLE SELLER INPUT"; field: keyof typeof initialState.seller; payload: string | boolean }
-    | { type: "SET SELLER INFO"; payload: CompleteSeller }
-    | { type: "HANDLE ROASTER INPUT"; field: keyof typeof initialState.roaster; payload: string | boolean }
-    | { type: "SET ROASTER INFO"; payload: CompleteRoaster }
-    | { type: "HANDLE PRODUCER INPUT"; field: keyof typeof initialState.producer; payload: string | boolean }
-    | { type: "SET PRODUCER INFO"; payload: CompleteProducer }
-    | { type: "HANDLE BREWER INPUT"; field: keyof typeof initialState.brewer; payload: string | boolean }
-    | { type: "SET BREWER INFO"; payload: CompleteBrewer }
-    | { type: "ADD TASTING NOTE"; payload: TastingNote }
-    | { type: "SET TASTING NOTES"; payload: TastingNote[] }
-    | { type: "RESET"; payload: string }
+    | { type: "LoadCoffee", coffee: z.infer<typeof coffeeModel> }
+    | { type: "EditCoffeeField", field: string, payload: string | boolean | number }
+    | { type: "AddEmptySeller" }
+    | { type: "LoadSeller", seller: z.infer<typeof sellerModel> }
+    | { type: "EditSeller", field: string, payload: string | boolean | number }
+    | { type: "RemoveSeller" }
+    | { type: "AddEmptyRoaster" }
+    | { type: "LoadRoaster", roaster: z.infer<typeof roasterModel> }
+    | { type: "EditRoaster", field: string, payload: string | boolean | number }
+    | { type: "RemoveRoaster" }
+    | { type: "AddEmptyProducer" }
+    | { type: "LoadProducer", producer: z.infer<typeof producerModel> }
+    | { type: "EditProducer", field: string, payload: string | boolean | number }
+    | { type: "RemoveProducer" }
+    | { type: "AddEmptyBrewer" }
+    | { type: "LoadBrewer", brewer: z.infer<typeof brewerModel> }
+    | { type: "EditBrewer", field: string, payload: string | boolean | number }
+    | { type: "RemoveBrewer" }
 
 export function reducer(
     state: typeof initialState,
     action: ACTIONTYPE,
 ): typeof initialState {
     switch (action.type) {
-        case "HANDLE INPUT TEXT": {
-            if (action.field === "altitude") {
+        case "LoadCoffee": {
+            return { ...state, coffee: action.coffee }
+        }
+        case "EditCoffeeField": {
+            if (action.field == "altitude") {
+                const altitude = parseInt(action.payload as string)
                 return {
                     ...state,
-                    altitude: Number.parseInt(action.payload)
-                };
+                    coffee: {
+                        ...state.coffee,
+                        [action.field]: altitude
+                    }
+                }
             }
             return {
                 ...state,
-                [action.field]: action.payload
+                coffee: {
+                    ...state.coffee,
+                    [action.field]: action.payload
+                }
             };
         }
-        case "SET BASE INFO": {
+        case "AddEmptySeller": {
             return {
                 ...state,
-                ...action.payload,
+                seller: {
+                    id: "",
+                    isRoaster: false,
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
             }
         }
-        case "HANDLE SELLER INPUT": {
+        case "LoadSeller": {
+            return { ...state, seller: action.seller }
+        }
+        case "EditSeller": {
+            if (!state.seller) return { ...state }
             return {
                 ...state,
-                seller: { ...state.seller, [action.field]: action.payload }
-            }
+                seller: {
+                    ...state.seller,
+                    [action.field]: action.payload
+                }
+            };
         }
-        case "SET SELLER INFO": {
+        case "RemoveSeller": {
+            if (state.seller) return { ...state, seller: null }
+            return { ...state }
+        }
+        case "AddEmptyRoaster": {
             return {
                 ...state,
-                seller: action.payload
+                roaster: {
+                    id: "",
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
             }
         }
-        case "HANDLE ROASTER INPUT": {
+        case "LoadRoaster": {
+            return { ...state, roaster: action.roaster }
+        }
+        case "EditRoaster": {
+            if (!state.roaster) return { ...state }
             return {
                 ...state,
-                roaster: { ...state.roaster, [action.field]: action.payload }
-            }
+                roaster: {
+                    ...state.roaster,
+                    [action.field]: action.payload
+                }
+            };
         }
-        case "SET ROASTER INFO": {
+        case "RemoveRoaster": {
+            if (state.roaster) return { ...state, roaster: null }
+            return { ...state }
+        }
+        case "AddEmptyProducer": {
             return {
                 ...state,
-                roaster: action.payload
+                producer: {
+                    id: "",
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
             }
         }
-        case "HANDLE PRODUCER INPUT": {
+        case "LoadProducer": {
+            return { ...state, producer: action.producer }
+        }
+        case "EditProducer": {
+            if (!state.producer) return { ...state }
             return {
                 ...state,
-                producer: { ...state.producer, [action.field]: action.payload }
-            }
+                producer: {
+                    ...state.producer,
+                    [action.field]: action.payload
+                }
+            };
         }
-        case "SET PRODUCER INFO": {
+        case "RemoveProducer": {
+            if (state.producer) return { ...state, producer: null }
+            return { ...state }
+        }
+        case "AddEmptyBrewer": {
             return {
                 ...state,
-                producer: action.payload
+                brewer: {
+                    id: "",
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
             }
         }
-        case "HANDLE BREWER INPUT": {
+        case "LoadBrewer": {
+            return { ...state, brewer: action.brewer }
+        }
+        case "EditBrewer": {
+            if (!state.brewer) return { ...state }
             return {
                 ...state,
-                brewer: { ...state.brewer, [action.field]: action.payload }
-            }
+                brewer: {
+                    ...state.brewer,
+                    [action.field]: action.payload
+                }
+            };
         }
-        case "SET BREWER INFO": {
-            return {
-                ...state,
-                brewer: action.payload
-            }
-        }
-        case "ADD TASTING NOTE": {
-            return { ...state, tastingNotes: [...state.tastingNotes, action.payload] }
-        }
-        case "SET TASTING NOTES": {
-            return { ...state, tastingNotes: action.payload }
-        }
-        case "RESET": {
-            return { ...initialState, userId: action.payload }
+        case "RemoveBrewer": {
+            if (state.brewer) return { ...state, brewer: null }
         }
         default: {
             throw new Error("Invalid reducer action!");

@@ -14,7 +14,7 @@ interface Props {
 const RoasterSection = ({ state, dispatch }: Props) => {
 
     const roaster = trpc.roaster.byId.useQuery({ roasterId: state.roaster?.id }, {
-        enabled: state.roaster?.id !== "",
+        enabled: !!state.roaster,
         onSuccess(data) {
             data && dispatch({ type: "LoadRoaster", roaster: data as z.infer<typeof roasterModel> })
         },

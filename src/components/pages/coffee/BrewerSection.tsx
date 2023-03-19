@@ -13,7 +13,7 @@ interface Props {
 }
 const BrewerSection = ({ state, dispatch }: Props) => {
     const brewer = trpc.brewer.byId.useQuery({ brewerId: state.brewer?.id }, {
-        enabled: state.brewer?.id !== "",
+        enabled: !!state.brewer,
         onSuccess(data) {
             data && dispatch({ type: "LoadBrewer", brewer: data as z.infer<typeof brewerModel> })
         },

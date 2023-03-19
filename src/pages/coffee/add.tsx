@@ -1,27 +1,17 @@
-import { useEffect, useRef, useState, useReducer } from 'react';
+import { useEffect, useRef } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from '../../utils/trpc';
-import SellerSection from "../../components/pages/coffee/SellerSection";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import BrewerSection from "../../components/pages/coffee/BrewerSection";
-import ProducerSection from "../../components/pages/coffee/ProducerSection";
-import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import BeanSection from "../../components/pages/coffee/BeanSection";
-import { ACTIONTYPE, initialState, reducer } from "../../utils/CoffeeReducer";
 import React from 'react';
 import SectionAdd from '../../components/pages/coffee/SectionAdd';
-import { useSession } from 'next-auth/react';
-import Router from "next/router";
+import { useCoffeeSections } from '../../utils/UseCoffeeSections'
+import Router from 'next/router';
 
 function AddCoffee() {
     const titleRef = useRef<HTMLInputElement>(null);
-    const session = useSession();
 
-    //Manage local state
-    const [state, dispatch] = useReducer(reducer, initialState)
-
-    const [enabledSections, setEnabledSections] = useState<Array<string>>([])
 
     const animation = useAnimation()
 
@@ -31,59 +21,29 @@ function AddCoffee() {
         }
     })
 
+    const {
+        brewer,
+        containsSection,
+        disableSection,
+        dispatch,
+        enableSection,
+        enabledSections,
+        producer,
+        roaster,
+        seller,
+        state
+    } = useCoffeeSections()
 
     useEffect(() => {
         if (titleRef.current) {
             titleRef.current.focus();
         }
-        if (session.data && session.data.user) {
-            dispatch({ type: "EditCoffeeField", field: "userId", payload: session.data.user.id })
-        }
-    }, [session.data]);
-
-    const enableSection = (element: string, type: ACTIONTYPE) => {
-        dispatch(type)
-        setEnabledSections(curr => {
-            return curr.includes(element) ?
-                curr :
-                [...curr, element]
-        })
-
-    }
-
-    const disableSection = (element: string) => {
-        setEnabledSections(curr => {
-            return curr.filter(section => section !== element)
-        })
-    }
+    }, []);
 
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         addCoffee.mutate(state)
     };
-
-    const sections = {
-        "seller": {
-            "title": "seller",
-            "jsx": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("seller", { type: "AddEmptySeller" })
-        },
-        "roaster": {
-            "title": "roaster",
-            "jsx": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("roaster", { type: "AddEmptyRoaster" })
-        },
-        "producer": {
-            "title": "producer",
-            "jsx": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("producer", { type: "AddEmptyProducer" })
-        },
-        "brewer": {
-            "title": "brewer",
-            "jsx": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("brewer", { type: "AddEmptyBrewer" })
-        }
-    }
 
     return (
         <AnimatePresence>
@@ -110,11 +70,11 @@ function AddCoffee() {
                             })} />
                     } />
                     <BeanSection state={state} dispatch={dispatch} />
-                    {enabledSections.map(name => sections[name as "seller" | "roaster" | "producer" | "brewer"].jsx)}
-                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={sections.seller.addFunction} />}
-                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={sections.roaster.addFunction} />}
-                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={sections.producer.addFunction} />}
-                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />}
+                    {enabledSections.map(section => section.jsx)}
+                    {!containsSection(seller) && <SectionAdd title='Seller' onClick={() => enableSection(seller, state)} />}
+                    {!containsSection(roaster) && <SectionAdd title='Roaster' onClick={() => enableSection(roaster, state)} />}
+                    {!containsSection(producer) && <SectionAdd title='Producer' onClick={() => enableSection(producer, state)} />}
+                    {!containsSection(brewer) && <SectionAdd title='Brewer' onClick={() => enableSection(brewer, state)} />}
 
                 </motion.div >
                 <motion.button

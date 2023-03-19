@@ -14,7 +14,7 @@ interface Props {
 const ProducerSection = ({ state, dispatch }: Props) => {
 
     const producer = trpc.producer.byId.useQuery({ producerId: state.producer?.id }, {
-        enabled: state.producer?.id !== "",
+        enabled: !!state.producer,
         onSuccess(data) {
             data && dispatch({ type: "LoadProducer", producer: data as z.infer<typeof producerModel> })
         },

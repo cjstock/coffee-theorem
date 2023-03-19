@@ -48,11 +48,6 @@ const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
                             {coffee.process && coffee.process}
                         </span>
                     </dd>
-                    <dt className={`${textColor} text-sm mt-3`}>
-                        Tasting Notes
-                    </dt>
-                    <dd className="mt-1">
-                    </dd>
                 </dl>
             </ul>
         </Reorder.Item>

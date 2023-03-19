@@ -1,21 +1,16 @@
 import { useRouter } from "next/router";
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Heading from "../../components/pages/coffee-collection/Heading";
 import { trpc } from '../../utils/trpc';
-import SellerSection from "../../components/pages/coffee/SellerSection";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import BrewerSection from "../../components/pages/coffee/BrewerSection";
-import ProducerSection from "../../components/pages/coffee/ProducerSection";
-import RoasterSection from "../../components/pages/coffee/RoasterSection";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import BeanSection from "../../components/pages/coffee/BeanSection";
 import SectionAdd from "../../components/pages/coffee/SectionAdd";
 import { useQueryClient } from "@tanstack/react-query";
 import React from 'react';
-import { ACTIONTYPE, initialState, reducer } from "../../utils/CoffeeReducer";
-import { coffeeModel } from '../../../prisma/zod/coffee';
-import { z } from "zod";
+import { useCoffeeSections } from "../../utils/UseCoffeeSections";
+import { CoffeeReducer } from "../../types/coffee";
 
 function Coffee() {
     const router = useRouter();
@@ -24,10 +19,20 @@ function Coffee() {
     const titleRef = useRef<HTMLInputElement>(null);
     const queryClient = useQueryClient();
 
-    //Manage local state
-    const [state, dispatch] = useReducer(reducer, initialState)
 
-    const [enabledSections, setEnabledSections] = useState<Array<string>>([])
+    const {
+        brewer,
+        containsSection,
+        disableSection,
+        dispatch,
+        enableSection,
+        enabledSections,
+        producer,
+        roaster,
+        seller,
+        state
+    } = useCoffeeSections()
+
 
     const animation = useAnimation()
 
@@ -38,10 +43,10 @@ function Coffee() {
             onSuccess(data) {
                 if (data.coffee) {
                     dispatch({ type: "LoadCoffee", coffee: data.coffee });
-                    data.seller && enableSection("seller", { type: "LoadSeller", seller: data.seller });
-                    data.roaster && enableSection("roaster", { type: "LoadRoaster", roaster: data.roaster })
-                    data.producer && enableSection("producer", { type: "LoadProducer", producer: data.producer })
-                    data.brewer && enableSection("brewer", { type: "LoadBrewer", brewer: data.brewer })
+                    data.seller && enableSection(seller, data as Partial<CoffeeReducer>);
+                    data.roaster && enableSection(roaster, data as Partial<CoffeeReducer>)
+                    data.producer && enableSection(producer, data as Partial<CoffeeReducer>)
+                    data.brewer && enableSection(brewer, data as Partial<CoffeeReducer>)
                 }
             },
         }
@@ -63,49 +68,7 @@ function Coffee() {
     const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         updateCoffee.mutate(state)
-
-        animation.start({
-            scale: [1, 1.2, 1, 1.2, 1],
-        })
     };
-
-    const enableSection = (element: string, type: ACTIONTYPE) => {
-        dispatch(type)
-        setEnabledSections(curr => {
-            return curr.includes(element) ?
-                curr :
-                [...curr, element]
-        })
-    }
-
-    const disableSection = (element: string) => {
-        setEnabledSections(curr => {
-            return curr.filter(section => section !== element)
-        })
-    }
-
-    const sections = {
-        "seller": {
-            "title": "seller",
-            "jsx": <SellerSection key={"seller"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("seller", { type: "AddEmptySeller" })
-        },
-        "roaster": {
-            "title": "roaster",
-            "jsx": <RoasterSection key={"roaster"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("roaster", { type: "AddEmptyRoaster" })
-        },
-        "producer": {
-            "title": "producer",
-            "jsx": <ProducerSection key={"producer"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("producer", { type: "AddEmptyProducer" })
-        },
-        "brewer": {
-            "title": "brewer",
-            "jsx": <BrewerSection key={"brewer"} state={state} dispatch={dispatch} />,
-            "addFunction": () => enableSection("brewer", { type: "AddEmptyBrewer" })
-        }
-    }
 
     return (
         <AnimatePresence>
@@ -132,11 +95,11 @@ function Coffee() {
                             })} />
                     } />
                     <BeanSection state={state} dispatch={dispatch} />
-                    {enabledSections.map(name => sections[name as "seller" | "roaster" | "producer" | "brewer"].jsx)}
-                    {!enabledSections.includes("seller") && <SectionAdd title='Seller' onClick={sections.seller.addFunction} />}
-                    {!enabledSections.includes("roaster") && <SectionAdd title='Roaster' onClick={sections.roaster.addFunction} />}
-                    {!enabledSections.includes("producer") && <SectionAdd title='Producer' onClick={sections.producer.addFunction} />}
-                    {!enabledSections.includes("brewer") && <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />}
+                    {enabledSections.map(section => section.jsx)}
+                    {!containsSection(seller) && <SectionAdd title='Seller' onClick={() => enableSection(seller, state)} />}
+                    {!containsSection(roaster) && <SectionAdd title='Roaster' onClick={() => enableSection(roaster, state)} />}
+                    {!containsSection(producer) && <SectionAdd title='Producer' onClick={() => enableSection(producer, state)} />}
+                    {!containsSection(brewer) && <SectionAdd title='Brewer' onClick={() => enableSection(brewer, state)} />}
                 </motion.div >
                 <motion.button
                     initial={{ width: "auto", height: "atuo" }}

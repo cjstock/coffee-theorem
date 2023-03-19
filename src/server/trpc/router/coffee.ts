@@ -8,11 +8,10 @@ import { brewerModel } from '../../../../prisma/zod/brewer';
 
 export const coffeeRouter = t.router({
     getAll: authedProcedure
-        .input(z.object({ userId: z.string().nullish() }))
-        .query(async ({ ctx, input }) => {
+        .query(async ({ ctx }) => {
             return await ctx.prisma.coffee.findMany({
                 where: {
-                    userId: input.userId || "",
+                    userId: ctx.session.user.id
                 },
             });
         }),
@@ -24,26 +23,26 @@ export const coffeeRouter = t.router({
                     id: input.coffeeId,
                 },
             });
-            const seller = coffee?.sellerId && await ctx.prisma.seller.findUnique({
+            const seller = !!coffee ? await ctx.prisma.seller.findUnique({
                 where: {
-                    id: coffee.sellerId
+                    id: coffee.sellerId || ""
                 }
-            })
-            const roaster = coffee?.roasterId && await ctx.prisma.roaster.findUnique({
+            }) : null
+            const roaster = !!coffee ? await ctx.prisma.roaster.findUnique({
                 where: {
-                    id: coffee.roasterId
+                    id: coffee.roasterId || ""
                 }
-            })
-            const producer = coffee?.producerId && await ctx.prisma.producer.findUnique({
+            }) : null
+            const producer = !!coffee ? await ctx.prisma.producer.findUnique({
                 where: {
-                    id: coffee.producerId
+                    id: coffee.producerId || ""
                 }
-            })
-            const brewer = coffee?.brewerId && await ctx.prisma.brewer.findUnique({
+            }) : null
+            const brewer = !!coffee ? await ctx.prisma.brewer.findUnique({
                 where: {
-                    id: coffee.brewerId
+                    id: coffee.brewerId || ""
                 }
-            })
+            }) : null
 
             return {
                 coffee,

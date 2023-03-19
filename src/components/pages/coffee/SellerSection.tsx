@@ -14,14 +14,6 @@ interface Props {
 }
 const SellerSection = ({ state, dispatch }: Props) => {
 
-    const seller = trpc.seller.byId.useQuery({ sellerId: state.seller?.id }, {
-        enabled: state.seller?.id !== "",
-        onSuccess(data) {
-            data && dispatch({ type: "LoadSeller", seller: data as z.infer<typeof sellerModel> })
-        },
-    })
-
-
     function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
         dispatch({ type: "EditSeller", field: "isRoaster", payload: event.currentTarget.checked })
     }

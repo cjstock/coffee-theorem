@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Divider from "./Divider";
 import { ReactNode } from 'react';
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface Props {
     title: string,
@@ -27,6 +28,9 @@ const CoffeeSection = ({ title, description, withDivider = true, children }: Pro
                 <form action="#" method="POST">
                     <div className="shadow sm:overflow-hidden sm:rounded-md">
                         <div className="space-y-6 bg-gradient-to-br from-coffee-400 to-coffee-500 px-4 py-5 sm:p-6">
+                            <button className="relative float-right">
+                                <XMarkIcon className="h-10 w-10  text-matcha-200 hover:text-matcha-100 transition-all" />
+                            </button>
                             <div className="grid grid-cols-3 gap-6">
                                 {children}
                             </div>

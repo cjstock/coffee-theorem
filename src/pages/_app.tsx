@@ -1,11 +1,11 @@
 // src/pages/_app.tsx
-import "../styles/globals.css";
-import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
-import type { AppType } from "next/app";
-import { trpc } from "../utils/trpc";
-import Layout from "../components/common/layout";
-import { CoffeeProvider } from "../utils/CoffeeContext";
+import '../styles/globals.css';
+import { SessionProvider } from 'next-auth/react';
+import type { Session } from 'next-auth';
+import type { AppType } from 'next/app';
+import { trpc } from '../utils/trpc';
+import Layout from '../components/ui/layout';
+import { CoffeeProvider } from '../utils/CoffeeContext';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

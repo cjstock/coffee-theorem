@@ -1,4 +1,4 @@
-import { CoffeeReducer as CoffeeState, CoffeeByIdOutput } from '../types/coffee';
+import { CoffeeReducer as CoffeeState } from '../types/coffee';
 import { sellerModel } from '../../prisma/zod/seller';
 import { z } from 'zod';
 import { roasterModel } from '../../prisma/zod/roaster';
@@ -16,15 +16,41 @@ export const initialState: CoffeeState = {
         process: "",
         roast: "",
         variety: "",
-        sellerId: null,
-        roasterId: null,
-        producerId: null,
-        brewerId: null,
+        sellerId: "",
+        roasterId: "",
+        producerId: "",
+        brewerId: "",
     },
-    seller: null,
-    roaster: null,
-    producer: null,
-    brewer: null,
+    seller: {
+        id: "",
+        name: "",
+        isRoaster: false,
+        address: "",
+        info: "",
+        url: ""
+    },
+    roaster: {
+        id: "",
+        name: "",
+        address: "",
+        info: "",
+        url: ""
+    },
+    producer: {
+        id: "",
+        name: "",
+        address: "",
+        info: "",
+        url: ""
+    },
+    brewer: {
+        id: "",
+        name: "",
+        address: "",
+        info: "",
+        url: "",
+        tastingNotes: ""
+    },
 
 }
 
@@ -33,19 +59,19 @@ export type ACTIONTYPE =
     | { type: "LoadAll", coffee: CoffeeState }
     | { type: "EditCoffeeField", field: string, payload: string | boolean | number }
     | { type: "AddEmptySeller" }
-    | { type: "AddSeller", seller: z.infer<typeof sellerModel> | null | undefined }
+    | { type: "SetSeller", seller: z.infer<typeof sellerModel> }
     | { type: "EditSeller", field: string, payload: string | boolean | number }
     | { type: "RemoveSeller" }
     | { type: "AddEmptyRoaster" }
-    | { type: "AddRoaster", roaster: z.infer<typeof roasterModel> | null | undefined }
+    | { type: "SetRoaster", roaster: z.infer<typeof roasterModel> }
     | { type: "EditRoaster", field: string, payload: string | boolean | number }
     | { type: "RemoveRoaster" }
     | { type: "AddEmptyProducer" }
-    | { type: "AddProducer", producer: z.infer<typeof producerModel> | null | undefined }
+    | { type: "SetProducer", producer: z.infer<typeof producerModel> }
     | { type: "EditProducer", field: string, payload: string | boolean | number }
     | { type: "RemoveProducer" }
     | { type: "AddEmptyBrewer" }
-    | { type: "AddBrewer", brewer: z.infer<typeof brewerModel> | null | undefined }
+    | { type: "SetBrewer", brewer: z.infer<typeof brewerModel> }
     | { type: "EditBrewer", field: string, payload: string | boolean | number }
     | { type: "RemoveBrewer" }
 
@@ -79,8 +105,23 @@ export function reducer(
                 }
             };
         }
-        case "AddSeller": {
-            if (!!action.seller) return { ...state, seller: action.seller }
+        case "AddEmptySeller": {
+            return {
+                ...state,
+                seller: {
+                    id: "",
+                    isRoaster: false,
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
+            }
+        }
+        case "SetSeller": {
+            if (!!action.seller) {
+                return { ...state, seller: action.seller }
+            }
             return {
                 ...state,
                 seller: {
@@ -94,7 +135,6 @@ export function reducer(
             }
         }
         case "EditSeller": {
-            console.log(`Editing ${action.field}`)
             if (!state.seller) return { ...state }
             return {
                 ...state,
@@ -105,10 +145,22 @@ export function reducer(
             };
         }
         case "RemoveSeller": {
-            if (state.seller) return { ...state, seller: null }
+            if (state.seller) return { ...state, seller: initialState.seller }
             return { ...state }
         }
-        case "AddRoaster": {
+        case "AddEmptyRoaster": {
+            return {
+                ...state,
+                roaster: {
+                    id: "",
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
+            }
+        }
+        case "SetRoaster": {
             if (!!action.roaster) return { ...state, roaster: action.roaster }
             return {
                 ...state,
@@ -132,12 +184,23 @@ export function reducer(
             };
         }
         case "RemoveRoaster": {
-            if (state.roaster) return { ...state, roaster: null }
+            if (state.roaster) return { ...state, roaster: initialState.seller }
             return { ...state }
         }
-
-        case "AddProducer": {
-            if (!!action.producer) return { ...state, producer: action.producer }
+        case "AddEmptyProducer": {
+            return {
+                ...state,
+                producer: {
+                    id: "",
+                    name: "",
+                    address: "",
+                    info: "",
+                    url: ""
+                }
+            }
+        }
+        case "SetProducer": {
+            if (!!action.producer) return { ...state, roaster: action.producer }
             return {
                 ...state,
                 producer: {
@@ -160,11 +223,17 @@ export function reducer(
             };
         }
         case "RemoveProducer": {
-            if (state.producer) return { ...state, producer: null }
+            if (state.producer) return { ...state, producer: initialState.producer }
             return { ...state }
         }
-        case "AddBrewer": {
-            if (!!action.brewer) return { ...state, brewer: action.brewer }
+        case "AddEmptyBrewer": {
+            return {
+                ...state,
+                brewer: initialState.brewer
+            }
+        }
+        case "SetBrewer": {
+            if (!!action.brewer) return { ...state, roaster: action.brewer }
             return {
                 ...state,
                 brewer: {
@@ -187,10 +256,10 @@ export function reducer(
             };
         }
         case "RemoveBrewer": {
-            if (state.brewer) return { ...state, brewer: null }
+            if (state.brewer) return { ...state, brewer: initialState.brewer }
         }
         default: {
-            throw new Error("Invalid reducer action!");
+            throw new Error(`Reducer Action: ${action.type} not found`);
         }
     }
 }

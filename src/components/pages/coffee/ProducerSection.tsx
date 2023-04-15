@@ -12,34 +12,6 @@ interface Props {
   dispatch: Dispatch<ACTIONTYPE>;
 }
 const ProducerSection = ({ state, dispatch }: Props) => {
-  const producer = trpc.producer.byId.useQuery(
-    { producerId: state.producer?.id },
-    {
-      enabled: state.producer?.id !== '',
-      onSuccess(data) {
-        data &&
-          dispatch({
-            type: 'LoadProducer',
-            producer: data as z.infer<typeof producerModel>,
-          });
-      },
-    }
-  );
-
-  const producer = trpc.producer.byId.useQuery(
-    { producerId: state.producer?.id },
-    {
-      enabled: !!state.producer,
-      onSuccess(data) {
-        data &&
-          dispatch({
-            type: 'LoadProducer',
-            producer: data as z.infer<typeof producerModel>,
-          });
-      },
-    }
-  );
-
   const title = 'Producer';
   const description =
     'Where was the coffee produced? This could be a large company, or a single farm. The primary group responsible for everything up until roasting.';

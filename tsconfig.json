@@ -29,7 +29,8 @@
     "next.config.mjs",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.cjs"
+    "**/*.cjs",
+    "**/*.mjs"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,51 +1,136 @@
 import type { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { trpc } from '../utils/trpc';
-import { Reorder } from 'framer-motion';
-import Link from 'next/link';
 import Heading from '../components/pages/coffee-collection/Heading';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Router from 'next/router';
-import BeanCard from '../components/pages/coffee-collection/BeanCard';
 import Unauthorized from '../components/ui/Unauthorized';
 import { z } from 'zod';
 import { coffeeModel } from '../../prisma/zod/coffee';
+import ButtonDropDown from '@ui/ButtonDropDown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faCoffeeBeans,
+  faShop,
+  faFireplace,
+  faFarm,
+  faList,
+  faChevronDown,
+  faMagnifyingGlass,
+} from '@fortawesome/pro-solid-svg-icons';
+import InfoGrid from '@ui/InfoGrid';
+import InfoCard, { CardStyle } from '@ui/InfoCard';
+import { useQueryClient } from '@tanstack/react-query';
+import Divider from '@ui/Divider';
+import { roasterModel, sellerModel } from 'prisma/zod';
+import { cva } from 'cva';
 
 const Home: NextPage = () => {
   const session = useSession();
-  const {
-    data: coffees,
-    isSuccess,
-    isLoading,
-    isError,
-  } = trpc.coffee.getAll.useQuery(
-    { userId: session.data?.user?.id },
+  const queryClient = useQueryClient();
+
+  const [coffeeState, setCoffeeState] = useState<
+    Array<z.infer<typeof coffeeModel>>
+  >([]);
+  const { data: coffees } = trpc.coffee.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+    enabled: session.status == 'authenticated',
+    onSuccess(data) {
+      setCoffeeState(data);
+    },
+  });
+
+  const [sellerState, setSellerState] = useState<
+    Array<z.infer<typeof sellerModel>>
+  >([]);
+  const { data: sellers } = trpc.seller.getAll.useQuery(
+    { coffees: coffees },
     {
-      retry: false,
-      refetchOnWindowFocus: false,
-      enabled: session.status == 'authenticated',
+      enabled: !!coffees,
       onSuccess(data) {
-        setCoffeeState(data);
+        setSellerState(data);
       },
     }
   );
+
+  const [roasterState, setRoasterState] = useState<
+    Array<z.infer<typeof roasterModel>>
+  >([]);
+  const { data: roasters } = trpc.roaster.getAll.useQuery(
+    { coffees: coffees },
+    {
+      enabled: !!coffees,
+      onSuccess(data) {
+        setRoasterState(data);
+      },
+    }
+  );
+
+  const deleteCoffee = trpc.coffee.deleteCoffee.useMutation({
+    onSuccess(data) {
+      queryClient.invalidateQueries(['coffee.getAll']);
+      setCoffeeState((prev) => prev.filter((coffee) => coffee.id !== data.id));
+    },
+  });
 
   const leftSide = (
     <h3 className='text-2xl font-semibold leading-6 -tracking-wider text-matcha-200'>
       Coffee Collection
     </h3>
   );
+  const tabs = ['Coffees', 'Sellers', 'Roasters', 'Producers', 'Brewers'];
+
+  const [selectedTab, setSelectedTab] = useState('Coffees');
+
+  const TabStyles = cva(['rounded-md px-3 py-2 font-medium transition-all'], {
+    variants: {
+      intent: {
+        selected: ['bg-matcha-300 text-coffee-500'],
+        default: ['bg-coffee-400 text-coffee-100'],
+      },
+    },
+  });
+
+  const tabNav = (
+    <>
+      <div className='sm:hidden'>
+        <label htmlFor='tabs' className='sr-only'>
+          Select a tab
+        </label>
+        {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
+        <select
+          id='tabs'
+          name='tabs'
+          className='block w-full rounded-md border-coffee-300 bg-coffee-500 text-coffee-100 focus:border-coffee-300 focus:ring-coffee-300'
+          defaultValue={'Coffees'}
+        >
+          {tabs.map((tab) => (
+            <option key={tab}>{tab}</option>
+          ))}
+        </select>
+      </div>
+      <div className='hidden sm:block'>
+        <nav className='flex space-x-4' aria-label='Tabs'>
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              className={TabStyles({
+                intent: selectedTab === tab ? 'selected' : 'default',
+              })}
+              aria-current={tab == selectedTab ? 'page' : undefined}
+              onClick={() => setSelectedTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </>
+  );
 
   const rightSide = (
-    <div className='mt-3 flex sm:mt-0 sm:ml-4'>
-      <button
-        type='button'
-        className='mr-5 inline-flex items-center rounded-md border border-transparent bg-matcha-300 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-matcha-200 focus:outline-none focus:ring-0'
-        onClick={() => Router.push('coffee/add')}
-      >
-        Add Coffee
-      </button>
+    <div className='mt-3 flex justify-between sm:mt-0 sm:ml-4'>
+      <ButtonDropDown />
       <label htmlFor='mobile-search-candidate' className='sr-only'>
         Filter
       </label>
@@ -55,23 +140,23 @@ const Home: NextPage = () => {
       <div className='flex rounded-md shadow-sm'>
         <div className='relative flex-grow focus-within:z-10'>
           <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
-            <MagnifyingGlassIcon
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
               className='h-5 w-5 text-matcha-200'
-              aria-hidden='true'
             />
           </div>
           <input
             type='text'
             name='mobile-search-candidate'
             id='mobile-search-candidate'
-            className='block w-full rounded-none rounded-l-md border-coffee-300 bg-coffee-400 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:hidden'
+            className='block w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:hidden'
             placeholder='Filter'
           />
           <input
             type='text'
             name='desktop-search-candidate'
             id='desktop-search-candidate'
-            className='hidden w-full rounded-none rounded-l-md border-coffee-300 bg-coffee-400 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm'
+            className='hidden w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm'
             placeholder='Filter Coffees'
           />
         </div>
@@ -79,31 +164,129 @@ const Home: NextPage = () => {
     </div>
   );
 
-  const [coffeeState, setCoffeeState] = useState<
-    Array<z.infer<typeof coffeeModel>>
-  >([]);
-
   if (session.status == 'unauthenticated') return <Unauthorized />;
   return (
     <>
-      <Heading key={'heading'} leftSide={leftSide} rightSide={rightSide} />
-      {isSuccess && (
-        <Reorder.Group
-          axis='x'
-          values={coffeeState}
-          onReorder={setCoffeeState}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          key={'cards'}
-          className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-        >
-          {coffeeState.map((coffee) => (
-            <Link key={coffee.id} href={`coffee/${coffee.id}`}>
-              <BeanCard coffee={coffee} />
-            </Link>
-          ))}
-        </Reorder.Group>
+      <Heading key={'heading'} leftSide={tabNav} rightSide={rightSide} />
+      {selectedTab === 'Coffees' && (
+        <InfoGrid state={coffeeState} setState={setCoffeeState}>
+          {coffeeState.map((coffee) => {
+            return (
+              <InfoCard
+                id={coffee.id}
+                title={coffee.origin}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faCoffeeBeans}
+                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
+                      {
+                        iconStyle: `${coffee.roast}`,
+                      }
+                    )}`}
+                  />
+                }
+                key={coffee.id}
+                menuOptions={[
+                  {
+                    name: 'Edit',
+                    action: () => Router.push(`coffee/${coffee.id}`),
+                  },
+                  {
+                    name: 'Remove',
+                    action: () => deleteCoffee.mutate({ coffeeId: coffee.id }),
+                  },
+                ]}
+                info={coffee}
+                cardBorder={coffee.roast}
+                headerStyle={coffee.roast}
+                titleColor={coffee.roast}
+                body={coffee.roast}
+                dataLabel={coffee.roast}
+                dataText={coffee.roast}
+              />
+            );
+          })}
+        </InfoGrid>
+      )}
+      {selectedTab === 'Sellers' && (
+        <InfoGrid state={sellerState} setState={setSellerState}>
+          {sellerState.map((seller) => {
+            return (
+              <InfoCard
+                id={seller.id}
+                title={seller.name}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faShop}
+                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
+                      {
+                        iconStyle: 'Light',
+                      }
+                    )}`}
+                  />
+                }
+                key={seller.id}
+                menuOptions={[
+                  {
+                    name: 'Edit',
+                    action: () => null,
+                  },
+                  {
+                    name: 'Remove',
+                    action: () => null,
+                  },
+                ]}
+                info={seller}
+                cardBorder={'Dark'}
+                headerStyle={'Dark'}
+                titleColor={'Dark'}
+                body={'Dark'}
+                dataLabel={'Dark'}
+                dataText={'Dark'}
+              />
+            );
+          })}
+        </InfoGrid>
+      )}
+      {selectedTab === 'Roasters' && (
+        <InfoGrid state={roasterState} setState={setRoasterState}>
+          {roasterState.map((roaster) => {
+            return (
+              <InfoCard
+                id={roaster.id}
+                title={roaster.name}
+                icon={
+                  <FontAwesomeIcon
+                    icon={faFireplace}
+                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
+                      {
+                        iconStyle: 'Light',
+                      }
+                    )}`}
+                  />
+                }
+                key={roaster.id}
+                menuOptions={[
+                  {
+                    name: 'Edit',
+                    action: () => null,
+                  },
+                  {
+                    name: 'Remove',
+                    action: () => null,
+                  },
+                ]}
+                info={roaster}
+                cardBorder={'Dark'}
+                headerStyle={'Dark'}
+                titleColor={'Dark'}
+                body={'Dark'}
+                dataLabel={'Dark'}
+                dataText={'Dark'}
+              />
+            );
+          })}
+        </InfoGrid>
       )}
     </>
   );

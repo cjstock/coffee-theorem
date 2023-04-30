@@ -10,7 +10,7 @@ const Heading = ({ leftSide, rightSide }: HeadingProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className='mb-10 w-full border-b-2 border-coffee-200 bg-clip-border px-5 pb-5 sm:flex sm:items-center sm:justify-between'
+      className='mb-10 w-full justify-between border-b-2 border-coffee-200 bg-clip-border px-5 pb-5 sm:flex sm:items-center sm:justify-between'
     >
       {leftSide}
       {rightSide && rightSide}

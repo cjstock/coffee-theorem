@@ -21,7 +21,7 @@ const CoffeeSection = ({
       animate={{ opacity: 1, transition: { duration: 0.2 } }}
       exit={{ opacity: 0 }}
     >
-      {withDivider && <Divider />}
+      {withDivider && <Divider intent={'dashed'} />}
       <motion.div
         initial={{ height: 0 }}
         animate={{ height: 'auto', transition: { duration: 0.2 } }}

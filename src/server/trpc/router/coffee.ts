@@ -52,14 +52,23 @@ export const coffeeRouter = t.router({
                 brewer
             }
         }),
-    update: authedProcedure
-        .input(z.object({ coffee: coffeeModel, seller: sellerModel.nullish(), roaster: roasterModel.nullish(), producer: producerModel.nullish(), brewer: brewerModel.nullish() }))
+    upsert: authedProcedure
+        .input(z.object({ coffee: coffeeModel, seller: sellerModel.nullable(), roaster: roasterModel.nullable(), producer: producerModel.nullable(), brewer: brewerModel.nullable() }))
         .mutation(async ({ ctx, input }) => {
-            const coffee = await ctx.prisma.coffee.update({
+            const coffee = await ctx.prisma.coffee.upsert({
                 where: {
                     id: input.coffee.id
                 },
-                data: {
+                update: {
+                    isFavorite: input.coffee.isFavorite,
+                    origin: input.coffee.origin,
+                    altitude: input.coffee.altitude,
+                    process: input.coffee.process,
+                    variety: input.coffee.variety,
+                    userId: ctx.session.user.id,
+                    roast: input.coffee.roast
+                },
+                create: {
                     isFavorite: input.coffee.isFavorite,
                     origin: input.coffee.origin,
                     altitude: input.coffee.altitude,
@@ -69,7 +78,7 @@ export const coffeeRouter = t.router({
                     roast: input.coffee.roast
                 },
             });
-            const seller = input.seller && await ctx.prisma.seller.upsert({
+            const seller = !!input.seller && await ctx.prisma.seller.upsert({
                 where: {
                     id: input.seller.id
                 },
@@ -93,7 +102,7 @@ export const coffeeRouter = t.router({
                     }
                 },
             });
-            const roaster = input.roaster && await ctx.prisma.roaster.upsert({
+            const roaster = !!input.roaster && await ctx.prisma.roaster.upsert({
                 where: {
                     id: input.roaster.id
                 },
@@ -115,7 +124,7 @@ export const coffeeRouter = t.router({
                     }
                 },
             });
-            const producer = input.producer && await ctx.prisma.producer.upsert({
+            const producer = !!input.producer && await ctx.prisma.producer.upsert({
                 where: {
                     id: input.producer.id
                 },
@@ -137,7 +146,7 @@ export const coffeeRouter = t.router({
                     }
                 },
             });
-            const brewer = input.brewer && await ctx.prisma.brewer.upsert({
+            const brewer = !!input.brewer && await ctx.prisma.brewer.upsert({
                 where: {
                     id: input.brewer.id
                 },
@@ -160,11 +169,11 @@ export const coffeeRouter = t.router({
                 },
             });
             return {
-                coffee: coffee,
-                seller: seller,
-                roaster: roaster,
-                producer: producer,
-                brewer: brewer
+                coffee,
+                seller,
+                roaster,
+                producer,
+                brewer
             }
         }),
     add: authedProcedure
@@ -234,6 +243,7 @@ export const coffeeRouter = t.router({
                     }
                 },
             });
+
         }),
     deleteCoffee: authedProcedure
         .input(z.object({ coffeeId: z.string() }))

@@ -17,12 +17,19 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true,
     "downlevelIteration": true,
+    "baseUrl": ".",
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"]
+      "@page-components/*": ["./src/components/pages/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "include": [
+    "next-env.d.ts",
+    "next.config.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.cjs"
+  ],
   "exclude": ["node_modules"]
 }

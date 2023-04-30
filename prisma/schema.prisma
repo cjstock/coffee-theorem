@@ -63,6 +63,15 @@ model User {
   @@index([id])
 }
 
+enum Roast {
+  Light
+  LightMedium
+  Medium
+  MediumDark
+  Dark
+  ExtraDark
+}
+
 model Coffee {
   id                 String              @id @default(cuid())
   origin             String
@@ -70,7 +79,7 @@ model Coffee {
   process            String?
   variety            String?
   altitude           Int?
-  roast              String?
+  roast              Roast @default(Medium)
   coffeeTastingNotes CoffeeTastingNote[]
   recipes            String?
 
@@ -193,8 +202,8 @@ generator zod {
   // prismaJsonNullability = false // allows null assignment to optional JSON fields
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.svg"
-  theme    = "forest"
-}
+// generator erd {
+//   provider = "prisma-erd-generator"
+//   output   = "./ERD.svg"
+//   theme    = "forest"
+// }

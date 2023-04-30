@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { Roast } from "@prisma/client"
 
 export const coffeeModel = z.object({
   id: z.string(),
@@ -7,7 +8,7 @@ export const coffeeModel = z.object({
   process: z.string().nullish(),
   variety: z.string().nullish(),
   altitude: z.number().int().nullish(),
-  roast: z.string().nullish(),
+  roast: z.nativeEnum(Roast),
   recipes: z.string().nullish(),
   userId: z.string(),
   sellerId: z.string().nullish(),

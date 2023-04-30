@@ -1,57 +1,78 @@
-import clsx from "clsx";
-import { Reorder } from "framer-motion";
+import { Reorder } from 'framer-motion';
 import { coffeeModel } from '../../../../prisma/zod/coffee';
-import { z } from "zod";
+import { z } from 'zod';
+import { cva, VariantProps } from 'cva';
 
-interface Props {
-    coffee: z.infer<typeof coffeeModel>;
+const beanCardBg = cva([], {
+  variants: {
+    intent: {
+      Light: ['bg-coffee-100'],
+      LightMedium: ['bg-coffee-200'],
+      Medium: ['bg-coffee-300'],
+      MediumDark: ['bg-coffee-300'],
+      Dark: ['bg-coffee-400'],
+      ExtraDark: ['bg-coffee-500'],
+    },
+  },
+});
+const beanCardTextColor = cva([], {
+  variants: {
+    intent: {
+      Light: ['text-coffee-500'],
+      LightMedium: ['text-coffee-500'],
+      Medium: ['text-coffee-500'],
+      MediumDark: ['text-coffee-500'],
+      Dark: ['text-coffee-100'],
+      ExtraDark: ['text-coffee-100'],
+    },
+  },
+});
+const beanCardTitleColor = cva([], {
+  variants: {
+    intent: {
+      Light: ['text-matcha-500'],
+      LightMedium: ['text-matcha-500'],
+      Medium: ['text-matcha-100'],
+      MediumDark: ['text-matcha-100'],
+      Dark: ['text-matcha-100'],
+      ExtraDark: ['text-matcha-100'],
+    },
+  },
+});
+
+interface Props extends VariantProps<typeof beanCardBg> {
+  coffee: z.infer<typeof coffeeModel>;
 }
-const BeanCard: React.FC<Props> = ({ coffee }: Props) => {
+const BeanCard = ({ coffee, intent }: Props) => {
+  const bgColor = beanCardBg({ intent });
+  const textColor = beanCardTextColor({ intent });
+  const titleColor = beanCardTitleColor({ intent });
 
-    const bgColor = clsx(
-        coffee.roast === "Light" && "bg-coffee-100"
-        || coffee.roast === "Light Medium" && "bg-coffee-200"
-        || coffee.roast === "Medium" && "bg-coffee-300"
-        || coffee.roast === "Medium Dark" && "bg-coffee-300"
-        || coffee.roast === "Dark" && "bg-coffee-400"
-        || coffee.roast === "Extra Dark" && "bg-coffee-500"
-        || "bg-coffee-300"
-    )
-    const textColor = clsx(
-        coffee.roast === "Light" && "text-coffee-500"
-        || coffee.roast === "Light Medium" && "text-coffee-500"
-        || coffee.roast === "Medium" && "text-coffee-500"
-        || coffee.roast === "Medium Dark" && "text-coffee-500"
-        || coffee.roast === "Dark" && "text-coffee-100"
-        || coffee.roast === "Extra Dark" && "text-coffee-100"
-        || "bg-coffee-300"
-    )
-
-    return (
-        <Reorder.Item
-            value={coffee}
-            key={coffee.id}
-            drag={false}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1, transition: { duration: 0.5 } }}
-            exit={{ opacity: 0, scale: 0 }}
-            className={`flex flex-col w-80 rounded-lg ${bgColor} border border-coffee-300 text-left transition-colors`}
-        >
-            <ul className="flex flex-1 flex-col p-8">
-                <h1 className={`mx-auto text-xl text-matcha-100`}>
-                    {`${coffee.origin}`}
-                </h1>
-                <dl className="mt-1 flex flex-grow flex-col">
-                    <dt className={`${textColor} text-sm mt-3`}>Process</dt>
-                    <dd className="mt-1">
-                        <span className={`text-md font-medium ${textColor}`}>
-                            {coffee.process && coffee.process}
-                        </span>
-                    </dd>
-                </dl>
-            </ul>
-        </Reorder.Item>
-    );
+  return (
+    <Reorder.Item
+      value={coffee}
+      key={coffee.id}
+      drag={false}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1, transition: { duration: 0.5 } }}
+      exit={{ opacity: 0, scale: 0 }}
+      className={`flex w-80 flex-col rounded-lg ${bgColor} text-left transition-colors`}
+    >
+      <ul className='flex flex-1 flex-col p-8'>
+        <h1 className={`mx-auto text-xl ${titleColor}`}>
+          {`${coffee.origin}`}
+        </h1>
+        <dl className='mt-1 flex flex-grow flex-col'>
+          <dt className={`${textColor} mt-3 text-sm`}>Process</dt>
+          <dd className='mt-1'>
+            <span className={`text-md font-medium ${textColor}`}>
+              {coffee.process && coffee.process}
+            </span>
+          </dd>
+        </dl>
+      </ul>
+    </Reorder.Item>
+  );
 };
 
 export default BeanCard;

@@ -9,11 +9,11 @@ import { z } from "zod";
 
 enum Roast {
     light = "Light",
-    lightMedium = "Light Medium",
+    lightMedium = "LightMedium",
     medium = "Medium",
-    mediumDark = "Medium Dark",
+    mediumDark = "MediumDark",
     dark = "Dark",
-    extraDark = "Extra Dark",
+    extraDark = "ExtraDark",
 }
 
 enum Process {

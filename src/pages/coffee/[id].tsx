@@ -1,19 +1,19 @@
-import { useRouter } from 'next/router';
-import { useEffect, useReducer, useRef, useState } from 'react';
-import Heading from '../../components/pages/coffee-collection/Heading';
-import { trpc } from '../../utils/trpc';
-import SellerSection from '../../components/pages/coffee/SellerSection';
-import { AnimatePresence, motion, useAnimation } from 'framer-motion';
-import BrewerSection from '../../components/pages/coffee/BrewerSection';
-import ProducerSection from '../../components/pages/coffee/ProducerSection';
-import RoasterSection from '../../components/pages/coffee/RoasterSection';
 import { CheckIcon } from '@heroicons/react/24/outline';
-import { useSession } from 'next-auth/react';
-import BeanSection from '../../components/pages/coffee/BeanSection';
-import SectionAdd from '../../components/pages/coffee/SectionAdd';
+import Heading from '@page-components/coffee-collection/Heading';
+import BeanSection from '@page-components/coffee/BeanSection';
+import BrewerSection from '@page-components/coffee/BrewerSection';
+import ProducerSection from '@page-components/coffee/ProducerSection';
+import RoasterSection from '@page-components/coffee/RoasterSection';
+import SectionAdd from '@page-components/coffee/SectionAdd';
+import SellerSection from '@page-components/coffee/SellerSection';
 import { useQueryClient } from '@tanstack/react-query';
-import React from 'react';
+import { trpc } from '@utils/trpc';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import Router, { useRouter } from 'next/router';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import { ACTIONTYPE, initialState, reducer } from '../../utils/CoffeeReducer';
+import { CoffeeByIdOutput } from '../../types/coffee';
 
 function Coffee() {
   const router = useRouter();
@@ -27,13 +27,11 @@ function Coffee() {
 
   const [enabledSections, setEnabledSections] = useState<Array<string>>([]);
 
-  const animation = useAnimation();
-
   const coffee = trpc.coffee.byId.useQuery(
     { coffeeId: id },
     {
-      enabled: session.status === 'authenticated',
-      onSuccess(data) {
+      enabled: session.status === 'authenticated' && id !== 'add',
+      onSuccess(data: CoffeeByIdOutput) {
         if (data.coffee) {
           dispatch({ type: 'LoadCoffee', coffee: data.coffee });
           data.seller &&
@@ -60,11 +58,12 @@ function Coffee() {
       },
     }
   );
-  const updateCoffee = trpc.coffee.update.useMutation({
+  const upsertCoffee = trpc.coffee.upsert.useMutation({
     onSuccess(data) {
       queryClient.setQueryData(['coffee.byId', id], () => {
         return data;
       });
+      Router.back();
     },
   });
 
@@ -72,15 +71,17 @@ function Coffee() {
     if (titleRef.current) {
       titleRef.current.focus();
     }
-  }, []);
+    session.data?.user?.id &&
+      dispatch({
+        type: 'EditCoffeeField',
+        field: 'userId',
+        payload: session.data.user.id,
+      });
+  }, [session.data]);
 
   const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    updateCoffee.mutate(state);
-
-    animation.start({
-      scale: [1, 1.2, 1, 1.2, 1],
-    });
+    upsertCoffee.mutate(state);
   };
 
   const enableSection = (element: string, type: ACTIONTYPE) => {
@@ -124,81 +125,71 @@ function Coffee() {
 
   return (
     <AnimatePresence>
-      {!coffee.isLoading && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.5 } }}
-            key={'body'}
-          >
-            <Heading
-              leftSide={
-                <input
-                  type='text'
-                  name='origin'
-                  id='origin'
-                  key='left'
-                  ref={titleRef}
-                  className='block w-full border-0 bg-gradient-to-r from-coffee-400 to-coffee-500 text-2xl font-semibold -tracking-tight text-matcha-100 focus:ring-0'
-                  placeholder='Origin'
-                  value={state.coffee.origin}
-                  onChange={(e) =>
-                    dispatch({
-                      type: 'EditCoffeeField',
-                      field: e.currentTarget.name,
-                      payload: e.currentTarget.value,
-                    })
-                  }
-                />
-              }
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration: 0.5 } }}
+          key={'body'}
+        >
+          <Heading
+            leftSide={
+              <input
+                type='text'
+                name='origin'
+                id='origin'
+                key='left'
+                ref={titleRef}
+                className='block w-full border-0 bg-gradient-to-r from-coffee-400 to-coffee-500 text-2xl font-semibold -tracking-tight text-matcha-100 focus:ring-0'
+                placeholder='Origin'
+                value={state.coffee.origin}
+                onChange={(e) =>
+                  dispatch({
+                    type: 'EditCoffeeField',
+                    field: e.currentTarget.name,
+                    payload: e.currentTarget.value,
+                  })
+                }
+              />
+            }
+          />
+          <BeanSection state={state} dispatch={dispatch} />
+          {enabledSections.map(
+            (name) =>
+              sections[name as 'seller' | 'roaster' | 'producer' | 'brewer'].jsx
+          )}
+          {!enabledSections.includes('seller') && (
+            <SectionAdd title='Seller' onClick={sections.seller.addFunction} />
+          )}
+          {!enabledSections.includes('roaster') && (
+            <SectionAdd
+              title='Roaster'
+              onClick={sections.roaster.addFunction}
             />
-            <BeanSection state={state} dispatch={dispatch} />
-            {enabledSections.map(
-              (name) =>
-                sections[name as 'seller' | 'roaster' | 'producer' | 'brewer']
-                  .jsx
-            )}
-            {!enabledSections.includes('seller') && (
-              <SectionAdd
-                title='Seller'
-                onClick={sections.seller.addFunction}
-              />
-            )}
-            {!enabledSections.includes('roaster') && (
-              <SectionAdd
-                title='Roaster'
-                onClick={sections.roaster.addFunction}
-              />
-            )}
-            {!enabledSections.includes('producer') && (
-              <SectionAdd
-                title='Producer'
-                onClick={sections.producer.addFunction}
-              />
-            )}
-            {!enabledSections.includes('brewer') && (
-              <SectionAdd
-                title='Brewer'
-                onClick={sections.brewer.addFunction}
-              />
-            )}
-          </motion.div>
-          <motion.button
-            initial={{ width: 'auto', height: 'atuo' }}
-            animate={animation}
-            transition={{
-              duration: 1,
-              times: [0, 0.25, 0.75, 1],
-            }}
-            key='button'
-            type='submit'
-            className='fixed bottom-10 right-10 inline-flex items-center rounded-full border border-transparent bg-matcha-100 p-3 text-center text-coffee-500 shadow-sm transition-colors focus:outline-none md:bottom-20 md:right-20'
-            onClick={handleSaveClick}
-          >
-            <CheckIcon className='h-10 w-10' />
-          </motion.button>
-        </>
-      )}
+          )}
+          {!enabledSections.includes('producer') && (
+            <SectionAdd
+              title='Producer'
+              onClick={sections.producer.addFunction}
+            />
+          )}
+          {!enabledSections.includes('brewer') && (
+            <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />
+          )}
+        </motion.div>
+        <motion.button
+          initial={{ width: 'auto', height: 'atuo' }}
+          transition={{
+            duration: 1,
+            times: [0, 0.25, 0.75, 1],
+          }}
+          key='button'
+          type='submit'
+          className='fixed bottom-10 right-10 inline-flex items-center rounded-full border border-transparent bg-matcha-100 p-3 text-center text-coffee-500 shadow-sm transition-colors focus:outline-none md:bottom-20 md:right-20'
+          onClick={handleSaveClick}
+        >
+          <CheckIcon className='h-10 w-10' />
+        </motion.button>
+      </>
     </AnimatePresence>
   );
 }

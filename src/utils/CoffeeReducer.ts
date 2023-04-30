@@ -14,43 +14,17 @@ export const initialState: CoffeeState = {
         isFavorite: false,
         altitude: 0,
         process: "",
-        roast: "",
+        roast: "Medium",
         variety: "",
         sellerId: "",
         roasterId: "",
         producerId: "",
         brewerId: "",
     },
-    seller: {
-        id: "",
-        name: "",
-        isRoaster: false,
-        address: "",
-        info: "",
-        url: ""
-    },
-    roaster: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: ""
-    },
-    producer: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: ""
-    },
-    brewer: {
-        id: "",
-        name: "",
-        address: "",
-        info: "",
-        url: "",
-        tastingNotes: ""
-    },
+    seller: null,
+    roaster: null,
+    producer: null,
+    brewer: null,
 
 }
 

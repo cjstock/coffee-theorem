@@ -103,6 +103,7 @@ const Home: NextPage = () => {
           name='tabs'
           className='block w-full rounded-md border-coffee-300 bg-coffee-500 text-coffee-100 focus:border-coffee-300 focus:ring-coffee-300'
           defaultValue={'Coffees'}
+          onChange={(e) => setSelectedTab(e.currentTarget.value)}
         >
           {tabs.map((tab) => (
             <option key={tab}>{tab}</option>
@@ -129,7 +130,7 @@ const Home: NextPage = () => {
   );
 
   const rightSide = (
-    <div className='mt-3 flex justify-between sm:mt-0 sm:ml-4'>
+    <div className='mt-3 flex justify-between sm:ml-4 sm:mt-0'>
       <ButtonDropDown />
       <label htmlFor='mobile-search-candidate' className='sr-only'>
         Filter

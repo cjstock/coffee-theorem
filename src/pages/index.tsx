@@ -17,7 +17,7 @@ import {
   faList,
   faMagnifyingGlass,
 } from '@fortawesome/pro-solid-svg-icons';
-import InfoGrid from '@ui/InfoGrid';
+import InfoGrid, { OnReorder } from '@ui/InfoGrid';
 import InfoCard, { CardStyle } from '@ui/InfoCard';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -202,7 +202,7 @@ const Home: NextPage = () => {
     <>
       <Heading key={'heading'} leftSide={tabNav} rightSide={rightSide} />
       {selectedTab === 'Coffees' && (
-        <InfoGrid state={coffeeState} setState={setCoffeeState}>
+        <InfoGrid state={coffeeState} setState={setCoffeeState as OnReorder}>
           {filtered(coffeeState, searchText).map((coffee) => {
             return (
               <InfoCard
@@ -242,7 +242,7 @@ const Home: NextPage = () => {
         </InfoGrid>
       )}
       {selectedTab === 'Sellers' && (
-        <InfoGrid state={sellerState} setState={setSellerState}>
+        <InfoGrid state={sellerState} setState={setSellerState as OnReorder}>
           {filtered(sellerState, searchText).map((seller) => {
             return (
               <InfoCard
@@ -282,7 +282,7 @@ const Home: NextPage = () => {
         </InfoGrid>
       )}
       {selectedTab === 'Roasters' && (
-        <InfoGrid state={roasterState} setState={setRoasterState}>
+        <InfoGrid state={roasterState} setState={setRoasterState as OnReorder}>
           {filtered(roasterState, searchText).map((roaster) => {
             return (
               <InfoCard
@@ -322,7 +322,10 @@ const Home: NextPage = () => {
         </InfoGrid>
       )}
       {selectedTab === 'Producers' && (
-        <InfoGrid state={producerState} setState={setProducerState}>
+        <InfoGrid
+          state={producerState}
+          setState={setProducerState as OnReorder}
+        >
           {filtered(producerState, searchText).map((producer) => {
             return (
               <InfoCard
@@ -362,7 +365,7 @@ const Home: NextPage = () => {
         </InfoGrid>
       )}
       {selectedTab === 'Brewers' && (
-        <InfoGrid state={brewerState} setState={setBrewerState}>
+        <InfoGrid state={brewerState} setState={setBrewerState as OnReorder}>
           {brewerState.map((brewer) => {
             return (
               <InfoCard

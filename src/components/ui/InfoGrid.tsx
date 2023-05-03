@@ -1,10 +1,11 @@
-import { SetStateAction } from 'react';
 import { Reorder } from 'framer-motion';
+
+export type OnReorder = (newOrder: object[]) => void;
 
 interface InfoGridProps {
   children?: React.ReactNode;
-  state: any;
-  setState: SetStateAction<any>;
+  state: object[];
+  setState: OnReorder;
 }
 
 const InfoGrid = ({ state, setState, children }: InfoGridProps) => {

@@ -27,7 +27,7 @@ function Coffee() {
 
   const [enabledSections, setEnabledSections] = useState<Array<string>>([]);
 
-  const coffee = trpc.coffee.byId.useQuery(
+  trpc.coffee.byId.useQuery(
     { coffeeId: id },
     {
       enabled: session.status === 'authenticated' && id !== 'add',
@@ -91,11 +91,11 @@ function Coffee() {
     });
   };
 
-  const disableSection = (element: string) => {
-    setEnabledSections((curr) => {
-      return curr.filter((section) => section !== element);
-    });
-  };
+  // const disableSection = (element: string) => {
+  //   setEnabledSections((curr) => {
+  //     return curr.filter((section) => section !== element);
+  //   });
+  // };
 
   const sections = {
     seller: {

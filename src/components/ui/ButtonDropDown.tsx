@@ -8,7 +8,6 @@ import {
   faFireplace,
   faFarm,
   faList,
-  faChevronDown,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import Router from 'next/router';
@@ -65,7 +64,7 @@ export default function ButtonDropDown() {
         leaveFrom='opacity-100 translate-y-0'
         leaveTo='opacity-0 translate-y-1'
       >
-        <Popover.Panel className='fixed left-1/2 z-50 z-10 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 lg:absolute'>
+        <Popover.Panel className='fixed left-1/2 z-50 mt-5 flex w-screen max-w-max -translate-x-1/2 px-4 lg:absolute'>
           <div className='w-screen max-w-md flex-auto overflow-hidden rounded-3xl border-2 border-coffee-300 bg-coffee-500 text-sm leading-6 shadow-lg'>
             <div className='p-4'>
               {solutions.map((item) => (

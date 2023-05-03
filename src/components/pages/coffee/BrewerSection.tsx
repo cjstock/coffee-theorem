@@ -3,9 +3,6 @@ import TextArea from '../../ui/TextArea';
 import { ACTIONTYPE, initialState } from '../../../utils/CoffeeReducer';
 import { Dispatch } from 'react';
 import CoffeeSection from '../../ui/CoffeeSection';
-import { brewerModel } from '../../../../prisma/zod/brewer';
-import { trpc } from '../../../utils/trpc';
-import { z } from 'zod';
 
 interface Props {
   state: typeof initialState;

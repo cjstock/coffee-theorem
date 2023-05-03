@@ -1,5 +1,5 @@
 import { Fragment, useState } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure, Menu } from '@headlessui/react';
 import {
   Bars3Icon,
   XMarkIcon,
@@ -57,7 +57,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                   return (
                     <Link
                       key={element.name}
-                      href={element.hrefs[0]!}
+                      href={element.hrefs[0] || ''}
                       passHref
                       className={classNames(
                         element.hrefs.find((href) => href === selectedNavTab)
@@ -70,7 +70,7 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                           ? 'page'
                           : undefined
                       }
-                      onClick={() => (selectedNavTab = element.hrefs[0]!)}
+                      onClick={() => (selectedNavTab = element.hrefs[0] || '')}
                     >
                       {element.name}
                     </Link>
@@ -148,10 +148,10 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 200 }}
                 exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
-                className='space-y-1 px-2 pt-2 pb-3 sm:px-3 md:hidden'
+                className='space-y-1 px-2 pb-3 pt-2 sm:px-3 md:hidden'
               >
                 {navigation.map((item) => (
-                  <Link href={item.hrefs[0]!} key={item.name} passHref>
+                  <Link href={item.hrefs[0] || ''} key={item.name} passHref>
                     <Disclosure.Button
                       key={item.name}
                       className={classNames(
@@ -165,13 +165,15 @@ const NavBar: React.FC<Props> = ({ selectedNavTab }: Props) => {
                           ? 'page'
                           : undefined
                       }
-                      onClickCapture={() => (selectedNavTab = item.hrefs[0]!)}
+                      onClickCapture={() =>
+                        (selectedNavTab = item.hrefs[0] || '')
+                      }
                     >
                       {item.name}
                     </Disclosure.Button>
                   </Link>
                 ))}
-                <div className='border-t border-coffee-300 pt-4 pb-3'>
+                <div className='border-t border-coffee-300 pb-3 pt-4'>
                   <div className=' space-y-1 px-2 sm:px-3'>
                     {session.status !== 'unauthenticated' ? (
                       <Disclosure.Button

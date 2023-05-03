@@ -1,6 +1,5 @@
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
-import { Brewer, Coffee, Producer, Roaster, Seller } from '@prisma/client';
 import { VariantProps, cva } from 'cva';
 import { Reorder } from 'framer-motion';
 import {
@@ -22,10 +21,10 @@ export const CardStyle = cva([], {
   variants: {
     cardBorder: {
       Dark: 'border-coffee-500',
-      Medium: 'border-coffee-400',
-      Light: 'border-coffee-200',
-      LightMedium: 'border-coffee-200',
-      MediumDark: 'border-coffee-400',
+      Medium: 'border-coffee-500',
+      Light: 'border-coffee-500',
+      LightMedium: 'border-coffee-500',
+      MediumDark: 'border-coffee-500',
       ExtraDark: 'border-coffee-500',
     },
     headerStyle: {

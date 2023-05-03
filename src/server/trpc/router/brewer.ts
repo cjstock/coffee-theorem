@@ -1,10 +1,24 @@
 
-import { t } from "../trpc";
+import { authedProcedure, t } from "../trpc";
 import { z } from "zod";
 import { brewerModel } from "../../../../prisma/zod";
 import { coffeeModel } from '../../../../prisma/zod/coffee';
 
 export const brewerRoute = t.router({
+    getAll: authedProcedure
+        .input(z.object({ coffees: z.array(coffeeModel).nullish() }))
+        .query(async ({ ctx, input }) => {
+            if (input.coffees) {
+                return await ctx.prisma.brewer.findMany({
+                    where: {
+                        id: {
+                            in: input.coffees.map(coffee => coffee.brewerId as string).filter(brewerId => brewerId !== null)
+                        },
+                    },
+                });
+            }
+            return await ctx.prisma.producer.findMany({})
+        }),
     byId: t.procedure
         .input(z.object({ brewerId: z.string().nullish() }))
         .query(({ ctx, input }) => {

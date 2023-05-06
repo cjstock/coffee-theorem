@@ -1,7 +1,6 @@
 import { CheckIcon } from '@heroicons/react/24/outline';
 import Heading from '@page-components/coffee-collection/Heading';
 import BeanSection from '@page-components/coffee/BeanSection';
-import BrewerSection from '@page-components/coffee/BrewerSection';
 import ProducerSection from '@page-components/coffee/ProducerSection';
 import RoasterSection from '@page-components/coffee/RoasterSection';
 import SectionAdd from '@page-components/coffee/SectionAdd';
@@ -32,8 +31,8 @@ function Coffee() {
     {
       enabled: session.status === 'authenticated' && id !== 'add',
       onSuccess(data: CoffeeByIdOutput) {
-        if (data.coffee) {
-          dispatch({ type: 'LoadCoffee', coffee: data.coffee });
+        if (data) {
+          dispatch({ type: 'LoadCoffee', coffee: data });
           data.seller &&
             enableSection('seller', {
               type: 'SetSeller',
@@ -48,11 +47,6 @@ function Coffee() {
             enableSection('producer', {
               type: 'SetProducer',
               producer: data.producer,
-            });
-          data.brewer &&
-            enableSection('brewer', {
-              type: 'SetBrewer',
-              brewer: data.brewer,
             });
         }
       },
@@ -116,11 +110,6 @@ function Coffee() {
       addFunction: () =>
         enableSection('producer', { type: 'AddEmptyProducer' }),
     },
-    brewer: {
-      title: 'brewer',
-      jsx: <BrewerSection key={'brewer'} state={state} dispatch={dispatch} />,
-      addFunction: () => enableSection('brewer', { type: 'AddEmptyBrewer' }),
-    },
   };
 
   return (
@@ -154,8 +143,7 @@ function Coffee() {
           />
           <BeanSection state={state} dispatch={dispatch} />
           {enabledSections.map(
-            (name) =>
-              sections[name as 'seller' | 'roaster' | 'producer' | 'brewer'].jsx
+            (name) => sections[name as 'seller' | 'roaster' | 'producer'].jsx
           )}
           {!enabledSections.includes('seller') && (
             <SectionAdd title='Seller' onClick={sections.seller.addFunction} />
@@ -171,9 +159,6 @@ function Coffee() {
               title='Producer'
               onClick={sections.producer.addFunction}
             />
-          )}
-          {!enabledSections.includes('brewer') && (
-            <SectionAdd title='Brewer' onClick={sections.brewer.addFunction} />
           )}
         </motion.div>
         <motion.button

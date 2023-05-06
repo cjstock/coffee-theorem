@@ -14,18 +14,12 @@ import {
   faShop,
   faFireplace,
   faFarm,
-  faList,
   faMagnifyingGlass,
 } from '@fortawesome/pro-solid-svg-icons';
 import InfoGrid, { OnReorder } from '@ui/InfoGrid';
 import InfoCard, { CardStyle } from '@ui/InfoCard';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  brewerModel,
-  producerModel,
-  roasterModel,
-  sellerModel,
-} from 'prisma/zod';
+import { producerModel, roasterModel, sellerModel } from 'prisma/zod';
 import { cva } from 'cva';
 import { filtered } from '@utils/utils';
 
@@ -79,19 +73,6 @@ const Home: NextPage = () => {
       enabled: !!coffees,
       onSuccess(data) {
         setProducerState(data);
-      },
-    }
-  );
-
-  const [brewerState, setBrewerState] = useState<
-    Array<z.infer<typeof brewerModel>>
-  >([]);
-  trpc.brewer.getAll.useQuery(
-    { coffees: coffees },
-    {
-      enabled: !!coffees,
-      onSuccess(data) {
-        setBrewerState(data);
       },
     }
   );
@@ -236,6 +217,7 @@ const Home: NextPage = () => {
                 body={coffee.roast}
                 dataLabel={coffee.roast}
                 dataText={coffee.roast}
+                tags={[]}
               />
             );
           })}
@@ -276,6 +258,7 @@ const Home: NextPage = () => {
                 body={'Dark'}
                 dataLabel={'Dark'}
                 dataText={'Dark'}
+                tags={[]}
               />
             );
           })}
@@ -316,6 +299,7 @@ const Home: NextPage = () => {
                 body={'Dark'}
                 dataLabel={'Dark'}
                 dataText={'Dark'}
+                tags={[]}
               />
             );
           })}
@@ -359,46 +343,7 @@ const Home: NextPage = () => {
                 body={'Dark'}
                 dataLabel={'Dark'}
                 dataText={'Dark'}
-              />
-            );
-          })}
-        </InfoGrid>
-      )}
-      {selectedTab === 'Brewers' && (
-        <InfoGrid state={brewerState} setState={setBrewerState as OnReorder}>
-          {brewerState.map((brewer) => {
-            return (
-              <InfoCard
-                id={brewer.id}
-                title={brewer.name}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faList}
-                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
-                      {
-                        iconStyle: 'Light',
-                      }
-                    )}`}
-                  />
-                }
-                key={brewer.id}
-                menuOptions={[
-                  {
-                    name: 'Edit',
-                    action: () => null,
-                  },
-                  {
-                    name: 'Remove',
-                    action: () => null,
-                  },
-                ]}
-                info={brewer}
-                cardBorder={'Dark'}
-                headerStyle={'Dark'}
-                titleColor={'Dark'}
-                body={'Dark'}
-                dataLabel={'Dark'}
-                dataText={'Dark'}
+                tags={[]}
               />
             );
           })}

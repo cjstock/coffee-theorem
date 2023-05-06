@@ -44,15 +44,15 @@ const RoasterSection = ({ state, dispatch }: Props) => {
         }
       />
       <InputText
-        title='Address'
-        id='roasterAddress'
+        title='Location'
+        id='roasterLocation'
         type='text'
         placeholder='123 Roaster St.'
-        value={state.roaster?.address || ''}
+        value={state.roaster?.location || ''}
         handleChange={(e) =>
           dispatch({
             type: 'EditRoaster',
-            field: 'address',
+            field: 'location',
             payload: e.currentTarget.value,
           })
         }

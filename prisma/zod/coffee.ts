@@ -10,9 +10,10 @@ export const coffeeModel = z.object({
   altitude: z.number().int().nullish(),
   roast: z.nativeEnum(Roast),
   recipes: z.string().nullish(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
   userId: z.string(),
   sellerId: z.string().nullish(),
   roasterId: z.string().nullish(),
   producerId: z.string().nullish(),
-  brewerId: z.string().nullish(),
 })

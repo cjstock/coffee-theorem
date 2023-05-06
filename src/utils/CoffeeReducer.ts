@@ -3,7 +3,6 @@ import { sellerModel } from '../../prisma/zod/seller';
 import { z } from 'zod';
 import { roasterModel } from '../../prisma/zod/roaster';
 import { producerModel } from '../../prisma/zod/producer';
-import { brewerModel } from '../../prisma/zod/brewer';
 import { coffeeModel } from '../../prisma/zod/coffee';
 
 export const initialState: CoffeeState = {
@@ -19,12 +18,13 @@ export const initialState: CoffeeState = {
         sellerId: "",
         roasterId: "",
         producerId: "",
-        brewerId: "",
+        createdAt: new Date,
+        updatedAt: new Date
     },
+    tastingNotes: [],
     seller: null,
     roaster: null,
     producer: null,
-    brewer: null,
 
 }
 
@@ -44,10 +44,7 @@ export type ACTIONTYPE =
     | { type: "SetProducer", producer: z.infer<typeof producerModel> }
     | { type: "EditProducer", field: string, payload: string | boolean | number }
     | { type: "RemoveProducer" }
-    | { type: "AddEmptyBrewer" }
-    | { type: "SetBrewer", brewer: z.infer<typeof brewerModel> }
-    | { type: "EditBrewer", field: string, payload: string | boolean | number }
-    | { type: "RemoveBrewer" }
+    | { type: "SetTastingNotes" }
 
 export function reducer(
     state: typeof initialState,
@@ -86,9 +83,11 @@ export function reducer(
                     id: "",
                     isRoaster: false,
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -102,9 +101,11 @@ export function reducer(
                     id: "",
                     isRoaster: false,
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -128,9 +129,11 @@ export function reducer(
                 roaster: {
                     id: "",
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -141,9 +144,11 @@ export function reducer(
                 roaster: {
                     id: "",
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -167,9 +172,11 @@ export function reducer(
                 producer: {
                     id: "",
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -180,9 +187,11 @@ export function reducer(
                 producer: {
                     id: "",
                     name: "",
-                    address: "",
+                    location: "",
                     info: "",
-                    url: ""
+                    url: "",
+                    createdAt: new Date,
+                    updatedAt: new Date
                 }
             }
         }
@@ -200,40 +209,8 @@ export function reducer(
             if (state.producer) return { ...state, producer: initialState.producer }
             return { ...state }
         }
-        case "AddEmptyBrewer": {
-            return {
-                ...state,
-                brewer: initialState.brewer
-            }
-        }
-        case "SetBrewer": {
-            if (!!action.brewer) return { ...state, roaster: action.brewer }
-            return {
-                ...state,
-                brewer: {
-                    id: "",
-                    name: "",
-                    address: "",
-                    info: "",
-                    url: ""
-                }
-            }
-        }
-        case "EditBrewer": {
-            if (!state.brewer) return { ...state }
-            return {
-                ...state,
-                brewer: {
-                    ...state.brewer,
-                    [action.field]: action.payload
-                }
-            };
-        }
-        case "RemoveBrewer": {
-            if (state.brewer) return { ...state, brewer: initialState.brewer }
-        }
         default: {
-            throw new Error(`Reducer Action: ${action.type} not found`);
+            throw new Error(`Reducer Action: ${action} not found`);
         }
     }
 }

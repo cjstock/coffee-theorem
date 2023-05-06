@@ -1,9 +1,8 @@
 import { Menu, Transition } from '@headlessui/react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/20/solid';
 import { VariantProps, cva } from 'cva';
-import { Reorder } from 'framer-motion';
+import { AnimatePresence, Reorder } from 'framer-motion';
 import {
-  brewerModel,
   coffeeModel,
   producerModel,
   roasterModel,
@@ -87,8 +86,8 @@ export interface InfoCardProps extends VariantProps<typeof CardStyle> {
     | z.infer<typeof coffeeModel>
     | z.infer<typeof sellerModel>
     | z.infer<typeof roasterModel>
-    | z.infer<typeof producerModel>
-    | z.infer<typeof brewerModel>;
+    | z.infer<typeof producerModel>;
+  tags: string[];
 }
 
 const InfoCard = ({
@@ -97,6 +96,7 @@ const InfoCard = ({
   title,
   menuOptions,
   info,
+  tags,
   cardBorder = 'Dark',
   headerStyle = 'Dark',
   titleColor = 'Dark',
@@ -117,93 +117,98 @@ const InfoCard = ({
     'roast',
     'info',
     'name',
+    'createdAt',
+    'updatedAt',
   ];
   const filteredInfo = Object.entries(info).filter(
     (entry) => excludedInfo.indexOf(entry[0]) == -1
   );
+
   return (
-    <Reorder.Item
-      key={id}
-      value={info}
-      drag={false}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 0.5 } }}
-      exit={{ opacity: 0, transition: { duration: 0.5 } }}
-      className={`overflow-hidden rounded-xl border ${CardStyle({
-        cardBorder,
-      })}`}
-    >
-      <div
-        className={`flex items-center gap-x-4 border-b ${CardStyle({
-          headerStyle,
-        })} p-6`}
+    <AnimatePresence>
+      <Reorder.Item
+        key={id}
+        value={info}
+        drag={false}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 0.5 } }}
+        exit={{ opacity: 0, transition: { duration: 0.5 } }}
+        className={`overflow-hidden rounded-xl border ${CardStyle({
+          cardBorder,
+        })}`}
       >
-        {icon}
         <div
-          className={`truncate text-lg font-medium leading-6 ${CardStyle({
-            titleColor,
-          })}`}
+          className={`flex items-center gap-x-4 border-b ${CardStyle({
+            headerStyle,
+          })} p-6`}
         >
-          {title}
-        </div>
-        <Menu as='div' className='relative ml-auto'>
-          <Menu.Button className='-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500'>
-            <span className='sr-only'>Open options</span>
-            <EllipsisHorizontalIcon className='h-5 w-5' aria-hidden='true' />
-          </Menu.Button>
-          <Transition
-            as={Fragment}
-            enter='transition ease-out duration-100'
-            enterFrom='transform opacity-0 scale-95'
-            enterTo='transform opacity-100 scale-100'
-            leave='transition ease-in duration-75'
-            leaveFrom='transform opacity-100 scale-100'
-            leaveTo='transform opacity-0 scale-95'
+          {icon}
+          <div
+            className={`truncate text-lg font-medium leading-6 ${CardStyle({
+              titleColor,
+            })}`}
           >
-            <Menu.Items className='absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-coffee-400 py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none'>
-              {menuOptions.map((option) => {
-                return (
-                  <Menu.Item key={option.name}>
-                    {({ active }) => (
-                      <button
-                        onClick={option.action}
-                        className={`block w-full px-3 py-1 text-sm leading-6 ${
-                          active ? 'text-matcha-200' : 'text-gray-400'
-                        }`}
-                      >
-                        {option.name}
-                      </button>
-                    )}
-                  </Menu.Item>
-                );
-              })}
-            </Menu.Items>
-          </Transition>
-        </Menu>
-      </div>
-      <dl
-        className={`-my-3 divide-y ${CardStyle({
-          body,
-        })} px-6 py-4 text-sm leading-6`}
-      >
-        {filteredInfo.map((entry) => {
-          return (
-            <div key={entry[0]} className='flex justify-between gap-x-4 py-3'>
-              <dt className={`capitalize ${CardStyle({ dataLabel })}`}>
-                {entry[0]}
-              </dt>
-              <dd
-                className={`truncate ${
-                  entry[1] ? CardStyle({ dataText }) : 'text-gray-500'
-                }`}
-              >
-                {entry[1] || 'Empty'}
-              </dd>
-            </div>
-          );
-        })}
-      </dl>
-    </Reorder.Item>
+            {title}
+          </div>
+          <Menu as='div' className='relative ml-auto'>
+            <Menu.Button className='-m-2.5 block p-2.5 text-gray-400 hover:text-gray-500'>
+              <span className='sr-only'>Open options</span>
+              <EllipsisHorizontalIcon className='h-5 w-5' aria-hidden='true' />
+            </Menu.Button>
+            <Transition
+              as={Fragment}
+              enter='transition ease-out duration-100'
+              enterFrom='transform opacity-0 scale-95'
+              enterTo='transform opacity-100 scale-100'
+              leave='transition ease-in duration-75'
+              leaveFrom='transform opacity-100 scale-100'
+              leaveTo='transform opacity-0 scale-95'
+            >
+              <Menu.Items className='absolute right-0 z-10 mt-0.5 w-32 origin-top-right rounded-md bg-coffee-400 py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none'>
+                {menuOptions.map((option) => {
+                  return (
+                    <Menu.Item key={option.name}>
+                      {({ active }) => (
+                        <button
+                          onClick={option.action}
+                          className={`block w-full px-3 py-1 text-sm leading-6 ${
+                            active ? 'text-matcha-200' : 'text-gray-400'
+                          }`}
+                        >
+                          {option.name}
+                        </button>
+                      )}
+                    </Menu.Item>
+                  );
+                })}
+              </Menu.Items>
+            </Transition>
+          </Menu>
+        </div>
+        <dl
+          className={`-my-3 divide-y ${CardStyle({
+            body,
+          })} px-6 py-4 text-sm leading-6`}
+        >
+          {filteredInfo.map((entry) => {
+            return (
+              <div key={entry[0]} className='flex justify-between gap-x-4 py-2'>
+                <dt className={`capitalize ${CardStyle({ dataLabel })}`}>
+                  {entry[0]}
+                </dt>
+                <dd
+                  className={`truncate ${
+                    entry[1] ? CardStyle({ dataText }) : 'text-gray-500'
+                  }`}
+                >
+                  {entry[1]?.toString() || 'Empty'}
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
+      </Reorder.Item>
+    </AnimatePresence>
   );
 };
 

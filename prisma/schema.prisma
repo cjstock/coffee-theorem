@@ -82,6 +82,8 @@ model Coffee {
   roast              Roast @default(Medium)
   coffeeTastingNotes CoffeeTastingNote[]
   recipes            String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -95,19 +97,15 @@ model Coffee {
   producer Producer? @relation(fields: [producerId], references: [id])
   producerId String?
 
-  brewer     Brewer? @relation(fields: [brewerId], references: [id])
-  brewerId   String?
-
   @@index([userId])
   @@index([sellerId])
   @@index([roasterId])
   @@index([producerId])
-  @@index([brewerId])
 }
 
 model TastingNote {
   id                 Int                 @id @default(autoincrement())
-  note               String
+  note               String @unique
   coffeeTastingNotes CoffeeTastingNote[]
 }
 
@@ -117,6 +115,8 @@ model CoffeeTastingNote {
   tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id])
   coffeeId      String
   tastingNoteId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@id([coffeeId, tastingNoteId])
   @@index([coffeeId])
@@ -125,41 +125,36 @@ model CoffeeTastingNote {
 
 model Roaster {
   id      String   @id @default(cuid())
-  name    String
+  name    String @unique
   url     String?
-  address String?
+  location String?
   info    String?  @db.LongText
   coffees Coffee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Producer {
   id      String   @id @default(cuid())
-  name    String
+  name    String @unique
   url     String?
-  address String?
+  location String?
   info    String?  @db.LongText
   coffees Coffee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Seller {
   id        String   @id @default(cuid())
-  name      String
+  name      String @unique
   url       String?
-  address   String?
+  location   String?
   info      String?  @db.LongText
   isRoaster Boolean  @default(false)
   coffees   Coffee[]
-}
-
-model Brewer {
-  id           String   @id @default(cuid())
-  name         String
-  url          String?
-  address      String?
-  info         String?  @db.LongText
-  tastingNotes String?
-  recipes      String?
-  coffees      Coffee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Variety {

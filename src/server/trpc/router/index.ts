@@ -6,7 +6,6 @@ import { tastingNotesRouter } from "./tastingNotes";
 import { sellerRouter } from './seller';
 import { roasterRoute } from './roaster';
 import { producerRoute } from './producer';
-import { brewerRoute } from './brewer';
 
 export const appRouter = t.router({
     auth: authRouter,
@@ -15,7 +14,6 @@ export const appRouter = t.router({
     seller: sellerRouter,
     roaster: roasterRoute,
     producer: producerRoute,
-    brewer: brewerRoute
 });
 
 // export type definition of API

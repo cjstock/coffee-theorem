@@ -24,7 +24,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
     <Listbox value={selected} onChange={(v) => handleChange(v)}>
       {({ open }) => (
         <div className='col-span-3 sm:col-span-2'>
-          <Listbox.Label className='block text-sm font-medium text-matcha-100'>
+          <Listbox.Label className='block text-sm font-medium text-matcha-200'>
             {title}
           </Listbox.Label>
           <div className='relative mt-1'>
@@ -50,7 +50,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
               leaveFrom='opacity-100'
               leaveTo='opacity-0'
             >
-              <Listbox.Options className='absolute z-50 mt-1 max-h-60 w-full rounded-md border-2 border-coffee-300 bg-coffee-500 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm'>
+              <Listbox.Options className='absolute z-50 mt-1 w-full rounded-md border-2 border-coffee-300 bg-coffee-500 py-1 text-coffee-200 shadow-lg ring-0 focus:outline-none sm:text-sm'>
                 {options.map((option) => (
                   <Listbox.Option
                     key={option}
@@ -59,7 +59,7 @@ const Select = ({ title, id, options, selected, dispatch }: SelectProps) => {
                         active
                           ? 'bg-gradient-to-r from-coffee-400 to-coffee-500 text-matcha-100'
                           : 'text-matcha-100',
-                        'relative z-50 cursor-pointer select-none py-2 pl-3 pr-9'
+                        'relative z-50 cursor-pointer select-none rounded-sm py-2 pl-3 pr-9 transition-all'
                       )
                     }
                     value={option}

@@ -16,7 +16,7 @@ const CoffeeSection = ({
 }: Props) => {
   return (
     <motion.div
-      className='z-40 overflow-visible'
+      className='overflow-visible'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1, transition: { duration: 0.2 } }}
       exit={{ opacity: 0 }}
@@ -25,7 +25,7 @@ const CoffeeSection = ({
       <motion.div
         initial={{ height: 0 }}
         animate={{ height: 'auto', transition: { duration: 0.2 } }}
-        className='z-40 overflow-visible md:grid md:grid-cols-3 md:gap-6'
+        className='overflow-visible md:grid md:grid-cols-3 md:gap-6'
       >
         <div className='md:col-span-1'>
           <div className='px-4 sm:px-0'>
@@ -35,7 +35,7 @@ const CoffeeSection = ({
         </div>
         <div className='mt-5 md:col-span-2 md:mt-0'>
           <form action='#' method='POST'>
-            <div className='shadow sm:overflow-hidden sm:rounded-md'>
+            <div className='overflow-visible shadow sm:rounded-md'>
               <div className='space-y-6 bg-coffee-500 px-4 py-5 sm:p-6'>
                 <div className='grid grid-cols-3 gap-6'>{children}</div>
               </div>

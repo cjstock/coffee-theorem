@@ -36,7 +36,7 @@ export const producerRoute = t.router({
                 },
                 create: {
                     name: input.producer.name,
-                    address: input.producer.address,
+                    location: input.producer.location,
                     info: input.producer.info,
                     url: input.producer.url,
                     coffees: {

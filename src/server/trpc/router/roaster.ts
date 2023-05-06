@@ -36,7 +36,7 @@ export const roasterRoute = t.router({
                 },
                 create: {
                     name: input.roaster.name,
-                    address: input.roaster.address,
+                    location: input.roaster.location,
                     info: input.roaster.info,
                     url: input.roaster.url,
                     coffees: {

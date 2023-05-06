@@ -53,15 +53,15 @@ const SellerSection = ({ state, dispatch }: Props) => {
         }
       />
       <InputText
-        title='Address'
-        id='sellerAddress'
+        title='Location'
+        id='sellerLocation'
         type='text'
         placeholder='123 Coffee St.'
-        value={state.seller?.address || ''}
+        value={state.seller?.location || ''}
         handleChange={(e) =>
           dispatch({
             type: 'EditSeller',
-            field: 'address',
+            field: 'location',
             payload: e.currentTarget.value,
           })
         }

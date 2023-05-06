@@ -44,15 +44,15 @@ const ProducerSection = ({ state, dispatch }: Props) => {
         }
       />
       <InputText
-        title='Address'
-        id='producerAddress'
+        title='Location'
+        id='producerLocation'
         type='text'
         placeholder='123 Bourbon Varietal St.'
-        value={state.producer?.address || ''}
+        value={state.producer?.location || ''}
         handleChange={(e) =>
           dispatch({
             type: 'EditProducer',
-            field: 'address',
+            field: 'location',
             payload: e.currentTarget.value,
           })
         }

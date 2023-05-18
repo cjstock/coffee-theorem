@@ -1,14 +1,12 @@
 import InputText from '../../ui/InputText';
 import TextArea from '../../ui/TextArea';
-import { ACTIONTYPE, initialState } from '../../../utils/CoffeeReducer';
-import { Dispatch } from 'react';
 import CoffeeSection from '../../ui/CoffeeSection';
+import { useCoffee, useCoffeeDispatch } from '@utils/CoffeeContext';
 
-interface Props {
-  state: typeof initialState;
-  dispatch: Dispatch<ACTIONTYPE>;
-}
-const RoasterSection = ({ state, dispatch }: Props) => {
+const RoasterSection = () => {
+  const state = useCoffee();
+  const dispatch = useCoffeeDispatch();
+
   const title = 'Roaster';
   const description =
     'Where was the coffee roasted? Many coffee shops roast their own beans.';

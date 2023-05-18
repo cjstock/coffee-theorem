@@ -1,15 +1,22 @@
 import Checkbox from '@ui/Checkbox';
 import InputText from '@ui/InputText';
 import TextArea from '@ui/TextArea';
-import { Dispatch } from 'react';
-import { ACTIONTYPE, initialState } from '../../../utils/CoffeeReducer';
 import CoffeeSection from '@ui/CoffeeSection';
+import { useCoffee, useCoffeeDispatch } from '@utils/CoffeeContext';
+import { trpc } from '@utils/trpc';
+import ComboBox from '@ui/ComboBox';
+import { useState } from 'react';
+import type { Option } from '@ui/ComboBox';
 
-interface Props {
-  state: typeof initialState;
-  dispatch: Dispatch<ACTIONTYPE>;
-}
-const SellerSection = ({ state, dispatch }: Props) => {
+
+const SellerSection = () => {
+  const state = useCoffee();
+  const dispatch = useCoffeeDispatch();
+
+  const { data: sellers } = trpc.seller.getAll.useQuery();
+
+  const [selectedSeller, setSelectedSeller] = useState<Option | null>(null)
+
   function handleCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
     dispatch({
       type: 'EditSeller',
@@ -17,6 +24,11 @@ const SellerSection = ({ state, dispatch }: Props) => {
       payload: event.currentTarget.checked,
     });
   }
+  const handlePressEnter = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && selectedSeller) {
+      dispatch({ type: 'SetSeller', seller: sellers?.find(seller => seller.name === selectedSeller.value) });
+    }
+  };
 
   const title = 'Seller';
   const description =
@@ -24,6 +36,15 @@ const SellerSection = ({ state, dispatch }: Props) => {
 
   return (
     <CoffeeSection title={title} description={description}>
+      <ComboBox
+        label='Name'
+        options={sellers?.map((seller) => {
+          return { id: seller.id, value: seller.name };
+        })}
+        selectedOption={ selectedSeller }
+      setSelectedOption={setSelectedSeller}
+      handleSelectOption={handlePressEnter}
+      />
       <InputText
         title='Name'
         id='sellerName'

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { t } from "../trpc";
+import { tastingNoteModel } from "prisma/zod";
 
 export const tastingNotesRouter = t.router({
     getAll: t.procedure
@@ -7,22 +8,22 @@ export const tastingNotesRouter = t.router({
             return ctx.prisma.tastingNote.findMany({});
         }),
     addTastingNote: t.procedure
-        .input(z.object({ note: z.string() }))
+        .input(z.object({ tastingNote: tastingNoteModel }))
         .mutation(async ({ input, ctx }) => {
-            const existingTastingNote = await ctx.prisma.tastingNote.findFirst({
+            return await ctx.prisma.tastingNote.upsert({
                 where: {
-                    note: input.note
+                    id: input.tastingNote.id
+                },
+                create: {
+                    value: input.tastingNote.value
+                },
+                update: {
+                    value: input.tastingNote.value
                 }
-            });
-            return existingTastingNote ? existingTastingNote :
-                await ctx.prisma.tastingNote.create({
-                    data: {
-                        note: input.note
-                    }
-                })
+            })
         }),
     connectCoffeeToNote: t.procedure
-        .input(z.object({ noteId: z.number(), coffeeId: z.string() }))
+        .input(z.object({ noteId: z.string(), coffeeId: z.string() }))
         .mutation(async ({ input, ctx }) => {
             return await ctx.prisma.coffeeTastingNote.create({
                 data: {
@@ -31,17 +32,16 @@ export const tastingNotesRouter = t.router({
                 }
             })
         }),
-    byCoffeeId: t.procedure
-        .input(z.object({ coffeeId: z.string() }))
-        .query(async ({ input, ctx }) => {
-            return await ctx.prisma.tastingNote.findMany({
+    removeFromCoffee: t.procedure
+        .input(z.object({ noteId: z.string(), coffeeId: z.string() }))
+        .mutation(async ({ input, ctx }) => {
+            return await ctx.prisma.coffeeTastingNote.delete({
                 where: {
-                    coffeeTastingNotes: {
-                        some: {
-                            coffeeId: input.coffeeId
-                        }
+                    coffeeId_tastingNoteId: {
+                        coffeeId: input.coffeeId,
+                        tastingNoteId: input.noteId
                     }
                 }
             })
-        }),
+        })
 });

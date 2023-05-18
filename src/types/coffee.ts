@@ -5,7 +5,7 @@ import { sellerModel } from '../../prisma/zod/seller';
 import { producerModel } from '../../prisma/zod/producer';
 import { roasterModel } from '../../prisma/zod/roaster';
 import { z } from "zod";
-import { coffeeTastingNoteModel } from "prisma/zod";
+import { tastingNoteModel } from "prisma/zod";
 
 
 enum Roast {
@@ -32,7 +32,7 @@ export type CoffeesGetAllOutput = inferProcedureOutput<AppRouter["coffee"]["getA
 
 export interface CoffeeReducer {
     coffee: z.infer<typeof coffeeModel>,
-    tastingNotes: z.infer<typeof coffeeTastingNoteModel>[] | null,
+    tastingNotes: z.infer<typeof tastingNoteModel>[],
     seller: z.infer<typeof sellerModel> | null,
     roaster: z.infer<typeof roasterModel> | null,
     producer: z.infer<typeof producerModel> | null,

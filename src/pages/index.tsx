@@ -6,7 +6,6 @@ import Heading from '../components/pages/coffee-collection/Heading';
 import Router from 'next/router';
 import Unauthorized from '../components/ui/Unauthorized';
 import { z } from 'zod';
-import { coffeeModel } from '../../prisma/zod/coffee';
 import ButtonDropDown from '@ui/ButtonDropDown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -19,37 +18,35 @@ import {
 import InfoGrid, { OnReorder } from '@ui/InfoGrid';
 import InfoCard, { CardStyle } from '@ui/InfoCard';
 import { useQueryClient } from '@tanstack/react-query';
-import { producerModel, roasterModel, sellerModel } from 'prisma/zod';
+import { producerModel, roasterModel } from 'prisma/zod';
 import { cva } from 'cva';
 import { filtered } from '@utils/utils';
+import { Seller, TastingNote } from '@prisma/client';
+import { CoffeesGetAllOutput } from 'src/types/coffee';
+import InfoItem from '@ui/InfoItem';
 
 const Home: NextPage = () => {
   const session = useSession();
   const queryClient = useQueryClient();
 
-  const [coffeeState, setCoffeeState] = useState<
-    Array<z.infer<typeof coffeeModel>>
-  >([]);
+  const [coffeeState, setCoffeeState] = useState<CoffeesGetAllOutput>([]);
   const { data: coffees } = trpc.coffee.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
     enabled: session.status == 'authenticated',
     onSuccess(data) {
       setCoffeeState(data);
+      setSellerState(
+        data
+          .filter((coffee) => coffee.seller !== null)
+          .map((coffee) => coffee.seller as Seller)
+      );
+      data.forEach((coffee) =>
+        queryClient.setQueryData(['coffee', coffee.id], coffee)
+      );
     },
   });
 
-  const [sellerState, setSellerState] = useState<
-    Array<z.infer<typeof sellerModel>>
-  >([]);
-  trpc.seller.getAll.useQuery(
-    { coffees: coffees },
-    {
-      enabled: !!coffees,
-      onSuccess(data) {
-        setSellerState(data);
-      },
-    }
-  );
+  const [sellerState, setSellerState] = useState<Array<Seller>>([]);
 
   const [roasterState, setRoasterState] = useState<
     Array<z.infer<typeof roasterModel>>
@@ -61,6 +58,7 @@ const Home: NextPage = () => {
       onSuccess(data) {
         setRoasterState(data);
       },
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -74,8 +72,17 @@ const Home: NextPage = () => {
       onSuccess(data) {
         setProducerState(data);
       },
+      refetchOnWindowFocus: false,
     }
   );
+
+  const [tastingNotes, setTatingNotes] = useState<Array<TastingNote>>([]);
+  trpc.tastingNotes.getAll.useQuery(undefined, {
+    onSuccess(data) {
+      setTatingNotes(data);
+    },
+    refetchOnWindowFocus: false,
+  });
 
   const deleteCoffee = trpc.coffee.deleteCoffee.useMutation({
     onSuccess(data) {
@@ -210,15 +217,20 @@ const Home: NextPage = () => {
                     action: () => deleteCoffee.mutate({ coffeeId: coffee.id }),
                   },
                 ]}
-                info={coffee}
-                cardBorder={coffee.roast}
-                headerStyle={coffee.roast}
-                titleColor={coffee.roast}
-                body={coffee.roast}
-                dataLabel={coffee.roast}
-                dataText={coffee.roast}
-                tags={[]}
-              />
+                tags={tastingNotes.filter(
+                  (note) =>
+                    coffee.coffeeTastingNotes.findIndex(
+                      (coffeeNote) => coffeeNote.tastingNoteId === note.id
+                    ) !== -1
+                )}
+              >
+                <InfoItem label='process' value={coffee.process} />
+                <InfoItem label='variety' value={coffee.variety} />
+                <InfoItem label='altitude' value={coffee.altitude} />
+                <InfoItem label='seller' value={coffee.seller?.name} />
+                <InfoItem label='roaster' value={coffee.roaster?.name} />
+                <InfoItem label='producer' value={coffee.producer?.name} />
+              </InfoCard>
             );
           })}
         </InfoGrid>
@@ -251,14 +263,6 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-                info={seller}
-                cardBorder={'Dark'}
-                headerStyle={'Dark'}
-                titleColor={'Dark'}
-                body={'Dark'}
-                dataLabel={'Dark'}
-                dataText={'Dark'}
-                tags={[]}
               />
             );
           })}
@@ -292,14 +296,6 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-                info={roaster}
-                cardBorder={'Dark'}
-                headerStyle={'Dark'}
-                titleColor={'Dark'}
-                body={'Dark'}
-                dataLabel={'Dark'}
-                dataText={'Dark'}
-                tags={[]}
               />
             );
           })}
@@ -336,14 +332,6 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-                info={producer}
-                cardBorder={'Dark'}
-                headerStyle={'Dark'}
-                titleColor={'Dark'}
-                body={'Dark'}
-                dataLabel={'Dark'}
-                dataText={'Dark'}
-                tags={[]}
               />
             );
           })}

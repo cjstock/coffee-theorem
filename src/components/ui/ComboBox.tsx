@@ -1,33 +1,41 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import { Combobox } from '@headlessui/react';
 import classNames from '@utils/ClassNames';
 
 export interface Option {
-  id: string | number;
+  id: string;
   value: string;
 }
 
+
 interface ComboBoxProps {
   label: string;
-  options: Option[];
-  handleSelectedOptionsChange: Dispatch<SetStateAction<Option[]>>;
+  placeholder?: string;
+  selectedOption: Option | null;
+  setSelectedOption: (option: Option) => void;
+  options?: Option[];
+  handleSelectOption: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 export default function ComboBox({
   label,
+  placeholder,
   options,
-  handleSelectedOptionsChange,
+  selectedOption,
+  setSelectedOption,
+  handleSelectOption 
 }: ComboBoxProps) {
   const [query, setQuery] = useState('');
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   const filteredOptions =
     query === ''
       ? options
-      : options.filter((option) => {
+      : options
+      ? options.filter((option) => {
           return option.value.toLowerCase().includes(query.toLowerCase());
-        });
+        })
+      : [];
 
   return (
     <Combobox
@@ -43,28 +51,18 @@ export default function ComboBox({
         <Combobox.Input
           className='relative w-full cursor-default rounded-md border border-coffee-200 bg-transparent py-2 pl-3 pr-10 text-left text-matcha-200 caret-matcha-200 shadow-sm transition-all focus:border-coffee-300 focus:ring-1 focus:ring-coffee-300 focus:ring-offset-1 focus:ring-offset-coffee-300 sm:text-sm'
           onChange={(event) => setQuery(event.target.value)}
+          placeholder={placeholder}
           displayValue={(option: Option) => option?.value}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter' && selectedOption) {
-              handleSelectedOptionsChange((prev) => {
-                return prev.findIndex(
-                  (option) => option.id === selectedOption.id
-                ) !== -1
-                  ? prev
-                  : [...prev, selectedOption];
-              });
-              setSelectedOption(null);
-            }
-          }}
+          onKeyUp={(e) => handleSelectOption(e)}
         />
         <Combobox.Button className='absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none'>
           <ChevronUpDownIcon
-            className='h-5 w-5 text-matcha-200'
+            className='h-5 w-5 text-matcha-300'
             aria-hidden='true'
           />
         </Combobox.Button>
 
-        {filteredOptions.length > 0 && (
+        {filteredOptions && filteredOptions.length > 0 && (
           <Combobox.Options className='absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border-2 border-coffee-300 bg-coffee-500 py-1 text-base shadow-lg ring-1 ring-coffee-200 ring-opacity-5 focus:outline-none sm:text-sm'>
             {filteredOptions.map((option) => (
               <Combobox.Option
@@ -73,7 +71,7 @@ export default function ComboBox({
                 className={({ active }) =>
                   classNames(
                     'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-coffee-400 text-matcha-200' : 'text-gray-400'
+                    active ? 'bg-coffee-400 text-matcha-300' : 'text-gray-400'
                   )
                 }
               >

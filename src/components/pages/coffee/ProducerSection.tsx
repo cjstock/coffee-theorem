@@ -1,14 +1,12 @@
 import InputText from '../../ui/InputText';
 import TextArea from '../../ui/TextArea';
-import { ACTIONTYPE, initialState } from '../../../utils/CoffeeReducer';
-import { Dispatch } from 'react';
 import CoffeeSection from '../../ui/CoffeeSection';
+import { useCoffee, useCoffeeDispatch } from '@utils/CoffeeContext';
 
-interface Props {
-  state: typeof initialState;
-  dispatch: Dispatch<ACTIONTYPE>;
-}
-const ProducerSection = ({ state, dispatch }: Props) => {
+const ProducerSection = () => {
+  const state = useCoffee();
+  const dispatch = useCoffeeDispatch();
+
   const title = 'Producer';
   const description =
     'Where was the coffee produced? This could be a large company, or a single farm. The primary group responsible for everything up until roasting.';

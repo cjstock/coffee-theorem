@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { roasterModel } from '../../prisma/zod/roaster';
 import { producerModel } from '../../prisma/zod/producer';
 import { coffeeModel } from '../../prisma/zod/coffee';
+import { tastingNoteModel } from 'prisma/zod';
 
 export const initialState: CoffeeState = {
     coffee: {
@@ -29,11 +30,12 @@ export const initialState: CoffeeState = {
 }
 
 export type ACTIONTYPE =
+    | { type: "Reset" }
     | { type: "LoadCoffee", coffee: z.infer<typeof coffeeModel> }
     | { type: "LoadAll", coffee: CoffeeState }
     | { type: "EditCoffeeField", field: string, payload: string | boolean | number }
     | { type: "AddEmptySeller" }
-    | { type: "SetSeller", seller: z.infer<typeof sellerModel> }
+    | { type: "SetSeller", seller: z.infer<typeof sellerModel> | undefined }
     | { type: "EditSeller", field: string, payload: string | boolean | number }
     | { type: "RemoveSeller" }
     | { type: "AddEmptyRoaster" }
@@ -44,13 +46,18 @@ export type ACTIONTYPE =
     | { type: "SetProducer", producer: z.infer<typeof producerModel> }
     | { type: "EditProducer", field: string, payload: string | boolean | number }
     | { type: "RemoveProducer" }
-    | { type: "SetTastingNotes" }
+    | { type: "SetTastingNotes", notes: z.infer<typeof tastingNoteModel>[] | undefined }
+    | { type: "RemoveTastingNote", noteId: string }
+    | { type: "AddTastingNote", note: z.infer<typeof tastingNoteModel> | null }
 
 export function reducer(
     state: typeof initialState,
     action: ACTIONTYPE,
 ): typeof initialState {
     switch (action.type) {
+        case "Reset": {
+            return initialState
+        }
         case "LoadAll": {
             return { ...action.coffee }
         }
@@ -208,6 +215,15 @@ export function reducer(
         case "RemoveProducer": {
             if (state.producer) return { ...state, producer: initialState.producer }
             return { ...state }
+        }
+        case "SetTastingNotes": {
+            return { ...state, tastingNotes: action.notes || [] }
+        }
+        case "AddTastingNote": {
+            return action.note ? { ...state, tastingNotes: [...state.tastingNotes, action.note] } : state
+        }
+        case "RemoveTastingNote": {
+            return { ...state, tastingNotes: state.tastingNotes.filter(note => note.id !== action.noteId) }
         }
         default: {
             throw new Error(`Reducer Action: ${action} not found`);

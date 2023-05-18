@@ -5,18 +5,29 @@ import { sellerModel } from '../../../../prisma/zod/seller';
 
 export const sellerRouter = t.router({
     getAll: authedProcedure
-        .input(z.object({ coffees: z.array(coffeeModel).nullish() }))
+        .query(async ({ ctx }) => {
+            return ctx.prisma.seller.findMany({})
+        }),
+    getAllFromCoffees: authedProcedure
+        .input(z.object({ coffeeIds: z.array(z.string()).nullish() }))
         .query(async ({ ctx, input }) => {
-            if (input.coffees) {
+            if (input.coffeeIds) {
+                const coffees = await ctx.prisma.coffee.findMany({
+                    where: {
+                        id: {
+                            in: input.coffeeIds
+                        }
+                    }
+                })
                 return await ctx.prisma.seller.findMany({
                     where: {
                         id: {
-                            in: input.coffees.map(coffee => coffee.sellerId as string).filter(sellerId => sellerId !== null)
+                            in: coffees.map(coffee => coffee.sellerId as string).filter(sellerId => sellerId !== null)
                         },
                     },
                 });
             }
-            return await ctx.prisma.seller.findMany({})
+            return [];
         }),
     byId: t.procedure
         .input(z.object({ sellerId: z.string().nullish() }))

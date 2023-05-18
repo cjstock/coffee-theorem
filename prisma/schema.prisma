@@ -104,17 +104,16 @@ model Coffee {
 }
 
 model TastingNote {
-  id                 Int                 @id @default(autoincrement())
-  note               String @unique
+  id                 String                 @id @default(cuid())
+  value               String
   coffeeTastingNotes CoffeeTastingNote[]
 }
 
 model CoffeeTastingNote {
-  id            Int         @default(dbgenerated())
-  coffee        Coffee      @relation(fields: [coffeeId], references: [id])
-  tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id])
+  coffee        Coffee      @relation(fields: [coffeeId], references: [id], onDelete: Cascade)
+  tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id], onDelete: Cascade)
   coffeeId      String
-  tastingNoteId Int
+  tastingNoteId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

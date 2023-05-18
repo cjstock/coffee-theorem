@@ -4,6 +4,7 @@ import { coffeeModel } from '../../../../prisma/zod/coffee';
 import { sellerModel } from '../../../../prisma/zod/seller';
 import { roasterModel } from '../../../../prisma/zod/roaster';
 import { producerModel } from '../../../../prisma/zod/producer';
+import { tastingNoteModel } from 'prisma/zod';
 
 export const coffeeRouter = t.router({
     getAll: authedProcedure
@@ -12,6 +13,12 @@ export const coffeeRouter = t.router({
                 where: {
                     userId: ctx.session.user.id
                 },
+                include: {
+                    coffeeTastingNotes: true,
+                    seller: true,
+                    roaster: true,
+                    producer: true
+                }
             });
         }),
     byId: authedProcedure
@@ -30,7 +37,7 @@ export const coffeeRouter = t.router({
             });
         }),
     upsert: authedProcedure
-        .input(z.object({ coffee: coffeeModel, seller: sellerModel.nullable(), roaster: roasterModel.nullable(), producer: producerModel.nullable() }))
+        .input(z.object({ coffee: coffeeModel, seller: sellerModel.nullable(), roaster: roasterModel.nullable(), producer: producerModel.nullable(), tastingNotes: z.array(tastingNoteModel) }))
         .mutation(async ({ ctx, input }) => {
             const coffee = await ctx.prisma.coffee.upsert({
                 where: {
@@ -44,6 +51,7 @@ export const coffeeRouter = t.router({
                     variety: input.coffee.variety,
                     userId: ctx.session.user.id,
                     roast: input.coffee.roast,
+                    sellerId: input.seller?.id
                 },
                 create: {
                     isFavorite: input.coffee.isFavorite,
@@ -55,7 +63,7 @@ export const coffeeRouter = t.router({
                     roast: input.coffee.roast
                 },
             });
-            const seller = !!input.seller && await ctx.prisma.seller.upsert({
+            const seller = !!input.seller ? await ctx.prisma.seller.upsert({
                 where: {
                     id: input.seller.id
                 },
@@ -65,6 +73,11 @@ export const coffeeRouter = t.router({
                     isRoaster: input.seller.isRoaster,
                     info: input.seller.info,
                     url: input.seller.url,
+                    coffees: {
+                        connect: {
+                            id: coffee.id
+                        }
+                    }
                 },
                 create: {
                     name: input.seller.name,
@@ -78,8 +91,8 @@ export const coffeeRouter = t.router({
                         }
                     }
                 },
-            });
-            const roaster = !!input.roaster && await ctx.prisma.roaster.upsert({
+            }) : null;
+            const roaster = !!input.roaster ? await ctx.prisma.roaster.upsert({
                 where: {
                     id: input.roaster.id
                 },
@@ -100,8 +113,8 @@ export const coffeeRouter = t.router({
                         }
                     }
                 },
-            });
-            const producer = !!input.producer && await ctx.prisma.producer.upsert({
+            }) : null;
+            const producer = !!input.producer ? await ctx.prisma.producer.upsert({
                 where: {
                     id: input.producer.id
                 },
@@ -122,12 +135,22 @@ export const coffeeRouter = t.router({
                         }
                     }
                 },
-            });
+            }) : null;
+            const coffeeTastingNotes = await ctx.prisma.coffeeTastingNote.createMany({
+                data: input.tastingNotes.map(tastingNote => {
+                    return {
+                        coffeeId: coffee.id,
+                        tastingNoteId: tastingNote.id,
+                    }
+                }),
+                skipDuplicates: true
+            })
             return {
                 coffee,
                 seller,
                 roaster,
                 producer,
+                coffeeTastingNotes
             }
         }),
     add: authedProcedure

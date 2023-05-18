@@ -10,9 +10,10 @@ import { trpc } from '@utils/trpc';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import Router, { useRouter } from 'next/router';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { ACTIONTYPE, initialState, reducer } from '../../utils/CoffeeReducer';
+import React, { useEffect, useRef, useState } from 'react';
+import { ACTIONTYPE } from '../../utils/CoffeeReducer';
 import { CoffeeByIdOutput } from '../../types/coffee';
+import { useCoffee, useCoffeeDispatch } from '@utils/CoffeeContext';
 
 function Coffee() {
   const router = useRouter();
@@ -20,11 +21,14 @@ function Coffee() {
   const session = useSession();
   const titleRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const {data: allTastingNotes} = trpc.tastingNotes.getAll.useQuery();
 
   //Manage local state
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const state = useCoffee();
+  const dispatch = useCoffeeDispatch();
 
   const [enabledSections, setEnabledSections] = useState<Array<string>>([]);
+
 
   trpc.coffee.byId.useQuery(
     { coffeeId: id },
@@ -48,8 +52,18 @@ function Coffee() {
               type: 'SetProducer',
               producer: data.producer,
             });
+          dispatch({
+            type: 'SetTastingNotes',
+            notes: allTastingNotes?.filter(
+              (note) =>
+                data.coffeeTastingNotes.findIndex(
+                  (cNote) => cNote.tastingNoteId === note.id
+                ) !== -1
+            ),
+          });
         }
       },
+      refetchOnWindowFocus: false,
     }
   );
   const upsertCoffee = trpc.coffee.upsert.useMutation({
@@ -65,13 +79,14 @@ function Coffee() {
     if (titleRef.current) {
       titleRef.current.focus();
     }
+    id === 'add' && dispatch({type: 'Reset'});
     session.data?.user?.id &&
       dispatch({
         type: 'EditCoffeeField',
         field: 'userId',
         payload: session.data.user.id,
       });
-  }, [session.data]);
+  }, [session.data, dispatch, id]);
 
   const handleSaveClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -94,23 +109,23 @@ function Coffee() {
   const sections = {
     seller: {
       title: 'seller',
-      jsx: <SellerSection key={'seller'} state={state} dispatch={dispatch} />,
+      jsx: <SellerSection key={'seller'} />,
       addFunction: () => enableSection('seller', { type: 'AddEmptySeller' }),
     },
     roaster: {
       title: 'roaster',
-      jsx: <RoasterSection key={'roaster'} state={state} dispatch={dispatch} />,
+      jsx: <RoasterSection key={'roaster'} />,
       addFunction: () => enableSection('roaster', { type: 'AddEmptyRoaster' }),
     },
     producer: {
       title: 'producer',
-      jsx: (
-        <ProducerSection key={'producer'} state={state} dispatch={dispatch} />
-      ),
+      jsx: <ProducerSection key={'producer'} />,
       addFunction: () =>
         enableSection('producer', { type: 'AddEmptyProducer' }),
     },
   };
+
+  console.log(state);
 
   return (
     <AnimatePresence>
@@ -141,7 +156,7 @@ function Coffee() {
               />
             }
           />
-          <BeanSection state={state} dispatch={dispatch} />
+          <BeanSection />
           {enabledSections.map(
             (name) => sections[name as 'seller' | 'roaster' | 'producer'].jsx
           )}

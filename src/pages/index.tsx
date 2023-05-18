@@ -190,7 +190,7 @@ const Home: NextPage = () => {
     <>
       <Heading key={'heading'} leftSide={tabNav} rightSide={rightSide} />
       {selectedTab === 'Coffees' && (
-        <InfoGrid state={coffeeState} setState={setCoffeeState as OnReorder}>
+        <InfoGrid state={coffeeState} setState={() => setCoffeeState}>
           {filtered(coffeeState, searchText).map((coffee) => {
             return (
               <InfoCard

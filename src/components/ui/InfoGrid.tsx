@@ -12,7 +12,6 @@ const InfoGrid = ({ state, setState, children }: InfoGridProps) => {
   return (
     <AnimatePresence>
       <Reorder.Group
-        axis='x'
         draggable={false}
         values={state}
         onReorder={setState}

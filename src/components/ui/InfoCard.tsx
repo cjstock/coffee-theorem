@@ -46,6 +46,7 @@ const InfoCard = ({
       <Reorder.Item
         key={id}
         value={id}
+        drag={false}
         draggable={false}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.5 } }}

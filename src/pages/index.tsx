@@ -21,7 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { producerModel, roasterModel } from 'prisma/zod';
 import { cva } from 'cva';
 import { filtered } from '@utils/utils';
-import { Seller, TastingNote } from '@prisma/client';
+import { Producer, Roaster, Seller, TastingNote } from '@prisma/client';
 import { CoffeesGetAllOutput } from 'src/types/coffee';
 import InfoItem from '@ui/InfoItem';
 
@@ -40,6 +40,16 @@ const Home: NextPage = () => {
           .filter((coffee) => coffee.seller !== null)
           .map((coffee) => coffee.seller as Seller)
       );
+      setRoasterState(
+        data
+          .filter((coffee) => coffee.roaster !== null)
+          .map((coffee) => coffee.roaster as Roaster)
+      );
+      setProducerState(
+        data
+          .filter((coffee) => coffee.producer !== null)
+          .map((coffee) => coffee.producer as Producer)
+      );
       data.forEach((coffee) =>
         queryClient.setQueryData(['coffee', coffee.id], coffee)
       );
@@ -47,34 +57,8 @@ const Home: NextPage = () => {
   });
 
   const [sellerState, setSellerState] = useState<Array<Seller>>([]);
-
-  const [roasterState, setRoasterState] = useState<
-    Array<z.infer<typeof roasterModel>>
-  >([]);
-  trpc.roaster.getAll.useQuery(
-    { coffees: coffees },
-    {
-      enabled: !!coffees,
-      onSuccess(data) {
-        setRoasterState(data);
-      },
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const [producerState, setProducerState] = useState<
-    Array<z.infer<typeof producerModel>>
-  >([]);
-  trpc.producer.getAll.useQuery(
-    { coffees: coffees },
-    {
-      enabled: !!coffees,
-      onSuccess(data) {
-        setProducerState(data);
-      },
-      refetchOnWindowFocus: false,
-    }
-  );
+  const [roasterState, setRoasterState] = useState<Array<Roaster>>([]);
+  const [producerState, setProducerState] = useState<Array<Producer>>([]);
 
   const [tastingNotes, setTatingNotes] = useState<Array<TastingNote>>([]);
   trpc.tastingNotes.getAll.useQuery(undefined, {

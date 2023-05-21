@@ -8,7 +8,7 @@ export function filtered<TData extends object>(
     return objs.filter((obj) => {
         return (
             Object.values(obj).filter((value) =>
-                value?.toString().includes(searchText)
+                value?.toString().toLowerCase().includes(searchText.toLowerCase())
             ).length > 0
         );
     });

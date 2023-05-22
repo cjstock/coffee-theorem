@@ -1,57 +1,54 @@
-import type { NextPage } from 'next';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { trpc } from '../utils/trpc';
-import Heading from '../components/pages/coffee-collection/Heading';
-import Router from 'next/router';
-import Unauthorized from '../components/ui/Unauthorized';
-import { z } from 'zod';
-import ButtonDropDown from '@ui/ButtonDropDown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { trpc } from "../utils/trpc";
+import Heading from "../components/pages/coffee-collection/Heading";
+import Router from "next/router";
+import Unauthorized from "../components/ui/Unauthorized";
+import ButtonDropDown from "@ui/ButtonDropDown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCoffeeBeans,
   faShop,
   faFireplace,
   faFarm,
   faMagnifyingGlass,
-} from '@fortawesome/pro-solid-svg-icons';
-import InfoGrid, { OnReorder } from '@ui/InfoGrid';
-import InfoCard, { CardStyle } from '@ui/InfoCard';
-import { useQueryClient } from '@tanstack/react-query';
-import { producerModel, roasterModel } from 'prisma/zod';
-import { cva } from 'cva';
-import { filtered } from '@utils/utils';
-import { Producer, Roaster, Seller, TastingNote } from '@prisma/client';
-import { CoffeesGetAllOutput } from 'src/types/coffee';
-import InfoItem from '@ui/InfoItem';
+} from "@fortawesome/pro-solid-svg-icons";
+import InfoGrid, { OnReorder } from "@ui/InfoGrid";
+import InfoCard, { CardStyle } from "@ui/InfoCard";
+import { useQueryClient } from "@tanstack/react-query";
+import { cva } from "cva";
+import { filtered } from "@utils/utils";
+import { Producer, Roaster, Seller, TastingNote } from "@prisma/client";
+import { CoffeesGetAllOutput } from "src/types/coffee";
+import InfoItem from "@ui/InfoItem";
 
 const Home: NextPage = () => {
   const session = useSession();
   const queryClient = useQueryClient();
 
   const [coffeeState, setCoffeeState] = useState<CoffeesGetAllOutput>([]);
-  const { data: coffees } = trpc.coffee.getAll.useQuery(undefined, {
+  trpc.coffee.getAll.useQuery(undefined, {
     refetchOnWindowFocus: false,
-    enabled: session.status == 'authenticated',
+    enabled: session.status == "authenticated",
     onSuccess(data) {
       setCoffeeState(data);
-      setSellerState(
-        data
-          .filter((coffee) => coffee.seller !== null)
-          .map((coffee) => coffee.seller as Seller)
-      );
-      setRoasterState(
-        data
-          .filter((coffee) => coffee.roaster !== null)
-          .map((coffee) => coffee.roaster as Roaster)
-      );
-      setProducerState(
-        data
-          .filter((coffee) => coffee.producer !== null)
-          .map((coffee) => coffee.producer as Producer)
-      );
+
+      // populate the sellers, roasters, producers with only unique entries
+      const sellers = new Set<Seller>();
+      const roasters = new Set<Roaster>();
+      const producers = new Set<Producer>();
+      data.forEach((coffee) => {
+        coffee.seller && sellers.add(coffee.seller);
+        coffee.roaster && roasters.add(coffee.roaster);
+        coffee.producer && producers.add(coffee.producer);
+      });
+      setSellerState(Array.from(sellers));
+      setRoasterState(Array.from(roasters));
+      setProducerState(Array.from(producers));
+
       data.forEach((coffee) =>
-        queryClient.setQueryData(['coffee', coffee.id], coffee)
+        queryClient.setQueryData(["coffee", coffee.id], coffee)
       );
     },
   });
@@ -70,21 +67,21 @@ const Home: NextPage = () => {
 
   const deleteCoffee = trpc.coffee.deleteCoffee.useMutation({
     onSuccess(data) {
-      queryClient.invalidateQueries(['coffee.getAll']);
+      queryClient.invalidateQueries(["coffee.getAll"]);
       setCoffeeState((prev) => prev.filter((coffee) => coffee.id !== data.id));
     },
   });
 
-  const tabs = ['Coffees', 'Sellers', 'Roasters', 'Producers', 'Brewers'];
-  const [selectedTab, setSelectedTab] = useState('Coffees');
+  const tabs = ["Coffees", "Sellers", "Roasters", "Producers"];
+  const [selectedTab, setSelectedTab] = useState("Coffees");
 
   const TabStyles = cva(
-    ['text-sm rounded-md px-3 py-2 font-medium transition-all'],
+    ["text-sm rounded-md px-3 py-2 font-medium transition-all"],
     {
       variants: {
         intent: {
-          selected: ['bg-matcha-300 text-coffee-500'],
-          default: ['bg-coffee-400 text-coffee-100'],
+          selected: ["bg-matcha-300 text-coffee-500"],
+          default: ["bg-coffee-400 text-coffee-100"],
         },
       },
     }
@@ -92,16 +89,16 @@ const Home: NextPage = () => {
 
   const tabNav = (
     <>
-      <div className='md:hidden'>
-        <label htmlFor='tabs' className='sr-only'>
+      <div className="md:hidden">
+        <label htmlFor="tabs" className="sr-only">
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
         <select
-          id='tabs'
-          name='tabs'
-          className='block w-full rounded-md border-coffee-300 bg-coffee-500 text-coffee-100 focus:border-coffee-300 focus:ring-coffee-300'
-          defaultValue={'Coffees'}
+          id="tabs"
+          name="tabs"
+          className="block w-full rounded-md border-coffee-300 bg-coffee-500 text-coffee-100 focus:border-coffee-300 focus:ring-coffee-300"
+          defaultValue={"Coffees"}
           onChange={(e) => setSelectedTab(e.currentTarget.value)}
         >
           {tabs.map((tab) => (
@@ -109,15 +106,15 @@ const Home: NextPage = () => {
           ))}
         </select>
       </div>
-      <div className='hidden md:block'>
-        <nav className='flex space-x-4' aria-label='Tabs'>
+      <div className="hidden md:block">
+        <nav className="flex space-x-4" aria-label="Tabs">
           {tabs.map((tab) => (
             <button
               key={tab}
               className={TabStyles({
-                intent: selectedTab === tab ? 'selected' : 'default',
+                intent: selectedTab === tab ? "selected" : "default",
               })}
-              aria-current={tab == selectedTab ? 'page' : undefined}
+              aria-current={tab == selectedTab ? "page" : undefined}
               onClick={() => setSelectedTab(tab)}
             >
               {tab}
@@ -128,52 +125,52 @@ const Home: NextPage = () => {
     </>
   );
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState("");
   const rightSide = (
-    <div className='mt-3 flex justify-between md:ml-4 md:mt-0'>
+    <div className="mt-3 flex justify-between md:ml-4 md:mt-0">
       <ButtonDropDown />
-      <label htmlFor='mobile-search-candidate' className='sr-only'>
+      <label htmlFor="mobile-search-candidate" className="sr-only">
         Filter
       </label>
-      <label htmlFor='desktop-search-candidate' className='sr-only'>
+      <label htmlFor="desktop-search-candidate" className="sr-only">
         Filter
       </label>
-      <div className='flex rounded-md shadow-sm'>
-        <div className='relative flex-grow focus-within:z-10'>
-          <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
+      <div className="flex rounded-md shadow-sm">
+        <div className="relative flex-grow focus-within:z-10">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
-              className='h-5 w-5 text-matcha-200'
+              className="h-5 w-5 text-matcha-200"
             />
           </div>
           <input
-            type='text'
-            name='mobile-search-candidate'
-            id='mobile-search-candidate'
+            type="text"
+            name="mobile-search-candidate"
+            id="mobile-search-candidate"
             value={searchText}
             onChange={(e) => setSearchText(e.currentTarget.value)}
-            className='block w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:hidden'
-            placeholder='Filter'
+            className="block w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:hidden"
+            placeholder="Filter"
           />
           <input
-            type='text'
-            name='desktop-search-candidate'
-            id='desktop-search-candidate'
+            type="text"
+            name="desktop-search-candidate"
+            id="desktop-search-candidate"
             value={searchText}
             onChange={(e) => setSearchText(e.currentTarget.value)}
-            className='hidden w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm'
-            placeholder='Filter Coffees'
+            className="hidden w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm"
+            placeholder="Filter Coffees"
           />
         </div>
       </div>
     </div>
   );
 
-  if (session.status == 'unauthenticated') return <Unauthorized />;
+  if (session.status == "unauthenticated") return <Unauthorized />;
   return (
     <>
-      <Heading key={'heading'} leftSide={tabNav} rightSide={rightSide} />
-      {selectedTab === 'Coffees' && (
+      <Heading key={"heading"} leftSide={tabNav} rightSide={rightSide} />
+      {selectedTab === "Coffees" && (
         <InfoGrid state={coffeeState} setState={() => setCoffeeState}>
           {filtered(coffeeState, searchText).map((coffee) => {
             return (
@@ -193,11 +190,11 @@ const Home: NextPage = () => {
                 key={coffee.id}
                 menuOptions={[
                   {
-                    name: 'Edit',
+                    name: "Edit",
                     action: () => Router.push(`coffee/${coffee.id}`),
                   },
                   {
-                    name: 'Remove',
+                    name: "Remove",
                     action: () => deleteCoffee.mutate({ coffeeId: coffee.id }),
                   },
                 ]}
@@ -208,18 +205,18 @@ const Home: NextPage = () => {
                     ) !== -1
                 )}
               >
-                <InfoItem label='process' value={coffee.process} />
-                <InfoItem label='variety' value={coffee.variety} />
-                <InfoItem label='altitude' value={coffee.altitude} />
-                <InfoItem label='seller' value={coffee.seller?.name} />
-                <InfoItem label='roaster' value={coffee.roaster?.name} />
-                <InfoItem label='producer' value={coffee.producer?.name} />
+                <InfoItem label="process" value={coffee.process} />
+                <InfoItem label="variety" value={coffee.variety} />
+                <InfoItem label="altitude" value={coffee.altitude} />
+                <InfoItem label="seller" value={coffee.seller?.name} />
+                <InfoItem label="roaster" value={coffee.roaster?.name} />
+                <InfoItem label="producer" value={coffee.producer?.name} />
               </InfoCard>
             );
           })}
         </InfoGrid>
       )}
-      {selectedTab === 'Sellers' && (
+      {selectedTab === "Sellers" && (
         <InfoGrid state={sellerState} setState={setSellerState as OnReorder}>
           {filtered(sellerState, searchText).map((seller) => {
             return (
@@ -231,7 +228,7 @@ const Home: NextPage = () => {
                     icon={faShop}
                     className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
                       {
-                        iconStyle: 'Light',
+                        iconStyle: "Light",
                       }
                     )}`}
                   />
@@ -239,11 +236,11 @@ const Home: NextPage = () => {
                 key={seller.id}
                 menuOptions={[
                   {
-                    name: 'Edit',
+                    name: "Edit",
                     action: () => null,
                   },
                   {
-                    name: 'Remove',
+                    name: "Remove",
                     action: () => null,
                   },
                 ]}
@@ -252,7 +249,7 @@ const Home: NextPage = () => {
           })}
         </InfoGrid>
       )}
-      {selectedTab === 'Roasters' && (
+      {selectedTab === "Roasters" && (
         <InfoGrid state={roasterState} setState={setRoasterState as OnReorder}>
           {filtered(roasterState, searchText).map((roaster) => {
             return (
@@ -264,7 +261,7 @@ const Home: NextPage = () => {
                     icon={faFireplace}
                     className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
                       {
-                        iconStyle: 'Light',
+                        iconStyle: "Light",
                       }
                     )}`}
                   />
@@ -272,11 +269,11 @@ const Home: NextPage = () => {
                 key={roaster.id}
                 menuOptions={[
                   {
-                    name: 'Edit',
+                    name: "Edit",
                     action: () => null,
                   },
                   {
-                    name: 'Remove',
+                    name: "Remove",
                     action: () => null,
                   },
                 ]}
@@ -285,7 +282,7 @@ const Home: NextPage = () => {
           })}
         </InfoGrid>
       )}
-      {selectedTab === 'Producers' && (
+      {selectedTab === "Producers" && (
         <InfoGrid
           state={producerState}
           setState={setProducerState as OnReorder}
@@ -300,7 +297,7 @@ const Home: NextPage = () => {
                     icon={faFarm}
                     className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
                       {
-                        iconStyle: 'Light',
+                        iconStyle: "Light",
                       }
                     )}`}
                   />
@@ -308,11 +305,11 @@ const Home: NextPage = () => {
                 key={producer.id}
                 menuOptions={[
                   {
-                    name: 'Edit',
+                    name: "Edit",
                     action: () => null,
                   },
                   {
-                    name: 'Remove',
+                    name: "Remove",
                     action: () => null,
                   },
                 ]}

@@ -244,7 +244,10 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-              />
+              >
+                <InfoItem label="url" value={seller.url} />
+                <InfoItem label="location" value={seller.location} />
+              </InfoCard>
             );
           })}
         </InfoGrid>
@@ -277,7 +280,10 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-              />
+              >
+                <InfoItem label="url" value={roaster.url} />
+                <InfoItem label="location" value={roaster.location} />
+              </InfoCard>
             );
           })}
         </InfoGrid>
@@ -313,7 +319,10 @@ const Home: NextPage = () => {
                     action: () => null,
                   },
                 ]}
-              />
+              >
+                <InfoItem label="url" value={producer.url} />
+                <InfoItem label="location" value={producer.location} />
+              </InfoCard>
             );
           })}
         </InfoGrid>

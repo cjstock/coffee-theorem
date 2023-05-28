@@ -159,7 +159,7 @@ const Home: NextPage = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.currentTarget.value)}
             className="hidden w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm"
-            placeholder="Filter Coffees"
+            placeholder="Filter"
           />
         </div>
       </div>

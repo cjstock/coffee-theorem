@@ -1,334 +1,79 @@
-import type { NextPage } from "next";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { trpc } from "../utils/trpc";
-import Heading from "../components/pages/coffee-collection/Heading";
-import Router from "next/router";
-import Unauthorized from "../components/ui/Unauthorized";
-import ButtonDropDown from "@ui/ButtonDropDown";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCoffeeBeans,
-  faShop,
-  faFireplace,
-  faFarm,
-  faMagnifyingGlass,
-} from "@fortawesome/pro-solid-svg-icons";
-import InfoGrid, { OnReorder } from "@ui/InfoGrid";
-import InfoCard, { CardStyle } from "@ui/InfoCard";
-import { useQueryClient } from "@tanstack/react-query";
-import { cva } from "cva";
-import { filtered } from "@utils/utils";
-import { Producer, Roaster, Seller, TastingNote } from "@prisma/client";
-import { CoffeesGetAllOutput } from "src/types/coffee";
-import InfoItem from "@ui/InfoItem";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Head from "next/head";
+import Link from "next/link";
+import { api } from "~/utils/api";
 
-const Home: NextPage = () => {
-  const session = useSession();
-  const queryClient = useQueryClient();
+export default function Home() {
+  const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
-  const [coffeeState, setCoffeeState] = useState<CoffeesGetAllOutput>([]);
-  trpc.coffee.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-    enabled: session.status == "authenticated",
-    onSuccess(data) {
-      setCoffeeState(data);
-
-      // populate the sellers, roasters, producers with only unique entries
-      const sellers = new Set<Seller>();
-      const roasters = new Set<Roaster>();
-      const producers = new Set<Producer>();
-      data.forEach((coffee) => {
-        coffee.seller && sellers.add(coffee.seller);
-        coffee.roaster && roasters.add(coffee.roaster);
-        coffee.producer && producers.add(coffee.producer);
-      });
-      setSellerState(Array.from(sellers));
-      setRoasterState(Array.from(roasters));
-      setProducerState(Array.from(producers));
-
-      data.forEach((coffee) =>
-        queryClient.setQueryData(["coffee", coffee.id], coffee)
-      );
-    },
-  });
-
-  const [sellerState, setSellerState] = useState<Array<Seller>>([]);
-  const [roasterState, setRoasterState] = useState<Array<Roaster>>([]);
-  const [producerState, setProducerState] = useState<Array<Producer>>([]);
-
-  const [tastingNotes, setTatingNotes] = useState<Array<TastingNote>>([]);
-  trpc.tastingNotes.getAll.useQuery(undefined, {
-    onSuccess(data) {
-      setTatingNotes(data);
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  const deleteCoffee = trpc.coffee.deleteCoffee.useMutation({
-    onSuccess(data) {
-      queryClient.invalidateQueries(["coffee.getAll"]);
-      setCoffeeState((prev) => prev.filter((coffee) => coffee.id !== data.id));
-    },
-  });
-
-  const tabs = ["Coffees", "Sellers", "Roasters", "Producers"];
-  const [selectedTab, setSelectedTab] = useState("Coffees");
-
-  const TabStyles = cva(
-    ["text-sm rounded-md px-3 py-2 font-medium transition-all"],
-    {
-      variants: {
-        intent: {
-          selected: ["bg-matcha-300 text-coffee-500"],
-          default: ["bg-coffee-400 text-coffee-100"],
-        },
-      },
-    }
-  );
-
-  const tabNav = (
-    <>
-      <div className="md:hidden">
-        <label htmlFor="tabs" className="sr-only">
-          Select a tab
-        </label>
-        {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-        <select
-          id="tabs"
-          name="tabs"
-          className="block w-full rounded-md border-coffee-300 bg-coffee-500 text-coffee-100 focus:border-coffee-300 focus:ring-coffee-300"
-          defaultValue={"Coffees"}
-          onChange={(e) => setSelectedTab(e.currentTarget.value)}
-        >
-          {tabs.map((tab) => (
-            <option key={tab}>{tab}</option>
-          ))}
-        </select>
-      </div>
-      <div className="hidden md:block">
-        <nav className="flex space-x-4" aria-label="Tabs">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              className={TabStyles({
-                intent: selectedTab === tab ? "selected" : "default",
-              })}
-              aria-current={tab == selectedTab ? "page" : undefined}
-              onClick={() => setSelectedTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </div>
-    </>
-  );
-
-  const [searchText, setSearchText] = useState("");
-  const rightSide = (
-    <div className="mt-3 flex justify-between md:ml-4 md:mt-0">
-      <ButtonDropDown />
-      <label htmlFor="mobile-search-candidate" className="sr-only">
-        Filter
-      </label>
-      <label htmlFor="desktop-search-candidate" className="sr-only">
-        Filter
-      </label>
-      <div className="flex rounded-md shadow-sm">
-        <div className="relative flex-grow focus-within:z-10">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="h-5 w-5 text-matcha-200"
-            />
-          </div>
-          <input
-            type="text"
-            name="mobile-search-candidate"
-            id="mobile-search-candidate"
-            value={searchText}
-            onChange={(e) => setSearchText(e.currentTarget.value)}
-            className="block w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:hidden"
-            placeholder="Filter"
-          />
-          <input
-            type="text"
-            name="desktop-search-candidate"
-            id="desktop-search-candidate"
-            value={searchText}
-            onChange={(e) => setSearchText(e.currentTarget.value)}
-            className="hidden w-full rounded rounded-l-md border-coffee-300 bg-coffee-500 pl-10 text-matcha-200 transition-colors focus:border-coffee-200 focus:ring-coffee-200 sm:block sm:text-sm"
-            placeholder="Filter Coffees"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  if (session.status == "unauthenticated") return <Unauthorized />;
   return (
     <>
-      <Heading key={"heading"} leftSide={tabNav} rightSide={rightSide} />
-      {selectedTab === "Coffees" && (
-        <InfoGrid state={coffeeState} setState={() => setCoffeeState}>
-          {filtered(coffeeState, searchText).map((coffee) => {
-            return (
-              <InfoCard
-                id={coffee.id}
-                title={coffee.origin}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faCoffeeBeans}
-                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
-                      {
-                        iconStyle: `${coffee.roast}`,
-                      }
-                    )}`}
-                  />
-                }
-                key={coffee.id}
-                menuOptions={[
-                  {
-                    name: "Edit",
-                    action: () => Router.push(`coffee/${coffee.id}`),
-                  },
-                  {
-                    name: "Remove",
-                    action: () => deleteCoffee.mutate({ coffeeId: coffee.id }),
-                  },
-                ]}
-                tags={tastingNotes.filter(
-                  (note) =>
-                    coffee.coffeeTastingNotes.findIndex(
-                      (coffeeNote) => coffeeNote.tastingNoteId === note.id
-                    ) !== -1
-                )}
-              >
-                <InfoItem label="process" value={coffee.process} />
-                <InfoItem label="variety" value={coffee.variety} />
-                <InfoItem label="altitude" value={coffee.altitude} />
-                <InfoItem label="seller" value={coffee.seller?.name} />
-                <InfoItem label="roaster" value={coffee.roaster?.name} />
-                <InfoItem label="producer" value={coffee.producer?.name} />
-              </InfoCard>
-            );
-          })}
-        </InfoGrid>
-      )}
-      {selectedTab === "Sellers" && (
-        <InfoGrid state={sellerState} setState={setSellerState as OnReorder}>
-          {filtered(sellerState, searchText).map((seller) => {
-            return (
-              <InfoCard
-                id={seller.id}
-                title={seller.name}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faShop}
-                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
-                      {
-                        iconStyle: "Light",
-                      }
-                    )}`}
-                  />
-                }
-                key={seller.id}
-                menuOptions={[
-                  {
-                    name: "Edit",
-                    action: () => null,
-                  },
-                  {
-                    name: "Remove",
-                    action: () => null,
-                  },
-                ]}
-              >
-                <InfoItem label="url" value={seller.url} />
-                <InfoItem label="location" value={seller.location} />
-              </InfoCard>
-            );
-          })}
-        </InfoGrid>
-      )}
-      {selectedTab === "Roasters" && (
-        <InfoGrid state={roasterState} setState={setRoasterState as OnReorder}>
-          {filtered(roasterState, searchText).map((roaster) => {
-            return (
-              <InfoCard
-                id={roaster.id}
-                title={roaster.name}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faFireplace}
-                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
-                      {
-                        iconStyle: "Light",
-                      }
-                    )}`}
-                  />
-                }
-                key={roaster.id}
-                menuOptions={[
-                  {
-                    name: "Edit",
-                    action: () => null,
-                  },
-                  {
-                    name: "Remove",
-                    action: () => null,
-                  },
-                ]}
-              >
-                <InfoItem label="url" value={roaster.url} />
-                <InfoItem label="location" value={roaster.location} />
-              </InfoCard>
-            );
-          })}
-        </InfoGrid>
-      )}
-      {selectedTab === "Producers" && (
-        <InfoGrid
-          state={producerState}
-          setState={setProducerState as OnReorder}
-        >
-          {filtered(producerState, searchText).map((producer) => {
-            return (
-              <InfoCard
-                id={producer.id}
-                title={producer.name}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faFarm}
-                    className={`h-11 w-11 rounded border-2 border-matcha-500 bg-matcha-400/30 p-1 ${CardStyle(
-                      {
-                        iconStyle: "Light",
-                      }
-                    )}`}
-                  />
-                }
-                key={producer.id}
-                menuOptions={[
-                  {
-                    name: "Edit",
-                    action: () => null,
-                  },
-                  {
-                    name: "Remove",
-                    action: () => null,
-                  },
-                ]}
-              >
-                <InfoItem label="url" value={producer.url} />
-                <InfoItem label="location" value={producer.location} />
-              </InfoCard>
-            );
-          })}
-        </InfoGrid>
-      )}
+      <Head>
+        <title>Create T3 App</title>
+        <meta name="description" content="Generated by create-t3-app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
+          </h1>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              href="https://create.t3.gg/en/usage/first-steps"
+              target="_blank"
+            >
+              <h3 className="text-2xl font-bold">First Steps →</h3>
+              <div className="text-lg">
+                Just the basics - Everything you need to know to set up your
+                database and authentication.
+              </div>
+            </Link>
+            <Link
+              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              href="https://create.t3.gg/en/introduction"
+              target="_blank"
+            >
+              <h3 className="text-2xl font-bold">Documentation →</h3>
+              <div className="text-lg">
+                Learn more about Create T3 App, the libraries it uses, and how
+                to deploy it.
+              </div>
+            </Link>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-2xl text-white">
+              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+            </p>
+            <AuthShowcase />
+          </div>
+        </div>
+      </main>
     </>
   );
-};
+}
 
-export default Home;
+function AuthShowcase() {
+  const { data: sessionData } = useSession();
+
+  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
+    undefined, // no input
+    { enabled: sessionData?.user !== undefined },
+  );
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-4">
+      <p className="text-center text-2xl text-white">
+        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
+        {secretMessage && <span> - {secretMessage}</span>}
+      </p>
+      <button
+        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        onClick={sessionData ? () => void signOut() : () => void signIn()}
+      >
+        {sessionData ? "Sign out" : "Sign in"}
+      </button>
+    </div>
+  );
+}

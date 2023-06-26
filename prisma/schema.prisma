@@ -2,202 +2,66 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+    provider = "sqlite"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 // Necessary for Next auth
 model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String
-  refresh_token            String?
-  access_token             String? @db.LongText
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? @db.LongText
-  session_state            String?
-  refresh_token_expires_in Int?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
-  @@index([userId])
+    @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  coffees       Coffee[]
-  accounts      Account[]
-  sessions      Session[]
-
-  @@index([id])
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
 }
 
-enum Roast {
-  Light
-  LightMedium
-  Medium
-  MediumDark
-  Dark
-  ExtraDark
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
 }
-
-model Coffee {
-  id                 String              @id @default(cuid())
-  origin             String
-  isFavorite         Boolean
-  process            String?
-  variety            String?
-  altitude           Int?
-  roast              Roast @default(Medium)
-  coffeeTastingNotes CoffeeTastingNote[]
-  recipes            String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  seller Seller? @relation(fields: [sellerId], references: [id])
-  sellerId   String?
-
-  roaster Roaster? @relation(fields: [roasterId], references: [id])
-  roasterId  String?
-
-  producer Producer? @relation(fields: [producerId], references: [id])
-  producerId String?
-
-  @@index([userId])
-  @@index([sellerId])
-  @@index([roasterId])
-  @@index([producerId])
-}
-
-model TastingNote {
-  id                 String                 @id @default(cuid())
-  value               String
-  coffeeTastingNotes CoffeeTastingNote[]
-}
-
-model CoffeeTastingNote {
-  coffee        Coffee      @relation(fields: [coffeeId], references: [id], onDelete: Cascade)
-  tastingNote   TastingNote @relation(fields: [tastingNoteId], references: [id], onDelete: Cascade)
-  coffeeId      String
-  tastingNoteId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@id([coffeeId, tastingNoteId])
-  @@index([coffeeId])
-  @@index([tastingNoteId])
-}
-
-model Roaster {
-  id      String   @id @default(cuid())
-  name    String @unique
-  url     String?
-  location String?
-  info    String?  @db.LongText
-  coffees Coffee[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Producer {
-  id      String   @id @default(cuid())
-  name    String @unique
-  url     String?
-  location String?
-  info    String?  @db.LongText
-  coffees Coffee[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Seller {
-  id        String   @id @default(cuid())
-  name      String @unique
-  url       String?
-  location   String?
-  info      String?  @db.LongText
-  isRoaster Boolean  @default(false)
-  coffees   Coffee[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Variety {
-  id                 String  @id @default(cuid())
-  name               String
-  description        String?
-  stature            Int?
-  leafTipColor       String?
-  beanSize           Int?
-  qualPotHighAlt     Int?
-  yieldPot           Int?
-  coffeeLeafRust     Int?
-  coffeeBerryDisease Int?
-  nematodes          Int?
-  yearOfFirstProd    Int?
-  nutReq             Int?
-  lineage            String?
-  breeder            String?
-  history            String? @db.LongText
-}
-
-generator zod {
-  provider = "zod-prisma"
-  output   = "./zod" // (default) the directory where generated zod schemas will be saved
-
-  relationModel = false // (default) Create and export both plain and related models.
-  // relationModel         = "default" // Do not export model without relations.
-  // relationModel         = false // Do not generate related model
-
-  modelCase = "camelCase" // (default) Output models using pascal case (ex. UserModel, PostModel)
-  // modelCase             = "camelCase" // Output models using camel case (ex. userModel, postModel)
-
-  modelSuffix = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
-
-  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
-  useDecimalJs = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
-
-  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
-  prismaJsonNullability = false // (default) uses prisma's scheme for JSON field nullability
-  // prismaJsonNullability = false // allows null assignment to optional JSON fields
-}
-
-// generator erd {
-//   provider = "prisma-erd-generator"
-//   output   = "./ERD.svg"
-//   theme    = "forest"
-// }

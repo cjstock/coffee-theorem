@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "mysql"
     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -47,27 +47,6 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Role {
-    STANDARD
-    ADMIN
-    ROASTER
-    FARM
-    CAFE
-}
-
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @updatedAt
-    image         String?
-    roles         String
-    accounts      Account[]
-    sessions      Session[]
-}
-
 model VerificationToken {
     identifier String
     token      String   @unique
@@ -76,6 +55,301 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+enum RoleValue {
+    STANDARD
+    ADMIN
+    ROASTER
+    FARM
+    CAFE
+}
+
+model Role {
+    name   RoleValue @unique
+    User   User?     @relation(fields: [userId], references: [id])
+    userId String?
+}
+
+model User {
+    id            String         @id @default(cuid())
+    accounts      Account[]
+    sessions      Session[]
+    name          String?
+    email         String?        @unique
+    emailVerified DateTime?
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    image         String?
+    roles         Role[]
+    coffees       UserToCoffee[]
+    ownedCafe     Cafe[]
+}
+
+model UserToCoffee {
+    user       User     @relation(fields: [userId], references: [id])
+    userId     String
+    coffee     Coffee   @relation(fields: [coffeeId], references: [id])
+    coffeeId   String
+    assignedAt DateTime @default(now())
+    assignedBy String
+
+    @@id([userId, coffeeId])
+}
+
+model Cafe {
+    id        String   @id @default(cuid())
+    owner     User?    @relation(fields: [ownerId], references: [id])
+    addedBy   String
+    ownerId   String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum BrewDevice {
+    CHEMEX
+    AEROPRESS
+    V60
+    BONMACDRIPPER
+    BEEHOUSEDRIPPER
+    KALITAWAVE
+    MOKAPOT
+    FRENCHPRESS
+    SIPHON
+    ESPRESSO
+    CLEVERDRIPPER
+    VIETNAMESEDRIPPER
+    CEVZE
+    BATCHBREW
+    CUPPING
+    OTHER
+}
+
+model Recipe {
+    id               String     @id @default(cuid())
+    brewDevice       BrewDevice
+    waterMass        Int
+    waterTemperature Int
+    coffeeMass       Int
+    brewTimeSeconds  Int
+    brewSteps        BrewStep[]
+    /// @zod.number.gte(0).lte(100)
+    grindSize        Int
+    createdAt        DateTime   @default(now())
+    updatedAt        DateTime   @updatedAt
+}
+
+model BrewStep {
+    id          String  @id @default(cuid())
+    time        Int
+    duration    Int
+    description String
+    Recipe      Recipe? @relation(fields: [recipeId], references: [id])
+    recipeId    String?
+}
+
 model Coffee {
-    id String @id @default(cuid())
+    id             String         @id @default(cuid())
+    origin         String
+    region         String
+    altitude       Int
+    roastProfile   RoastProfile   @relation(fields: [roastProfileId], references: [id])
+    variety        Variety        @relation(fields: [varietyId], references: [id])
+    varietyId      String
+    roastProfileId String
+    users          UserToCoffee[]
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
+}
+
+model RoastEquipment {
+    id           String         @id @default(cuid())
+    name         String
+    company      String?
+    RoastProfile RoastProfile[]
+}
+
+model RoastProfile {
+    id               String          @id @default(cuid())
+    /// @zod.number.gte(0).lte(100)
+    development      Int
+    chargeTemp       Int?
+    turningPointTemp Int?
+    firstCrackTemp   Int?
+    dropTemp         Int?
+    Coffee           Coffee[]
+    roastEquipment   RoastEquipment? @relation(fields: [roastEquipmentId], references: [id])
+    roastEquipmentId String
+    createdAt        DateTime        @default(now())
+    updatedAt        DateTime        @updatedAt
+}
+
+// VARIETY
+model Variety {
+    id                           String                       @id @default(cuid())
+    name                         String                       @unique
+    stature                      Stature
+    leafTipColor                 LeafTipColor
+    beanSize                     BeanSize
+    yieldPotential               YieldPotential
+    highAltitudeQualityPotential HighAltitudeQualityPotential
+    optimalAltitude              OptimalAltitude
+    coffeeLeafRust               CoffeeLeafRust
+    nematode                     Nematode
+    coffeeBerryDisease           CoffeeBerryDisease
+    firstProductionYear          FirstProductionYear
+    nutritionRequirement         NutritionRequirement
+    ripeningOfFruit              RipeningOfFruit
+    cherryToGreenBeanOuttrun     CherryToGreenBeanOutturn
+    plantingDensity              PlantingDensity
+    additionalAgronomicInfo      String?
+    geneticDescription           GeneticDescription
+    lineage                      String?
+    breeder                      String?
+    history                      String?
+    image                        String?
+    Coffee                       Coffee[]
+    createdAt                    DateTime                     @default(now())
+    updatedAt                    DateTime                     @updatedAt
+}
+
+enum Stature {
+    DWARF
+    TALL
+    UNKNOWN
+    NA
+}
+
+enum LeafTipColor {
+    GREEN
+    BRONZE
+    GREENORBRONZE
+    LIGHTBRONZE
+    DARKBRONZE
+    UNKNOWN
+    NA
+}
+
+enum BeanSize {
+    BELOWAVERAGE
+    AVERAGE
+    LARGE
+    VERYLARGE
+    UNKNOWN
+    NA
+}
+
+enum YieldPotential {
+    LOW
+    MEDIUM
+    GOOD
+    HIGH
+    VERYHIGH
+    UNKNOWN
+    NA
+}
+
+enum HighAltitudeQualityPotential {
+    VERYLOW
+    LOW
+    GOOD
+    VERYGOOD
+    EXCEPTIONAL
+    UNKNOWN
+    NA
+}
+
+enum OptimalAltitude {
+    LOW
+    LOWMEDIUM
+    MEDIUM
+    MEDIUMHIGH
+    HIGH
+    ANY
+}
+
+enum CoffeeLeafRust {
+    RESISTANT
+    TOLERANT
+    SUSCEPTIBLE
+    UNKNOWN
+    NA
+}
+
+enum Nematode {
+    RESISTANT
+    TOLERANT
+    SUSCEPTIBLE
+    UNKNOWN
+    NA
+}
+
+enum CoffeeBerryDisease {
+    RESISTANT
+    TOLERANT
+    SUSCEPTIBLE
+    UNKNOWN
+    NA
+}
+
+enum FirstProductionYear {
+    YEAR2
+    YEAR3
+    YEAR4
+    UNKNOWN
+    NA
+}
+
+enum NutritionRequirement {
+    VERYHIGH
+    HIGH
+    MEDIUM
+    LOW
+    UNKNOWN
+    NA
+}
+
+enum RipeningOfFruit {
+    EARLY
+    AVERAGE
+    LATE
+    VERYLATE
+    UNKNOWN
+    NA
+}
+
+enum CherryToGreenBeanOutturn {
+    LOW
+    AVERAGE
+    HIGH
+    VERYHIGH
+    UNKNOWN
+    NA
+}
+
+enum PlantingDensity {
+    MSP12K
+    MSP23K
+    SSP34K
+    SSP45K
+    SSP56K
+    UNKNOWN
+    NA
+}
+
+enum GeneticDescription {
+    BOURBONTYPICA
+    TYPICABOURBON
+    BOTHBOURBONTYPICA
+    ETHIOPIANLR
+    INTROGRESSEDCATIMOR
+    INTROGRESSEDSARCHIMOR
+    INTROGRESSEDOTHER
+    F1HYBRIDINTROGRESSED
+    F1HYBRID
+    UNKNOWN
+}
+
+// VARIETY
+
+generator zod {
+    provider = "zod-prisma-types"
 }
